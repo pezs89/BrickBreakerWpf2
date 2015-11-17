@@ -8,7 +8,7 @@ using BrickBreaker_2015.Model;
 namespace BrickBreaker_2015.Model
 {
     /// <summary>
-    /// Base class of the HighScoreModel
+    /// Base class for HighScoreModel.
     /// </summary>
     class HighScoreModel
     {
