@@ -16,13 +16,6 @@ using System.Windows.Threading;
 
 namespace BrickBreaker_2015.View
 {
-    public enum Irany
-    {
-        bal,
-        jobb,
-        stay
-    }
-
     /// <summary>
     /// Interaction logic for GamePlayWindow.xaml.
     /// </summary>
@@ -30,10 +23,10 @@ namespace BrickBreaker_2015.View
     {
         #region Fields
 
-        // 
+        // The game ViewModel.
         NewGameViewModel newGameViewModel;
 
-        // 
+        // The dispacher timer.
         DispatcherTimer timer;
 
         #endregion Fields
@@ -76,13 +69,17 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Left)
+            if (newGameViewModel.SpecKeys(e.Key) == newGameViewModel.optionsViewModel.OptionModel.LeftMove)
             {
-
+                //racket.direction.left
             }
-            else if (e.Key == Key.Right)
+            else if (newGameViewModel.SpecKeys(e.Key) == newGameViewModel.optionsViewModel.OptionModel.RightMove)
             {
-
+                //racket.direction.right
+            }
+            else
+            {
+                //racket.direction.stay
             }
         }
 

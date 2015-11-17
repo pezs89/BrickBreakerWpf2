@@ -23,6 +23,30 @@ namespace BrickBreaker_2015.Model
 
         #region Properties
 
+        /// <summary>
+        /// Gets or sets the horizontalMovement.
+        /// </summary>
+        /// <value>
+        /// The horizontalMovement.
+        /// </value>
+        public int HorizontalMovement
+        {
+            get { return horizontalMovement; }
+            set { horizontalMovement = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the verticalMovement.
+        /// </summary>
+        /// <value>
+        /// The verticalMovement.
+        /// </value>
+        public int VerticalMovement
+        {
+            get { return verticalMovement; }
+            set { verticalMovement = value; }
+        }
+
         #endregion Properties
 
         #region Constructors
@@ -30,8 +54,8 @@ namespace BrickBreaker_2015.Model
         public Ball(int posX, int posY, int width, int height, int horizontalMovement, int verticalMovement)
             : base(posX, posY, width, height)
         {
-            this.horizontalMovement = horizontalMovement;
-            this.verticalMovement = verticalMovement;
+            HorizontalMovement = horizontalMovement;
+            VerticalMovement = verticalMovement;
         }
 
         #endregion Constructors
@@ -41,17 +65,18 @@ namespace BrickBreaker_2015.Model
         public void Mozog(int canvasWidth, int canvasHeight, Racket racket)
         {
             //Rect -> ütközésvizsgálat!
-            area.X += horizontalMovement;
-            area.Y += verticalMovement;
+            area.X += HorizontalMovement;
+            area.Y += VerticalMovement;
 
             if (area.Top < 0 || this.area.IntersectsWith(racket.Area))
             {
-                verticalMovement = -verticalMovement;
+                VerticalMovement = -VerticalMovement;
                 //terulet.Y = -terulet.Y;
             }
+
             if (area.Left < 0 || area.Right > canvasWidth)
             {
-                horizontalMovement = -horizontalMovement;
+                HorizontalMovement = -HorizontalMovement;
                 //terulet.X = -terulet.X;
             }
 

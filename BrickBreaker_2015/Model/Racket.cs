@@ -8,7 +8,9 @@ namespace BrickBreaker_2015.Model
 {
     public enum Direction
     {
-        Left, Right, Stay
+        Left,
+        Right,
+        Stay
     }
 
     class Racket : MainObject
