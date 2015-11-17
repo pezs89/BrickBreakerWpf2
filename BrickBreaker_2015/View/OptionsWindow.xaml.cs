@@ -29,7 +29,7 @@ namespace BrickBreaker_2015.View
         {
             InitializeComponent();
 
-            ResolutionComboBox.Items.Add("480x320");
+            ResolutionComboBox.Items.Add("580x420");
             ResolutionComboBox.Items.Add("640x480");
             ResolutionComboBox.Items.Add("800x600");
 
