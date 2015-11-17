@@ -9,7 +9,7 @@ using System.Xml.Linq;
 namespace BrickBreaker_2015.ViewModel
 {
     /// <summary>
-    /// Interaction logic for XmlAccess.
+    /// Interaction logic for ScoresXmlAccess.
     /// </summary>
     class ScoresXmlAccess
     {
@@ -102,6 +102,7 @@ namespace BrickBreaker_2015.ViewModel
         /// <summary>
         /// Updates the items in the highscores xml file and creates new ones if necessary.
         /// </summary>
+        /// <param name="highscores">The highscores list.</param>
         public void SaveScore(List<Model.HighScoreModel> highscores)
         {
             try
