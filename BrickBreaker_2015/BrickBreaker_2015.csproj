@@ -63,6 +63,7 @@
     <Compile Include="Model\Racket.cs" />
     <Compile Include="ViewModel\NewGameViewModel.cs" />
     <Compile Include="ViewModel\OptionsViewModel.cs" />
+    <Compile Include="ViewModel\ScoresXmlAccess.cs" />
     <Compile Include="View\CreditsWindow.xaml.cs">
       <DependentUpon>CreditsWindow.xaml</DependentUpon>
     </Compile>
