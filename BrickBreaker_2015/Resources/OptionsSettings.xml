@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- XML -->
+<Options>
+  <option id="1">
+    <mouse>True</mouse>
+    <keyboard>True</keyboard>
+    <sound>True</sound>
+    <resolution>640x480</resolution>
+    <leftkey>u</leftkey>
+    <rightkey>s</rightkey>
+    <pausekey>d</pausekey>
+    <firekey>j</firekey>
+    <difficulty>3</difficulty>
+    <map>1</map>
+  </option>
+</Options>
