@@ -31,7 +31,13 @@ namespace BrickBreaker_2015.ViewModel
             Racket = new Racket(canvasSzelesseg / 2 - 40, canvasMagassag - 40, 80, 10);
 
             BallList = new ObservableCollection<Ball>();
+<<<<<<< HEAD
             BallList.Add(new Ball(0, 0, 20, 20, 5, 5));
+=======
+            BallList.Add(
+                new Ball(0, 0, 15, 15, 5, 5));
+
+>>>>>>> origin/master
         }
 
         #endregion Constructors

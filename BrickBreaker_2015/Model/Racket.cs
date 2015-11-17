@@ -6,15 +6,19 @@ using System.Threading.Tasks;
 
 namespace BrickBreaker_2015.Model
 {
-    enum Direction
+    public enum Direction
     {
         Left, Right, Stay
     }
 
     class Racket : MainObject
     {
+<<<<<<< HEAD
         #region Fields
 
+=======
+        public Direction dir { get; set; }
+>>>>>>> origin/master
         const int move = 10;
 
         #endregion Fields

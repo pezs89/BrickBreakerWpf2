@@ -5,12 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrickBreaker_2015.View"
         mc:Ignorable="d"
-        Title="GamePlayWindow" Height="475" Width="650" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+        Title="GamePlayWindow" Height="475" Width="650" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" KeyDown="Window_KeyDown">
     <Window.Background>
-        <ImageBrush ImageSource="/Resources/Concrete_wall.jpg"></ImageBrush>
+        <ImageBrush ImageSource="/Resources/Concrete_wall.jpg"/>
     </Window.Background>
     <Canvas x:Name="canvas">
-        <Ellipse Fill="#FFF4F4F5" Height="{Binding BallList[0].Area.Height}" Canvas.Left="{Binding BallList[0].Area.X}" Stroke="Black" Canvas.Top="{Binding BallList[0].Area.Y}" Width="{Binding BallList[0].Area.Width}"/>
-        <Rectangle></Rectangle>
+        <Ellipse Fill="Red" Height="{Binding BallList[0].Area.Height}" Canvas.Left="{Binding BallList[0].Area.X}" Stroke="Black" Canvas.Top="{Binding BallList[0].Area.Y}" Width="{Binding BallList[0].Area.Width}"/>
+        <Rectangle Fill="White" 
+                   Height="{Binding Racket.Area.Height}" 
+                   Canvas.Left="{Binding Racket.Area.X}" 
+                   Stroke="Black" 
+                   Canvas.Top="{Binding Racket.Area.Y}" 
+                   Width="{Binding Racket.Area.Width}"/>
     </Canvas>
 </Window>

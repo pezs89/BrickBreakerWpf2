@@ -16,6 +16,8 @@ using System.Windows.Threading;
 
 namespace BrickBreaker_2015.View
 {
+    enum Irany
+    { bal,jobb}
     /// <summary>
     /// Interaction logic for GamePlayWindow.xaml.
     /// </summary>
@@ -54,6 +56,8 @@ namespace BrickBreaker_2015.View
         {
             newGameViewModel = new NewGameViewModel((int)canvas.ActualWidth, (int)canvas.ActualHeight);
 
+            this.DataContext = newGameViewModel;
+
             timer = new DispatcherTimer();
             timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
             timer.Tick += Timer_Tick;
@@ -70,6 +74,18 @@ namespace BrickBreaker_2015.View
             newGameViewModel.LabdaMozgat((int)canvas.ActualWidth, (int)canvas.ActualHeight);
         }
 
+<<<<<<< HEAD
         #endregion Methods
+=======
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Left)
+            {
+            }
+            else if (e.Key == Key.Right)
+            {
+            }
+        }
+>>>>>>> origin/master
     }
 }
