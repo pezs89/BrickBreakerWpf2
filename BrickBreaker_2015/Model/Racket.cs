@@ -13,17 +13,15 @@ namespace BrickBreaker_2015.Model
 
     class Racket : MainObject
     {
-<<<<<<< HEAD
         #region Fields
 
-=======
-        public Direction dir { get; set; }
->>>>>>> origin/master
         const int move = 10;
 
         #endregion Fields
 
         #region Properties
+
+        public Direction dir { get; set; }
 
         #endregion Properties
 

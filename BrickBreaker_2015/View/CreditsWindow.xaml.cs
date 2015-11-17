@@ -31,7 +31,6 @@ namespace BrickBreaker_2015.View
             InitializeComponent();
 
             OptionsViewModel optionsViewModel = new OptionsViewModel();
-<<<<<<< HEAD
             this.Height = optionsViewModel.VerticalScaleNumber;
             this.Width = optionsViewModel.HorizontalScaleNumber;
 
@@ -39,13 +38,6 @@ namespace BrickBreaker_2015.View
             ScoresXmlAccess scoresXmlAccess = new ScoresXmlAccess(@"..\..\Resources\Scores.xml");
             var items = scoresXmlAccess.LoadScores();
             dataGrid1.DataContext = items;
-=======
-            this.Height = optionsViewModel.verticalScaleNumber;
-            this.Width = optionsViewModel.horizontalScaleNumber;
-
-            var xml = XDocument.Load("Scores.xml").Root;
-            dataGrid1.DataContext = xml;
->>>>>>> origin/master
         }
 
         #endregion Constructors

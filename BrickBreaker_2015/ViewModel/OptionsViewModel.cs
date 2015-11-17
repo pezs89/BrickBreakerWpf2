@@ -98,13 +98,8 @@ namespace BrickBreaker_2015.ViewModel
             switch (OptionModel.Resolution)
             {
                 case "580x420":
-<<<<<<< HEAD
                     HorizontalScaleNumber = 580;
                     VerticalScaleNumber = 420;
-=======
-                    horizontalScaleNumber = 580;
-                    verticalScaleNumber = 420;
->>>>>>> origin/master
                     break;
                 case "640x480":
                     HorizontalScaleNumber = 640;

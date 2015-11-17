@@ -16,8 +16,13 @@ using System.Windows.Threading;
 
 namespace BrickBreaker_2015.View
 {
-    enum Irany
-    { bal,jobb}
+    public enum Irany
+    {
+        bal,
+        jobb,
+        stay
+    }
+
     /// <summary>
     /// Interaction logic for GamePlayWindow.xaml.
     /// </summary>
@@ -65,6 +70,23 @@ namespace BrickBreaker_2015.View
         }
 
         /// <summary>
+        /// Handles the KeyDown event of the Window control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Left)
+            {
+
+            }
+            else if (e.Key == Key.Right)
+            {
+
+            }
+        }
+
+        /// <summary>
         /// Handles the Tick event of the Timer control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -74,18 +96,6 @@ namespace BrickBreaker_2015.View
             newGameViewModel.LabdaMozgat((int)canvas.ActualWidth, (int)canvas.ActualHeight);
         }
 
-<<<<<<< HEAD
         #endregion Methods
-=======
-        private void Window_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Left)
-            {
-            }
-            else if (e.Key == Key.Right)
-            {
-            }
-        }
->>>>>>> origin/master
     }
 }

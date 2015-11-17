@@ -19,11 +19,6 @@ namespace BrickBreaker_2015.View
     /// <summary>
     /// Interaction logic for OptionsWindow.xaml.
     /// </summary>
-<<<<<<< HEAD
-=======
-    /// 
-
->>>>>>> origin/master
     public partial class OptionsWindow : Window
     {
         #region Fields
@@ -103,15 +98,10 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void ApplyButton_Click(object sender, RoutedEventArgs e)
         {
-<<<<<<< HEAD
             optionsVM.SaveToXml(ResolutionComboBox.SelectedItem.ToString(),LeftMoveTextBox.Text, RightMoveTextBox.Text, PauseTextBox.Text, 
                 FireTextBox.Text, MouseCheckBox.IsChecked.Value, KeyboardCheckBox.IsChecked.Value, SoundCheckBox.IsChecked.Value);
             
             if (optionsVM.IsChanged)
-=======
-            optionsVM.OptionModel.SaveToXml(ResolutionComboBox.SelectedItem.ToString(), LeftMoveTextBox.Text, RightMoveTextBox.Text, PauseTextBox.Text, FireTextBox.Text, MouseCheckBox.IsChecked.Value, KeyboardCheckBox.IsChecked.Value, SoundCheckBox.IsChecked.Value);
-            if (optionsVM.OptionModel.IsChanged)
->>>>>>> origin/master
             {
                 StatusLabel.Content = "Settings has been updated!";
                 SettingsUpdatedLabelHide.Start();
