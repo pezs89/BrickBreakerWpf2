@@ -69,10 +69,10 @@ namespace BrickBreaker_2015.ViewModel
         #region Methods
 
         /// <summary>
-        /// Lists the items from the highscores xml file.
+        /// Loads the items from the highscores xml file.
         /// </summary>
         /// <returns>The list of highscore items or null.</returns>
-        public List<Model.HighScoreModel> ListScores()
+        public List<Model.HighScoreModel> LoadScores()
         {
             try
             {
