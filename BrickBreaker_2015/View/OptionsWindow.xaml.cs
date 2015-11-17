@@ -17,14 +17,25 @@ using System.Windows.Threading;
 namespace BrickBreaker_2015.View
 {
     /// <summary>
-    /// Interaction logic for OptionsWindow.xaml
+    /// Interaction logic for OptionsWindow.xaml.
     /// </summary>
-    /// 
-    
     public partial class OptionsWindow : Window
     {
+        #region Fields
+
+        // The options ViewModel.
         OptionsViewModel optionsVM;
+
+        // The dispacher timer.
         DispatcherTimer SettingsUpdatedLabelHide = new DispatcherTimer();
+
+        #endregion Fields
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OptionsWindow"/> class.
+        /// </summary>
         public OptionsWindow()
         {
             InitializeComponent();
@@ -35,8 +46,8 @@ namespace BrickBreaker_2015.View
 
             optionsVM = new OptionsViewModel();
             this.DataContext = optionsVM;
-            this.Width = optionsVM.horizontalScaleNumber;
-            this.Height = optionsVM.verticalScaleNumber;
+            this.Width = optionsVM.HorizontalScaleNumber;
+            this.Height = optionsVM.VerticalScaleNumber;
 
             ResolutionComboBox.SelectedItem = optionsVM.OptionModel.Resolution;
 
@@ -44,12 +55,26 @@ namespace BrickBreaker_2015.View
             SettingsUpdatedLabelHide.Tick += SettingsUpdatedLabelHide_Tick;
         }
 
+        #endregion Constructors
+
+        #region Methods
+
+        /// <summary>
+        /// Handles the Tick event of the SettingsUpdatedLabelHide control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void SettingsUpdatedLabelHide_Tick(object sender, EventArgs e)
         {
             StatusLabel.Content = "";
             SettingsUpdatedLabelHide.Stop();
         }
 
+        /// <summary>
+        /// Handles the Click event of the BackToMainButto control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void BackToMainButton_Click(object sender, RoutedEventArgs e)
         {
             if (MouseCheckBox.IsChecked == false && KeyboardCheckBox.IsChecked == false)
@@ -66,76 +91,109 @@ namespace BrickBreaker_2015.View
             }
         }
 
+        /// <summary>
+        /// Handles the Click event of the ApplyButton control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void ApplyButton_Click(object sender, RoutedEventArgs e)
         {
-            optionsVM.OptionModel.SaveToXml(ResolutionComboBox.SelectedItem.ToString(),LeftMoveTextBox.Text, RightMoveTextBox.Text, PauseTextBox.Text, FireTextBox.Text, MouseCheckBox.IsChecked.Value, KeyboardCheckBox.IsChecked.Value, SoundCheckBox.IsChecked.Value);
-            if (optionsVM.OptionModel.IsChanged)
+            optionsVM.SaveToXml(ResolutionComboBox.SelectedItem.ToString(),LeftMoveTextBox.Text, RightMoveTextBox.Text, PauseTextBox.Text, 
+                FireTextBox.Text, MouseCheckBox.IsChecked.Value, KeyboardCheckBox.IsChecked.Value, SoundCheckBox.IsChecked.Value);
+            
+            if (optionsVM.IsChanged)
             {
                 StatusLabel.Content = "Settings has been updated!";
                 SettingsUpdatedLabelHide.Start();
 
-                optionsVM.OptionModel.IsChanged = false;
+                optionsVM.IsChanged = false;
             }
            
         }
 
+        /// <summary>
+        /// Handles the KeyUp event of the LeftMoveTextBox control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void LeftMoveTextBox_KeyUp(object sender, KeyEventArgs e)
         {
-            if (!optionsVM.OptionModel.Check(LeftMoveTextBox.Text))
+            if (!optionsVM.Check(LeftMoveTextBox.Text))
             {
                 StatusLabel.Content = "Key has been already assigned!";
                 SettingsUpdatedLabelHide.Start();
                 LeftMoveTextBox.Text = optionsVM.OptionModel.LeftMove;
             }
-            if (!string.IsNullOrEmpty(optionsVM.OptionModel.SpecKeys(e.Key)))
+
+            if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
             {
-                LeftMoveTextBox.Text  = optionsVM.OptionModel.retVal.ToString();
+                LeftMoveTextBox.Text = optionsVM.SpecKeys(e.Key);
             }
             
         }
 
+        /// <summary>
+        /// Handles the KeyUp event of the RightMoveTextBox control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void RightMoveTextBox_KeyUp(object sender, KeyEventArgs e)
         {
-            if(!optionsVM.OptionModel.Check(RightMoveTextBox.Text))
+            if(!optionsVM.Check(RightMoveTextBox.Text))
             {
                 StatusLabel.Content = "Key has been already assigned!";
                 SettingsUpdatedLabelHide.Start();
                 RightMoveTextBox.Text = optionsVM.OptionModel.RightMove;
             }
-            if (!string.IsNullOrEmpty(optionsVM.OptionModel.SpecKeys(e.Key)))
+
+            if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
             {
-                RightMoveTextBox.Text = optionsVM.OptionModel.retVal.ToString();
+                RightMoveTextBox.Text = optionsVM.SpecKeys(e.Key);
             }
 
         }
 
+        /// <summary>
+        /// Handles the KeyUp event of the PauseTextBox control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void PauseTextBox_KeyUp(object sender, KeyEventArgs e)
         {
-            if(!optionsVM.OptionModel.Check(PauseTextBox.Text))
+            if(!optionsVM.Check(PauseTextBox.Text))
             {
                 StatusLabel.Content = "Key has been already assigned!";
                 SettingsUpdatedLabelHide.Start();
                 PauseTextBox.Text = optionsVM.OptionModel.PauseButton;
             }
-            if (!string.IsNullOrEmpty(optionsVM.OptionModel.SpecKeys(e.Key)))
+
+            if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
             {
-                PauseTextBox.Text = optionsVM.OptionModel.retVal.ToString();
+                PauseTextBox.Text = optionsVM.SpecKeys(e.Key);
             }
 
         }
 
+        /// <summary>
+        /// Handles the KeyUp event of the FireTextBox control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void FireTextBox_KeyUp(object sender, KeyEventArgs e)
         {
-            if(!optionsVM.OptionModel.Check(FireTextBox.Text))
+            if(!optionsVM.Check(FireTextBox.Text))
             {
                 StatusLabel.Content = "Key has been already assigned!";
                 SettingsUpdatedLabelHide.Start();
                 FireTextBox.Text = optionsVM.OptionModel.FireButton;
             }
-            if (!string.IsNullOrEmpty(optionsVM.OptionModel.SpecKeys(e.Key)))
+
+            if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
             {
-                FireTextBox.Text = optionsVM.OptionModel.retVal.ToString();
+                FireTextBox.Text = optionsVM.SpecKeys(e.Key);
             }
         }
+
+        #endregion Methods
     }
 }

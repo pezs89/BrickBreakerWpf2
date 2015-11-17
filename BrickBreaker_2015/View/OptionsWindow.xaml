@@ -89,7 +89,7 @@
         <SolidColorBrush x:Key="ComboBoxDisabledForegroundBrush" Color="Blue" />
         <SolidColorBrush x:Key="ComboBoxDisabledBackgroundBrush" Color="BlueViolet" />
         <SolidColorBrush x:Key="ComboBoxDisabledBorderBrush" Color="LightBlue" />
-        
+
         <ControlTemplate TargetType="ToggleButton" x:Key="ComboBoxToggleButtonTemplate">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -202,14 +202,18 @@
         </Style>
 
     </Window.Resources>
-    
+
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="355*"/>
+            <ColumnDefinition Width="407*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="4*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="1" DataContext="{Binding OptionModel}">
+        <Grid Grid.Row="1" DataContext="{Binding OptionModel}" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
@@ -256,7 +260,7 @@
                 <Label x:Name="StatusLabel" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Style="{StaticResource LabelTemplate}"></Label>
             </Grid>
         </Grid>
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>

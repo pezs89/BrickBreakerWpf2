@@ -18,19 +18,33 @@ using BrickBreaker_2015.ViewModel;
 namespace BrickBreaker_2015
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for MainWindow.xaml.
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainWindow"/> class.
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
 
             OptionsViewModel optionsViewModel = new OptionsViewModel();
-            this.Height = optionsViewModel.verticalScaleNumber;
-            this.Width = optionsViewModel.horizontalScaleNumber;
+            this.Height = optionsViewModel.VerticalScaleNumber;
+            this.Width = optionsViewModel.HorizontalScaleNumber;
         }
 
+        #endregion Constructors
+
+        #region Methods
+
+        /// <summary>
+        /// Handles the Click event of the NewGameButton control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void NewGameButton_Click(object sender, RoutedEventArgs e)
         {
             NewGameWindow childWindow = new NewGameWindow();
@@ -39,6 +53,11 @@ namespace BrickBreaker_2015
             
         }
 
+        /// <summary>
+        /// Handles the Click event of the OptionsButton control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void OptionsButton_Click(object sender, RoutedEventArgs e)
         {
             OptionsWindow childWindow = new OptionsWindow();
@@ -48,6 +67,11 @@ namespace BrickBreaker_2015
 
         }
 
+        /// <summary>
+        /// Handles the Click event of the CreditsButton control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void CreditsButton_Click(object sender, RoutedEventArgs e)
         {
             CreditsWindow childWindow = new CreditsWindow();
@@ -56,6 +80,11 @@ namespace BrickBreaker_2015
             
         }
 
+        /// <summary>
+        /// Handles the Click event of the InfoButton control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void InfoButton_Click(object sender, RoutedEventArgs e)
         {
             InformationsWindow childWindow = new InformationsWindow();
@@ -63,9 +92,16 @@ namespace BrickBreaker_2015
             childWindow.ShowDialog();
         }
 
+        /// <summary>
+        /// Handles the Click event of the ExitGameButton control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void ExitGameButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
+
+        #endregion Methods
     }
 }

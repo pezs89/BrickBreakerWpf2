@@ -52,7 +52,7 @@
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="1">
-            <Button Click="HardButton_Click" x:Name="EasyButton" Content="Easy" Style="{StaticResource CustomButtonStyle}"></Button>
+            <Button Click="EasyButton_Click" x:Name="EasyButton" Content="Easy" Style="{StaticResource CustomButtonStyle}"></Button>
             <Button Click="NormalButton_Click" x:Name="NormalButton" Content="Normal" Style="{StaticResource CustomButtonStyle}"></Button>
             <Button Click="HardButton_Click" x:Name="HardButton" Content="Hard" Style="{StaticResource CustomButtonStyle}"></Button>
         </StackPanel>

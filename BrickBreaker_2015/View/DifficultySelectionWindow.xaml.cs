@@ -16,19 +16,43 @@ using System.Windows.Shapes;
 namespace BrickBreaker_2015.View
 {
     /// <summary>
-    /// Interaction logic for DifficultySelectionWindow.xaml
+    /// Interaction logic for DifficultySelectionWindow.xaml.
     /// </summary>
     public partial class DifficultySelectionWindow : Window
     {
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DifficultySelectionWindow"/> class.
+        /// </summary>
         public DifficultySelectionWindow()
         {
             InitializeComponent();
 
             OptionsViewModel optionsViewModel = new OptionsViewModel();
-            this.Height = optionsViewModel.verticalScaleNumber;
-            this.Width = optionsViewModel.horizontalScaleNumber;
+            this.Height = optionsViewModel.VerticalScaleNumber;
+            this.Width = optionsViewModel.HorizontalScaleNumber;
         }
 
+        #endregion Constructors
+
+        #region Methods
+
+        /// <summary>
+        /// Handles the Click event of the EasyButton control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
+        private void EasyButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Handles the Click event of the NormalButton control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void NormalButton_Click(object sender, RoutedEventArgs e)
         {
             GamePlayWindow childWindow = new GamePlayWindow();
@@ -37,9 +61,16 @@ namespace BrickBreaker_2015.View
             
         }
 
+        /// <summary>
+        /// Handles the Click event of the HardButton control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void HardButton_Click(object sender, RoutedEventArgs e)
         {
 
         }
+
+        #endregion Methods
     }
 }

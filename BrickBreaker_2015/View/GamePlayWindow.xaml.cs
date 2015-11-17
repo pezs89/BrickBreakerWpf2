@@ -17,18 +17,39 @@ using System.Windows.Threading;
 namespace BrickBreaker_2015.View
 {
     /// <summary>
-    /// Interaction logic for GamePlayWindow.xaml
+    /// Interaction logic for GamePlayWindow.xaml.
     /// </summary>
     public partial class GamePlayWindow : Window
     {
+        #region Fields
+
+        // 
+        NewGameViewModel newGameViewModel;
+
+        // 
+        DispatcherTimer timer;
+
+        #endregion Fields
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GamePlayWindow"/> class.
+        /// </summary>
         public GamePlayWindow()
         {
             InitializeComponent();
         }
 
-        NewGameViewModel newGameViewModel;
-        DispatcherTimer timer;
+        #endregion Constructors
 
+        #region Methods
+
+        /// <summary>
+        /// Handles the Loaded event of the Window control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             newGameViewModel = new NewGameViewModel((int)canvas.ActualWidth, (int)canvas.ActualHeight);
@@ -39,9 +60,16 @@ namespace BrickBreaker_2015.View
             timer.Start();
         }
 
+        /// <summary>
+        /// Handles the Tick event of the Timer control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void Timer_Tick(object sender, EventArgs e)
         {
             newGameViewModel.LabdaMozgat((int)canvas.ActualWidth, (int)canvas.ActualHeight);
         }
+
+        #endregion Methods
     }
 }

@@ -9,247 +9,174 @@ using System.Xml.Linq;
 
 namespace BrickBreaker_2015.Model
 {
+    /// <summary>
+    /// Base class for Options.
+    /// </summary>
     public class Options
     {
-        public string Resolution { get; set; }
-        public string LeftMove { get; set; }
-        public string PauseButton { get; set; }
-        public string FireButton { get; set; }
-        public bool IsMouseEnabled { get; set; }
-        public string RightMove { get; set; }
-        public bool IsKeyBoardEnabled { get; set; }
-        public bool IsSoundEnabled { get; set; }
-        public string retVal { get; set; }
+        #region Fields
 
-        public bool IsChanged = false;
+        // The resolution field of the Options class.
+        private string resolution;
 
-        
+        // The left button field of the Options class.
+        private string leftMove;
 
+        // The right button field of the Options class.
+        private string rightMove;
+
+        // The pause button field of the Options class.
+        private string pauseButton;
+
+        // The fire button field of the Options class.
+        private string fireButton;
+
+        // The mouse enabled field of the Options class.
+        private bool isMouseEnabled;
+
+        // The sound enabled field of the Options class.
+        private bool isSoundEnabled;
+
+        // The keyboard enabled field of the Options class.
+        private bool isKeyboardEnabled;
+
+        #endregion Fields
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets the resolution.
+        /// </summary>
+        /// <value>
+        /// The resolution.
+        /// </value>
+        public string Resolution
+        {
+            get { return resolution; }
+            set { resolution = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the leftMove.
+        /// </summary>
+        /// <value>
+        /// The leftMove.
+        /// </value>
+        public string LeftMove
+        {
+            get { return leftMove; }
+            set { leftMove = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the pauseButton.
+        /// </summary>
+        /// <value>
+        /// The pauseButton.
+        /// </value>
+        public string PauseButton
+        {
+            get { return pauseButton; }
+            set { pauseButton = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the fireButton.
+        /// </summary>
+        /// <value>
+        /// The fireButton.
+        /// </value>
+        public string FireButton
+        {
+            get { return fireButton; }
+            set { fireButton = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the isMouseEnabled.
+        /// </summary>
+        /// <value>
+        /// The isMouseEnabled.
+        /// </value>
+        public bool IsMouseEnabled
+        {
+            get { return isMouseEnabled; }
+            set { isMouseEnabled = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the rightMove.
+        /// </summary>
+        /// <value>
+        /// The rightMove.
+        /// </value>
+        public string RightMove
+        {
+            get { return rightMove; }
+            set { rightMove = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the isKeyboardEnabled.
+        /// </summary>
+        /// <value>
+        /// The isKeyboardEnabled.
+        /// </value>
+        public bool IsKeyboardEnabled
+        {
+            get { return isKeyboardEnabled; }
+            set { isKeyboardEnabled = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the isSoundEnabled.
+        /// </summary>
+        /// <value>
+        /// The isSoundEnabled.
+        /// </value>
+        public bool IsSoundEnabled
+        {
+            get { return isSoundEnabled; }
+            set { isSoundEnabled = value; }
+        }
+
+        #endregion Properties
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Options"/> class.
+        /// </summary>
         public Options()
+        { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Options"/> class.
+        /// </summary>
+        /// <param name="resolution">The resolution field.</param>
+        /// <param name="leftMove">The leftMove field.</param>
+        /// <param name="rightMove">The rightMove field.</param>
+        /// <param name="pauseButton">The pauseButton field.</param>
+        /// <param name="fireButton">The fireButton field.</param>
+        /// <param name="isMouseEnabled">The isMouseEnabled field.</param>
+        /// <param name="isSoundEnabled">The isSoundEnabled field.</param>
+        /// <param name="isKeyboardEnabled">The isKeyboardEnabled field.</param>
+        public Options(string resolution, string leftMove, string rightMove, string pauseButton, string fireButton, bool isMouseEnabled, bool isSoundEnabled, bool isKeyboardEnabled)
         {
-            LoadFromXml();
+            Resolution = resolution;
+            LeftMove = leftMove;
+            RightMove = rightMove;
+            PauseButton = pauseButton;
+            FireButton = fireButton;
+            IsMouseEnabled = isMouseEnabled;
+            IsSoundEnabled = isSoundEnabled;
+            IsKeyboardEnabled = isKeyboardEnabled;
         }
 
-        public void LoadFromXml()
-        {
-            if (!File.Exists("OptionsSettings.xml"))
-            {
-                XElement mouseElement = new XElement("mouse", "true");
-                XElement keyboardElement = new XElement("keyboard", "true");
-                XElement soundElement = new XElement("sound", "true");
-                XElement resolutionElement = new XElement("resolution", "800x600");
-                XElement leftkeyElement = new XElement("leftkey", "Left");
-                XElement rightkeyElement = new XElement("rightkey", "Right");
-                XElement firekeyElement = new XElement("firekey", "Space");
-                XElement pausekeyElement = new XElement("pausekey", "P");
-                XElement difficultyElement = new XElement("difficulty", "1");
-                XElement mapElement = new XElement("map", "1");
-                XAttribute newAttribute = new XAttribute("id", 1);
-                XElement newElements = new XElement("option", newAttribute, mouseElement, keyboardElement, soundElement, resolutionElement, leftkeyElement, rightkeyElement, firekeyElement, pausekeyElement, difficultyElement, mapElement);
-                XElement newOptions = new XElement("Options", newElements);
-                XDocument newDocument = new XDocument(newOptions);
-                newDocument.Save("OptionsSettings.xml");
-            }
-            // If the file doesn't exist, then create a new.
+        #endregion Constructors
 
-            XDocument settingsFromXml = XDocument.Load("OptionsSettings.xml");
-            var readDataFromXml = settingsFromXml.Descendants("option");
-            var fromXml = from x in readDataFromXml
-                          select x;
-            // Load the values stored in the xml.
-            foreach (var oneElement in fromXml)
-            {
-                Resolution = (string)oneElement.Element("resolution");
-                LeftMove = (string)oneElement.Element("leftkey");
-                PauseButton = (string)oneElement.Element("pausekey");
-                FireButton = (string)oneElement.Element("firekey");
-                IsMouseEnabled = (bool)oneElement.Element("mouse");
-                RightMove = (string)oneElement.Element("rightkey");
-                IsKeyBoardEnabled = (bool)oneElement.Element("keyboard");
-                IsSoundEnabled = (bool)oneElement.Element("sound");
-            }
-            
-        }
+        #region Methods
 
-        public void SaveToXml(string Resolution, string LeftMove, string RightMove, string PauseButton, string FireButton, bool IsMouseEnabled, bool IsKeyBoardEnabled, bool IsSoundEnabled)
-        {
-            XDocument settingsFromXml = XDocument.Load("OptionsSettings.xml");
-            var readDataFromXml = settingsFromXml.Descendants("option");
-            var fromXml = from x in readDataFromXml
-                          select x;
-            // Load the values stored in the xml.
-            foreach (var oneElement in fromXml)
-            {
-                if (fromXml.Single().Element("leftkey").Value != LeftMove)
-                {
-                    fromXml.Single().Element("leftkey").Value = LeftMove;
-                    IsChanged = true;
-                }
-                if (fromXml.Single().Element("rightkey").Value != RightMove)
-                {
-                    fromXml.Single().Element("rightkey").Value = RightMove;
-                    IsChanged = true;
-                }
-                if (fromXml.Single().Element("pausekey").Value != PauseButton)
-                {
-                    fromXml.Single().Element("pausekey").Value = PauseButton;
-                    IsChanged = true;
-                }
-                if (fromXml.Single().Element("resolution").Value != Resolution)
-                {
-                    fromXml.Single().Element("resolution").Value = Resolution;
-                    IsChanged = true;
-                }
-                if (fromXml.Single().Element("firekey").Value != FireButton)
-                {
-                    fromXml.Single().Element("firekey").Value = FireButton;
-                    IsChanged = true;
-                }
-                if (fromXml.Single().Element("mouse").Value != IsMouseEnabled.ToString())
-                {
-                    fromXml.Single().Element("mouse").Value = IsMouseEnabled.ToString();
-                    IsChanged = true;
-                }
-                if (fromXml.Single().Element("keyboard").Value != IsKeyBoardEnabled.ToString())
-                {
-                    fromXml.Single().Element("keyboard").Value = IsKeyBoardEnabled.ToString();
-                    IsChanged = true;
-                }
-                if (fromXml.Single().Element("sound").Value != IsSoundEnabled.ToString())
-                {
-                    fromXml.Single().Element("sound").Value = IsSoundEnabled.ToString();
-                    IsChanged = true;
-                }
-                settingsFromXml.Save("OptionsSettings.xml");
-            }
-        }
-
-        public bool Check(string inputKey)
-        {
-            if (!string.IsNullOrEmpty(inputKey))
-            {
-                if (inputKey == PauseButton || inputKey == RightMove || inputKey == FireButton)
-                {
-                    return false;
-                }
-                else if (inputKey == LeftMove || inputKey == PauseButton || inputKey == FireButton)
-                {
-                    return false;
-                }
-                else if (inputKey == LeftMove || inputKey == FireButton || inputKey == RightMove)
-                {
-                    return false;
-                }
-                else if (inputKey == LeftMove || inputKey == RightMove || inputKey == PauseButton)
-                {
-                    return false;
-                }
-            } return true;            
-        }
-
-        public string SpecKeys(Key inputKey)
-        {
-            switch (inputKey)
-            {
-                case Key.Left:
-                    retVal = "Left";
-                    break;
-                case Key.Right:
-                    retVal = "Right";
-                    break;
-                case Key.Up:
-                    retVal = "Up";
-                    break;
-                case Key.Down:
-                    retVal = "Down";
-                    break;
-                case Key.Enter:
-                    // Also known as Key.Return.
-                    retVal = "Enter";
-                    break;
-                case Key.Space:
-                    retVal = "Space";
-                    break;
-                case Key.LeftShift:
-                    retVal = "LeftShift";
-                    break;
-                case Key.RightShift:
-                    retVal = "RightShift";
-                    break;
-                case Key.LeftCtrl:
-                    retVal = "LeftCtrl";
-                    break;
-                case Key.RightCtrl:
-                    retVal = "RightCtrl";
-                    break;
-                case Key.LeftAlt:
-                    retVal = "LeftAlt";
-                    break;
-                case Key.RightAlt:
-                    retVal = "RightAlt";
-                    break;
-                case Key.Tab:
-                    retVal = "Tab";
-                    break;
-                case Key.F1:
-                    retVal = "F1";
-                    break;
-                case Key.F2:
-                    retVal = "F2";
-                    break;
-                case Key.F3:
-                    retVal = "F3";
-                    break;
-                case Key.F4:
-                    retVal = "F4";
-                    break;
-                case Key.F5:
-                    retVal = "F5";
-                    break;
-                case Key.F6:
-                    retVal = "F6";
-                    break;
-                case Key.F7:
-                    retVal = "F7";
-                    break;
-                case Key.F8:
-                    retVal = "F8";
-                    break;
-                case Key.F9:
-                    retVal = "F9";
-                    break;
-                case Key.F10:
-                    retVal = "F10";
-                    break;
-                case Key.F11:
-                    retVal = "F11";
-                    break;
-                case Key.F12:
-                    retVal = "F12";
-                    break;
-                case Key.PageUp:
-                    retVal = "PageUp";
-                    break;
-                case Key.PageDown:
-                    retVal = "PageDown";
-                    break;
-                case Key.Home:
-                    retVal = "Home";
-                    break;
-                case Key.Insert:
-                    retVal = "Insert";
-                    break;
-                case Key.End:
-                    retVal = "End";
-                    break;
-                case Key.Delete:
-                    retVal = "Delete";
-                    break;
-                default:
-                    retVal = inputKey.ToString();
-                    break;
-            } return retVal;
-        }
-
+        #endregion Methods
     }
 }

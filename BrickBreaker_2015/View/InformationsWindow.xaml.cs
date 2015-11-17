@@ -16,22 +16,36 @@ using System.Windows.Shapes;
 namespace BrickBreaker_2015.View
 {
     /// <summary>
-    /// Interaction logic for InformationsWindow.xaml
+    /// Interaction logic for InformationsWindow.xaml.
     /// </summary>
     public partial class InformationsWindow : Window
     {
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InformationsWindow"/> class.
+        /// </summary>
         public InformationsWindow()
         {
             InitializeComponent();
 
             OptionsViewModel optionsViewModel = new OptionsViewModel();
-            this.Height = optionsViewModel.verticalScaleNumber;
-            this.Width = optionsViewModel.horizontalScaleNumber;
+            this.Height = optionsViewModel.VerticalScaleNumber;
+            this.Width = optionsViewModel.HorizontalScaleNumber;
 
-            InfoTxtBlock.Text = "Name: Péter Zsolt" + "\n" + "Neptun: GZOG8N" + "\n" +"App: BrickBreaker";
+            InfoTxtBlock.Text = "Name: Péter Zsolt" + "\n" + "Neptun: GZOG8N" + "\n" + "App: BrickBreaker";
             PressKeyTxtBlock.Text = "Press Esc to the Main Menu";
         }
 
+        #endregion Constructors
+
+        #region Methods
+
+        /// <summary>
+        /// Handles the KeyDown event of the Window control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
@@ -41,5 +55,7 @@ namespace BrickBreaker_2015.View
                 parent.ShowDialog();
             }
         }
+
+        #endregion Methods
     }
 }

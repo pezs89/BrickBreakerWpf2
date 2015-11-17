@@ -16,19 +16,33 @@ using BrickBreaker_2015.ViewModel;
 namespace BrickBreaker_2015.View
 {
     /// <summary>
-    /// Interaction logic for NewGameWindow.xaml
+    /// Interaction logic for NewGameWindow.xaml.
     /// </summary>
     public partial class NewGameWindow : Window
     {
-        
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NewGameWindow"/> class.
+        /// </summary>
         public NewGameWindow()
         {
             InitializeComponent();
+
             OptionsViewModel optionsViewModel = new OptionsViewModel();
-            this.Height = optionsViewModel.verticalScaleNumber;
-            this.Width = optionsViewModel.horizontalScaleNumber;
+            this.Height = optionsViewModel.VerticalScaleNumber;
+            this.Width = optionsViewModel.HorizontalScaleNumber;
         }
 
+        #endregion Constructors
+
+        #region Methods
+
+        /// <summary>
+        /// Handles the Click event of the firstMap_Diff control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void firstMap_Diff_Click(object sender, RoutedEventArgs e)
         {
             DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
@@ -36,6 +50,11 @@ namespace BrickBreaker_2015.View
             childWindow.ShowDialog();
         }
 
+        /// <summary>
+        /// Handles the Click event of the secondMap_Diff control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void secondMap_Diff_Click(object sender, RoutedEventArgs e)
         {
             DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
@@ -43,6 +62,11 @@ namespace BrickBreaker_2015.View
             childWindow.ShowDialog();
         }
 
+        /// <summary>
+        /// Handles the Click event of the thirdMap_Diff control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void thirdMap_Diff_Click(object sender, RoutedEventArgs e)
         {
             DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
@@ -51,11 +75,18 @@ namespace BrickBreaker_2015.View
             
         }
 
+        /// <summary>
+        /// Handles the Click event of the Back control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void Back_Click(object sender, RoutedEventArgs e)
         {
             MainWindow parent = new MainWindow();
             this.DialogResult = true;
             parent.ShowDialog();
         }
+
+        #endregion Methods
     }
 }

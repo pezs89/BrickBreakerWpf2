@@ -17,23 +17,38 @@ using System.Xml.Linq;
 namespace BrickBreaker_2015.View
 {
     /// <summary>
-    /// Interaction logic for CreditsWindow.xaml
+    /// Interaction logic for CreditsWindow.xaml.
     /// </summary>
     public partial class CreditsWindow : Window
     {
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CreditsWindow"/> class.
+        /// </summary>
         public CreditsWindow()
         {
             InitializeComponent();
 
             OptionsViewModel optionsViewModel = new OptionsViewModel();
-            this.Height = optionsViewModel.verticalScaleNumber;
-            this.Width = optionsViewModel.horizontalScaleNumber;
+            this.Height = optionsViewModel.VerticalScaleNumber;
+            this.Width = optionsViewModel.HorizontalScaleNumber;
 
-            var xml = XDocument.Load("Scores.xml").Root;
-            dataGrid1.DataContext = xml;
-
+            //var xml = XDocument.Load(@"..\..\Resources\Scores.xml").Root;
+            ScoresXmlAccess scoresXmlAccess = new ScoresXmlAccess(@"..\..\Resources\Scores.xml");
+            var items = scoresXmlAccess.LoadScores();
+            dataGrid1.DataContext = items;
         }
 
+        #endregion Constructors
+
+        #region Methods
+
+        /// <summary>
+        /// Handles the KeyDown event of the Window control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
@@ -43,5 +58,7 @@ namespace BrickBreaker_2015.View
                 parent.ShowDialog();
             }
         }
+
+        #endregion Methods
     }
 }
