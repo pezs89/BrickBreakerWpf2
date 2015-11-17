@@ -26,7 +26,7 @@ namespace BrickBreaker_2015.ViewModel
 
             BallList = new ObservableCollection<Ball>();
             BallList.Add(
-                new Ball(0, 0, 20, 20, 5, 5));
+                new Ball(0, 0, 15, 15, 5, 5));
 
         }
 

@@ -20,7 +20,7 @@ namespace BrickBreaker_2015.View
     /// Interaction logic for OptionsWindow.xaml
     /// </summary>
     /// 
-    
+
     public partial class OptionsWindow : Window
     {
         OptionsViewModel optionsVM;
@@ -68,7 +68,7 @@ namespace BrickBreaker_2015.View
 
         private void ApplyButton_Click(object sender, RoutedEventArgs e)
         {
-            optionsVM.OptionModel.SaveToXml(ResolutionComboBox.SelectedItem.ToString(),LeftMoveTextBox.Text, RightMoveTextBox.Text, PauseTextBox.Text, FireTextBox.Text, MouseCheckBox.IsChecked.Value, KeyboardCheckBox.IsChecked.Value, SoundCheckBox.IsChecked.Value);
+            optionsVM.OptionModel.SaveToXml(ResolutionComboBox.SelectedItem.ToString(), LeftMoveTextBox.Text, RightMoveTextBox.Text, PauseTextBox.Text, FireTextBox.Text, MouseCheckBox.IsChecked.Value, KeyboardCheckBox.IsChecked.Value, SoundCheckBox.IsChecked.Value);
             if (optionsVM.OptionModel.IsChanged)
             {
                 StatusLabel.Content = "Settings has been updated!";
@@ -76,7 +76,6 @@ namespace BrickBreaker_2015.View
 
                 optionsVM.OptionModel.IsChanged = false;
             }
-           
         }
 
         private void LeftMoveTextBox_KeyUp(object sender, KeyEventArgs e)

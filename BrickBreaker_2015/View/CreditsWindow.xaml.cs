@@ -31,7 +31,6 @@ namespace BrickBreaker_2015.View
 
             var xml = XDocument.Load("Scores.xml").Root;
             dataGrid1.DataContext = xml;
-
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
