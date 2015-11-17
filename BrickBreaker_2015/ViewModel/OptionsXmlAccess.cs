@@ -102,7 +102,7 @@ namespace BrickBreaker_2015.ViewModel
                     returnValue.FireButton = (string)oneElement.Element("firekey");
                     returnValue.IsMouseEnabled = (bool)oneElement.Element("mouse");
                     returnValue.RightMove = (string)oneElement.Element("rightkey");
-                    returnValue.IsKeyBoardEnabled = (bool)oneElement.Element("keyboard");
+                    returnValue.IsKeyboardEnabled = (bool)oneElement.Element("keyboard");
                     returnValue.IsSoundEnabled = (bool)oneElement.Element("sound");
                 }
 
@@ -141,7 +141,7 @@ namespace BrickBreaker_2015.ViewModel
                         fromXml.Single().Element("resolution").Value = options.Resolution;
                         fromXml.Single().Element("firekey").Value = options.FireButton;
                         fromXml.Single().Element("mouse").Value = options.IsMouseEnabled.ToString();
-                        fromXml.Single().Element("keyboard").Value = options.IsKeyBoardEnabled.ToString();
+                        fromXml.Single().Element("keyboard").Value = options.IsKeyboardEnabled.ToString();
                         fromXml.Single().Element("sound").Value = options.IsSoundEnabled.ToString();
                     }
 
