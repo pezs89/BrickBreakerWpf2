@@ -37,7 +37,7 @@ namespace BrickBreaker_2015.Model
 
         #region Constructors
 
-        public MainObject(int posX, int posY, int width, int height)
+        public MainObject(double posX, double posY, double width, double height)
         {
             Area = new Rect(posX, posY, width, height);
         }

@@ -33,7 +33,7 @@ namespace BrickBreaker_2015.ViewModel
         /// <summary>
         /// Initializes a new instance of the <see cref="NewGameViewModel"/> class.
         /// </summary>
-        public NewGameViewModel(int canvasSzelesseg, int canvasMagassag)
+        public NewGameViewModel(double canvasSzelesseg, double canvasMagassag)
         {
             Racket = new Racket(canvasSzelesseg / 2 - 40, canvasMagassag - 40, 80, 10);
 
@@ -93,7 +93,7 @@ namespace BrickBreaker_2015.ViewModel
             Racket.Move(direction);
         }
 
-        public void LabdaMozgat(int canvasSzelesseg, int canvasMagassag) //  összes labda!
+        public void LabdaMozgat(double canvasSzelesseg, double canvasMagassag) //  összes labda!
         {
             foreach (Ball labda in BallList)
             {
@@ -101,7 +101,7 @@ namespace BrickBreaker_2015.ViewModel
             }
         }
 
-        public bool Vege(int canvasMagassag)
+        public bool Vege(double canvasMagassag)
         {
             foreach (Ball labda in BallList)
             {

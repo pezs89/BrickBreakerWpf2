@@ -14,10 +14,10 @@ namespace BrickBreaker_2015.Model
         #region Fields
 
         // The ball's vartival movement.
-        private int verticalMovement;
+        private double verticalMovement;
 
         // The ball's horizontal movement.
-        private int horizontalMovement;
+        private double horizontalMovement;
 
         #endregion Fields
 
@@ -29,7 +29,7 @@ namespace BrickBreaker_2015.Model
         /// <value>
         /// The horizontalMovement.
         /// </value>
-        public int HorizontalMovement
+        public double HorizontalMovement
         {
             get { return horizontalMovement; }
             set { horizontalMovement = value; }
@@ -41,7 +41,7 @@ namespace BrickBreaker_2015.Model
         /// <value>
         /// The verticalMovement.
         /// </value>
-        public int VerticalMovement
+        public double VerticalMovement
         {
             get { return verticalMovement; }
             set { verticalMovement = value; }
@@ -51,7 +51,7 @@ namespace BrickBreaker_2015.Model
 
         #region Constructors
 
-        public Ball(int posX, int posY, int width, int height, int horizontalMovement, int verticalMovement)
+        public Ball(double posX, double posY, double width, double height, double horizontalMovement, double verticalMovement)
             : base(posX, posY, width, height)
         {
             HorizontalMovement = horizontalMovement;
@@ -62,7 +62,7 @@ namespace BrickBreaker_2015.Model
 
         #region Methods
 
-        public void Mozog(int canvasWidth, int canvasHeight, Racket racket)
+        public void Mozog(double canvasWidth, double canvasHeight, Racket racket)
         {
             //Rect -> ütközésvizsgálat!
             area.X += HorizontalMovement;
