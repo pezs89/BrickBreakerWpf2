@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrickBreaker_2015.View"
         mc:Ignorable="d"
-        Title="GamePlayWindow" Height="475" Width="650" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" KeyDown="Window_KeyDown">
+        Title="GamePlayWindow" Height="475" Width="650" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp" MouseMove="Window_MouseMove" MouseDown="Window_MouseDown">
     <Window.Background>
         <ImageBrush ImageSource="/Resources/Concrete_wall.jpg"/>
     </Window.Background>

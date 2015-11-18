@@ -69,18 +69,37 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (newGameViewModel.SpecKeys(e.Key) == newGameViewModel.GetOption().LeftMove)
-            {
-                //racket.direction.left
-            }
-            else if (newGameViewModel.SpecKeys(e.Key) == newGameViewModel.GetOption().RightMove)
-            {
-                //racket.direction.right
-            }
-            else
-            {
-                //racket.direction.stay
-            }
+            newGameViewModel.KeyDown(e);
+        }
+
+        /// <summary>
+        /// Handles the KeyUp event of the Window control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            newGameViewModel.KeyUp(e);
+        }
+
+        /// <summary>
+        /// Handles the MouseMove event of the Window control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void Window_MouseMove(object sender, MouseEventArgs e)
+        {
+            newGameViewModel.MouseMove(e);
+        }
+
+        /// <summary>
+        /// Handles the MouseDown event of the Window control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseButtonEventArgs"/> instance containing the event data.</param>
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            newGameViewModel.MouseDown(e);
         }
 
         /// <summary>

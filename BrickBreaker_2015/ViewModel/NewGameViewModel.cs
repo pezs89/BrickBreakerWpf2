@@ -45,6 +45,37 @@ namespace BrickBreaker_2015.ViewModel
 
         #region Methods
 
+        public void KeyUp(KeyEventArgs e)
+        {
+
+        }
+
+        public void KeyDown(KeyEventArgs e)
+        {
+            if (SpecKeys(e.Key) == GetOption().LeftMove)
+            {
+                //racket.direction.left
+            }
+            else if (SpecKeys(e.Key) == GetOption().RightMove)
+            {
+                //racket.direction.right
+            }
+            else
+            {
+                //racket.direction.stay
+            }
+        }
+
+        public void MouseMove(MouseEventArgs e)
+        {
+
+        }
+
+        public void MouseDown(MouseButtonEventArgs e)
+        {
+
+        }
+
         public Options GetOption()
         {
             try
