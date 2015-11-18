@@ -16,7 +16,7 @@ namespace BrickBreaker_2015.ViewModel
     {
         #region Fields
 
-        public OptionsViewModel optionsViewModel = new OptionsViewModel();
+        private OptionsViewModel optionsViewModel = new OptionsViewModel();
 
         #endregion Fields
 
@@ -44,6 +44,18 @@ namespace BrickBreaker_2015.ViewModel
         #endregion Constructors
 
         #region Methods
+
+        public Options GetOption()
+        {
+            try
+            {
+                return optionsViewModel.OptionModel;
+            }
+            catch
+            {
+                return null;
+            }
+        }
 
         public void UtoMozgat(Direction direction)
         {

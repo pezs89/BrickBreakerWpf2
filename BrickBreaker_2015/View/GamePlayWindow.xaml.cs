@@ -24,10 +24,10 @@ namespace BrickBreaker_2015.View
         #region Fields
 
         // The game ViewModel.
-        NewGameViewModel newGameViewModel;
+        private NewGameViewModel newGameViewModel;
 
         // The dispacher timer.
-        DispatcherTimer timer;
+        private DispatcherTimer timer;
 
         #endregion Fields
 
@@ -69,11 +69,11 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (newGameViewModel.SpecKeys(e.Key) == newGameViewModel.optionsViewModel.OptionModel.LeftMove)
+            if (newGameViewModel.SpecKeys(e.Key) == newGameViewModel.GetOption().LeftMove)
             {
                 //racket.direction.left
             }
-            else if (newGameViewModel.SpecKeys(e.Key) == newGameViewModel.optionsViewModel.OptionModel.RightMove)
+            else if (newGameViewModel.SpecKeys(e.Key) == newGameViewModel.GetOption().RightMove)
             {
                 //racket.direction.right
             }
