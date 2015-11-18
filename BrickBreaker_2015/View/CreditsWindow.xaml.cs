@@ -34,10 +34,7 @@ namespace BrickBreaker_2015.View
             this.Height = optionsViewModel.VerticalScaleNumber;
             this.Width = optionsViewModel.HorizontalScaleNumber;
 
-            var xml = XDocument.Load(@"..\..\Resources\Scores.xml").Root;
-            //ScoresXmlAccess scoresXmlAccess = new ScoresXmlAccess(@"..\..\Resources\Scores.xml");
-            //List<Model.HighScoreModel> items = scoresXmlAccess.LoadScores();
-            dataGrid1.DataContext = xml;
+            dataGrid1.DataContext = optionsViewModel.LoadRawScores();
         }
 
         #endregion Constructors

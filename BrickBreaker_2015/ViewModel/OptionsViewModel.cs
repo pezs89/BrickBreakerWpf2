@@ -28,8 +28,11 @@ namespace BrickBreaker_2015.ViewModel
         // The vertical scale number.
         private double verticalScaleNumber;
 
-        // The xml access layer.
+        // The options xml access layer.
         private OptionsXmlAccess optionsXmlAccess = new OptionsXmlAccess(@"..\..\Resources\OptionsSettings.xml");
+
+        // The scores xml access layer.
+        private ScoresXmlAccess scoreXmlAccess = new ScoresXmlAccess(@"..\..\Resources\Scores.xml");
 
         // The changed field.
         private bool isChanged = false;
@@ -213,6 +216,22 @@ namespace BrickBreaker_2015.ViewModel
             }
             
             return true;
+        }
+
+        /// <summary>
+        /// Loads the items fro the highscores xml file in a raw xml format.
+        /// </summary>
+        /// <returns>The object of highscores or null.</returns>
+        public object LoadRawScores()
+        {
+            try
+            {
+                return scoreXmlAccess.LoadRawScores();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>

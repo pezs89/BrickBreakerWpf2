@@ -100,6 +100,25 @@ namespace BrickBreaker_2015.ViewModel
         }
 
         /// <summary>
+        /// Loads the items from the highscores xml file in raw xml format.
+        /// </summary>
+        /// <returns>The object of highscore items or null.</returns>
+        public object LoadRawScores()
+        {
+            try
+            {
+                // Open the highscores xml file.
+                var returnValue = XDocument.Load(PathString).Root;
+
+                return returnValue;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Updates the items in the highscores xml file and creates new ones if necessary.
         /// </summary>
         /// <param name="highscores">The highscores list.</param>
@@ -109,6 +128,9 @@ namespace BrickBreaker_2015.ViewModel
             {
                 if (highscores != null && highscores.Count > 0)
                 {
+                    // Sort to descending order by scores.
+                    highscores.Sort((x, y) => int.Parse(y.PlayerScore).CompareTo(int.Parse(x.PlayerScore)));
+
                     // Open the highscores xml file.
                     XDocument highscoresFromXml = XDocument.Load(PathString);
                     var readDataFromXml = highscoresFromXml.Descendants("Data");
