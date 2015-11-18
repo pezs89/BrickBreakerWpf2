@@ -24,10 +24,10 @@ namespace BrickBreaker_2015.View
         #region Fields
 
         // The options ViewModel.
-        OptionsViewModel optionsVM;
+        private OptionsViewModel optionsVM;
 
         // The dispacher timer.
-        DispatcherTimer SettingsUpdatedLabelHide = new DispatcherTimer();
+        private DispatcherTimer SettingsUpdatedLabelHide = new DispatcherTimer();
 
         #endregion Fields
 
@@ -117,18 +117,19 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void LeftMoveTextBox_KeyUp(object sender, KeyEventArgs e)
         {
-            if (!optionsVM.Check(LeftMoveTextBox.Text))
+            if (!optionsVM.Check(optionsVM.SpecKeys(e.Key)))
             {
                 StatusLabel.Content = "Key has been already assigned!";
                 SettingsUpdatedLabelHide.Start();
                 LeftMoveTextBox.Text = optionsVM.OptionModel.LeftMove;
             }
-
-            if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
+            else
             {
-                LeftMoveTextBox.Text = optionsVM.SpecKeys(e.Key);
+                if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
+                {
+                    LeftMoveTextBox.Text = optionsVM.SpecKeys(e.Key);
+                }
             }
-            
         }
 
         /// <summary>
@@ -138,18 +139,19 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void RightMoveTextBox_KeyUp(object sender, KeyEventArgs e)
         {
-            if(!optionsVM.Check(RightMoveTextBox.Text))
+            if (!optionsVM.Check(optionsVM.SpecKeys(e.Key)))
             {
                 StatusLabel.Content = "Key has been already assigned!";
                 SettingsUpdatedLabelHide.Start();
                 RightMoveTextBox.Text = optionsVM.OptionModel.RightMove;
             }
-
-            if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
+            else
             {
-                RightMoveTextBox.Text = optionsVM.SpecKeys(e.Key);
+                if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
+                {
+                    RightMoveTextBox.Text = optionsVM.SpecKeys(e.Key);
+                }
             }
-
         }
 
         /// <summary>
@@ -159,18 +161,19 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void PauseTextBox_KeyUp(object sender, KeyEventArgs e)
         {
-            if(!optionsVM.Check(PauseTextBox.Text))
+            if (!optionsVM.Check(optionsVM.SpecKeys(e.Key)))
             {
                 StatusLabel.Content = "Key has been already assigned!";
                 SettingsUpdatedLabelHide.Start();
                 PauseTextBox.Text = optionsVM.OptionModel.PauseButton;
             }
-
-            if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
+            else
             {
-                PauseTextBox.Text = optionsVM.SpecKeys(e.Key);
+                if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
+                {
+                    PauseTextBox.Text = optionsVM.SpecKeys(e.Key);
+                }
             }
-
         }
 
         /// <summary>
@@ -180,16 +183,18 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void FireTextBox_KeyUp(object sender, KeyEventArgs e)
         {
-            if(!optionsVM.Check(FireTextBox.Text))
+            if (!optionsVM.Check(optionsVM.SpecKeys(e.Key)))
             {
                 StatusLabel.Content = "Key has been already assigned!";
                 SettingsUpdatedLabelHide.Start();
                 FireTextBox.Text = optionsVM.OptionModel.FireButton;
             }
-
-            if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
+            else
             {
-                FireTextBox.Text = optionsVM.SpecKeys(e.Key);
+                if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
+                {
+                    FireTextBox.Text = optionsVM.SpecKeys(e.Key);
+                }
             }
         }
 
