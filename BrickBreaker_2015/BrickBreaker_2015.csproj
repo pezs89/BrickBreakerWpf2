@@ -57,10 +57,12 @@
     </ApplicationDefinition>
     <Compile Include="Model\Ball.cs" />
     <Compile Include="Model\Bindable.cs" />
+    <Compile Include="Model\Brick.cs" />
     <Compile Include="Model\HighScoreModel.cs" />
     <Compile Include="Model\MainObject.cs" />
     <Compile Include="Model\Options.cs" />
     <Compile Include="Model\Racket.cs" />
+    <Compile Include="ViewModel\MapTxtAccess.cs" />
     <Compile Include="ViewModel\NewGameViewModel.cs" />
     <Compile Include="ViewModel\OptionsViewModel.cs" />
     <Compile Include="ViewModel\OptionsXmlAccess.cs" />
