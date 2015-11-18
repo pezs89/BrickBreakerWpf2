@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BrickBreaker_2015.Model;
+using BrickBreaker_2015.ViewModel;
 
 namespace BrickBreaker_2015.Model
 {
@@ -21,7 +22,7 @@ namespace BrickBreaker_2015.Model
         private string playerScore;
 
         #endregion Fields
-
+        
         #region Properties
 
         /// <summary>

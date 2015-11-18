@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Linq;
 
+
 namespace BrickBreaker_2015.Model
 {
     /// <summary>
@@ -15,7 +16,6 @@ namespace BrickBreaker_2015.Model
     public class Options
     {
         #region Fields
-
         // The resolution field of the Options class.
         private string resolution;
 
@@ -140,6 +140,8 @@ namespace BrickBreaker_2015.Model
             set { isSoundEnabled = value; }
         }
 
+
+
         #endregion Properties
 
         #region Constructors
@@ -148,7 +150,8 @@ namespace BrickBreaker_2015.Model
         /// Initializes a new instance of the <see cref="Options"/> class.
         /// </summary>
         public Options()
-        { }
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Options"/> class.

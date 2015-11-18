@@ -5,13 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using BrickBreaker_2015.Model;
 
 namespace BrickBreaker_2015.ViewModel
 {
     /// <summary>
     /// Interaction logic for ScoresXmlAccess.
     /// </summary>
-    class ScoresXmlAccess
+    class ScoresXmlAccessViewModel
     {
         #region Fields
 
@@ -34,34 +35,44 @@ namespace BrickBreaker_2015.ViewModel
             set { pathString = value; }
         }
 
+        public List<HighScoreModel> ReturnValue
+        {
+            get
+            {
+                return returnValue;
+            }
+
+            set
+            {
+                returnValue = value;
+            }
+        }
+
+        List<HighScoreModel> returnValue;
+
         #endregion Properties
 
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ScoresXmlAccess"/> class.
+        /// Initializes a new instance of the <see cref="ScoresXmlAccessViewModel"/> class.
         /// </summary>
         /// <param name="pathstring">The path to the xml file.</param>
-        public ScoresXmlAccess(string pathstring)
+        public ScoresXmlAccessViewModel()
         {
-            PathString = pathstring;
-
-            try
+            if (!File.Exists(@"..\..\Resources\Scores.xml"))
             {
-                // If the file can't be found then make a new.
-                if (!File.Exists(PathString))
-                {
-                    XElement nameElement = new XElement("Name", "Test");
-                    XElement scoreElement = new XElement("Score", "0");
-                    XAttribute placeAttribute = new XAttribute("ID", 1);
-                    XElement newElements = new XElement("Data", placeAttribute, nameElement, scoreElement);
-                    XElement newPerson = new XElement("Person", newElements);
-                    XDocument newDocument = new XDocument(newPerson);
-                    newDocument.Save(PathString);
-                }
+                XElement nameElement = new XElement("Name", "Test");
+                XElement scoreElement = new XElement("Score", "0");
+                XAttribute placeAttribute = new XAttribute("ID", 1);
+                XElement newElements = new XElement("Data", placeAttribute, nameElement, scoreElement);
+                XElement newPerson = new XElement("Person", newElements);
+                XDocument newDocument = new XDocument(newPerson);
+                newDocument.Save(PathString);
             }
-            catch
-            { }
+            else {
+            LoadScores(@"..\..\Resources\Scores.xml");
+            }
         }
 
         #endregion Constructors
@@ -72,45 +83,29 @@ namespace BrickBreaker_2015.ViewModel
         /// Loads the items from the highscores xml file.
         /// </summary>
         /// <returns>The list of highscore items or null.</returns>
-        public List<Model.HighScoreModel> LoadScores()
+        public List<HighScoreModel> LoadScores(string PathString)
         {
             try
             {
-                // Open the highscores xml file.
-                XDocument highscoresFromXml = XDocument.Load(PathString);
-                var readDataFromXml = highscoresFromXml.Descendants("Data");
 
-                // Get the items from the highscores xml file.
-                List<Model.HighScoreModel> returnValue = new List<Model.HighScoreModel>();
-                var fromXml = from x in readDataFromXml
-                              select x;
-
-                // Store the items in a Highscore list.
-                foreach (var oneElement in fromXml)
                 {
-                    returnValue.Add(new Model.HighScoreModel((string)oneElement.Element("Name"), (string)oneElement.Element("Score")));
+                    // Open the highscores xml file.
+                    XDocument highscoresFromXml = XDocument.Load(PathString);
+                    var readDataFromXml = highscoresFromXml.Descendants("Data");
+
+                    // Get the items from the highscores xml file.
+                    returnValue = new List<HighScoreModel>();
+                    var fromXml = from x in readDataFromXml
+                                  select x;
+
+                    // Store the items in a Highscore list.
+                    foreach (var oneElement in fromXml)
+                    {
+                        returnValue.Add(new HighScoreModel((string)oneElement.Element("Name"), (string)oneElement.Element("Score")));
+                    }
+
+                    return returnValue;
                 }
-
-                return returnValue;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Loads the items from the highscores xml file in raw xml format.
-        /// </summary>
-        /// <returns>The object of highscore items or null.</returns>
-        public object LoadRawScores()
-        {
-            try
-            {
-                // Open the highscores xml file.
-                var returnValue = XDocument.Load(PathString).Root;
-
-                return returnValue;
             }
             catch
             {

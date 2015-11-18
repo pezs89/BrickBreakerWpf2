@@ -15,7 +15,7 @@
             <RowDefinition Height="1*"></RowDefinition>
         </Grid.RowDefinitions>
         <DataGrid GridLinesVisibility="None"
-                ItemsSource="{Binding Path=Elements[Data]}"
+                ItemsSource="{Binding ReturnValue}"
                 AutoGenerateColumns="False" Height="Auto" 
                 Name="dataGrid1" 
                 FontWeight="Thin"
@@ -31,7 +31,7 @@
                 <DataGridTextColumn
                         Header="Name" 
                         Foreground="White"    
-                        Binding="{Binding Path=Element[Name].Value}">
+                        Binding="{Binding PlayerName}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -41,7 +41,7 @@
                 <DataGridTextColumn 
                         Header="Score" 
                         Foreground="White"
-                        Binding="{Binding Path=Element[Score].Value}">
+                        Binding="{Binding PlayerScore}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="HorizontalAlignment" Value="Center" />
