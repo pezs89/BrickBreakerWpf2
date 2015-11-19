@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace BrickBreaker_2015.ViewModel
 {
     /// <summary>
-    /// 
+    /// Interaction logic for CreditsViewModel.
     /// </summary>
     class CreditsViewModel
     {
@@ -26,7 +26,7 @@ namespace BrickBreaker_2015.ViewModel
         #region Constructors
 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="CreditsViewModel"/> class.
         /// </summary>
         public CreditsViewModel()
         {
@@ -38,9 +38,9 @@ namespace BrickBreaker_2015.ViewModel
         #region Methods
 
         /// <summary>
-        /// 
+        /// Loads the highscores items from the xml file in a raw format.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The raw xml items or null.</returns>
         public object LoadRawScores()
         {
             try

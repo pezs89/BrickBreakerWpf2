@@ -34,12 +34,12 @@ namespace BrickBreaker_2015.DataAccess
         #region Methods
 
         /// <summary>
-        /// 
+        /// Loads the bricks from the map.
         /// </summary>
-        /// <param name="pathString"></param>
-        /// <param name="brickWidth"></param>
-        /// <param name="brickHeight"></param>
-        /// <returns></returns>
+        /// <param name="pathString">The path to the txt file.</param>
+        /// <param name="brickWidth">The width of the bricks.</param>
+        /// <param name="brickHeight">The height of the bricks.</param>
+        /// <returns>The brick list or null.</returns>
         private List<Brick> LoadMap(string pathString, double brickWidth, double brickHeight)
         {
             try
@@ -48,11 +48,16 @@ namespace BrickBreaker_2015.DataAccess
                 {
                     double X = 0;
                     double Y = 0;
+
+                    // Open a connection to the txt file.
                     FileStream fs = new FileStream(pathString, FileMode.Open, FileAccess.Read, FileShare.None);
+
+                    // Open a reader to read the txt file.
                     BinaryReader rd = new BinaryReader(fs);
 
                     while (rd.BaseStream.Position != rd.BaseStream.Length)
                     {
+                        // The string row needs to be checked by characters.
                         char[] oneLine = rd.ReadChars(24);
 
                         for (int i = 0; i < oneLine.Length; i++)
@@ -62,34 +67,37 @@ namespace BrickBreaker_2015.DataAccess
                                 case '.':
                                     break;
                                 case '1':
-                                    Brick brick1 = new Brick(X, Y, brickHeight, brickWidth, Brick.BricksType.Easy, @"");
+                                    Brick brick1 = new Brick(X, Y, brickHeight, brickWidth, Brick.BricksType.Easy, @"..\..\Resources\Media\Brick\easybrick.jpg");
                                     brick1.ScorePoint = 10;
                                     brick1.BreakNumber = 1;
                                     break;
                                 case '2':
-                                    Brick brick2 = new Brick(X, Y, brickHeight, brickWidth, Brick.BricksType.Medium, @"");
+                                    Brick brick2 = new Brick(X, Y, brickHeight, brickWidth, Brick.BricksType.Medium, @"..\..\Resources\Media\Brick\mediumbrick.jpg");
                                     brick2.ScorePoint = 20;
                                     brick2.BreakNumber = 2;
                                     break;
                                 case '3':
-                                    Brick brick3 = new Brick(X, Y, brickHeight, brickWidth, Brick.BricksType.Hard, @"");
+                                    Brick brick3 = new Brick(X, Y, brickHeight, brickWidth, Brick.BricksType.Hard, @"..\..\Resources\Media\Brick\hardbrick.jpg");
                                     brick3.ScorePoint = 30;
                                     brick3.BreakNumber = 5;
                                     break;
                                 case '4':
-                                    Brick brick4 = new Brick(X, Y, brickHeight, brickWidth, Brick.BricksType.Steel, @"");
+                                    Brick brick4 = new Brick(X, Y, brickHeight, brickWidth, Brick.BricksType.Steel, @"..\..\Resources\Media\Brick\steelbrick.jpg");
                                     brick4.ScorePoint = 40;
                                     brick4.BreakNumber = 1;
                                     break;
                             }
 
+                            // Next column.
                             X += brickWidth;
                         }
 
+                        // Ready the variables for the next row.
                         X = 0;
                         Y += brickHeight;
                     }
 
+                    // Close the BinaryReader and the FileStream.
                     rd.Close();
                     fs.Close();
                 }
@@ -103,10 +111,10 @@ namespace BrickBreaker_2015.DataAccess
         }
 
         /// <summary>
-        /// 
+        /// Checks if the file exists.
         /// </summary>
-        /// <param name="pathString"></param>
-        /// <returns></returns>
+        /// <param name="pathString">The path to the txt file.</param>
+        /// <returns>True if exists, false if not.</returns>
         private bool FileExists(string pathString)
         {
             try

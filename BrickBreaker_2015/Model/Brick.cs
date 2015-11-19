@@ -13,19 +13,19 @@ namespace BrickBreaker_2015.Model
     {
         #region Fields
 
-        //
+        // The type of the brick.
         private BricksType brickType;
 
-        // 
+        // The score value the brick's worth.
         private int scorePoint;
 
-        // 
+        // The number to break the brick.
         private int breakNumber;
 
-        // 
+        // The path to tha brick's picture.
         private string brickPicture;
 
-        // 
+        // The brick types.
         public enum BricksType
         {
             Easy,
@@ -91,14 +91,14 @@ namespace BrickBreaker_2015.Model
         #region Constructors
 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="Brick"/> class.
         /// </summary>
-        /// <param name="posX"></param>
-        /// <param name="posY"></param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <param name="brickType"></param>
-        /// <param name="brickPicture"></param>
+        /// <param name="posX">The x position of the brick.</param>
+        /// <param name="posY">The y position of the brick.</param>
+        /// <param name="width">The width of the brick.</param>
+        /// <param name="height">The height of the brick.</param>
+        /// <param name="brickType">The type of the brick.</param>
+        /// <param name="brickPicture">The picture of the brick.</param>
         public Brick(double posX, double posY, double width, double height, BricksType brickType, string brickPicture)
             : base(posX, posY, width, height)
         {
@@ -109,6 +109,33 @@ namespace BrickBreaker_2015.Model
         #endregion Constructors
 
         #region Methods
+
+        /// <summary>
+        /// Decrements the breaknumber of the brick.
+        /// </summary>
+        public void DecrementBreakNumber()
+        {
+            if (BreakNumber > 0)
+            {
+                BreakNumber--;
+
+                switch (BrickType)
+                {
+                    case BricksType.Medium:
+                        if (BrickPicture != @"..\..\Resources\Media\Brick\brokenmediumbrick.jpg")
+                        {
+                            BrickPicture = @"..\..\Resources\Media\Brick\brokenmediumbrick.jpg";
+                        }
+                        break;
+                    case BricksType.Hard:
+                        if (BrickPicture != @"..\..\Resources\Media\Brick\brokenhardbrick.jpg")
+                        {
+                            BrickPicture = @"..\..\Resources\Media\Brick\brokenhardbrick.jpg";
+                        }
+                        break;
+                }
+            }
+        }
 
         #endregion Methods
     }

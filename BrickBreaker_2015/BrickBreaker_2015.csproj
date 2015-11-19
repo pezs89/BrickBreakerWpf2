@@ -164,6 +164,36 @@
   <ItemGroup>
     <Resource Include="Resources\Scores.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Maps\FifthMap.txt" />
+    <Resource Include="Resources\Maps\FirstMap.txt" />
+    <Resource Include="Resources\Maps\FourthMap.txt" />
+    <Resource Include="Resources\Maps\SecondMap.txt" />
+    <Resource Include="Resources\Maps\ThirdMap.txt" />
+    <Resource Include="Resources\Media\Ball\hardball.jpg" />
+    <Resource Include="Resources\Media\Ball\normalball.jpg" />
+    <Resource Include="Resources\Media\Ball\steelball.jpg" />
+    <Resource Include="Resources\Media\Bonus\ballbigger.jpg" />
+    <Resource Include="Resources\Media\Bonus\ballsmaller.jpg" />
+    <Resource Include="Resources\Media\Bonus\hardball.jpg" />
+    <Resource Include="Resources\Media\Bonus\lifedown.jpg" />
+    <Resource Include="Resources\Media\Bonus\lifeup.jpg" />
+    <Resource Include="Resources\Media\Bonus\newball.jpg" />
+    <Resource Include="Resources\Media\Bonus\racketlengthen.jpg" />
+    <Resource Include="Resources\Media\Bonus\racketshorten.jpg" />
+    <Resource Include="Resources\Media\Bonus\steelball.jpg" />
+    <Resource Include="Resources\Media\Bonus\stickyracket.jpg" />
+    <Resource Include="Resources\Media\Brick\brokenhardbrick.jpg" />
+    <Resource Include="Resources\Media\Brick\brokenmediumbrick.jpg" />
+    <Resource Include="Resources\Media\Brick\easybrick.jpg" />
+    <Resource Include="Resources\Media\Brick\hardbrick.jpg" />
+    <Resource Include="Resources\Media\Brick\mediumbrick.jpg" />
+    <Resource Include="Resources\Media\Brick\steelbrick.jpg" />
+    <Resource Include="Resources\Media\Racket\normalracket.jpg" />
+    <Resource Include="Resources\Media\Racket\stickyracket.jpg" />
+    <Content Include="Resources\Media\Sounds\play_this.mp3" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
