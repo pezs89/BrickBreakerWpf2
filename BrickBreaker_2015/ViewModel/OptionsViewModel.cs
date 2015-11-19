@@ -120,70 +120,10 @@ namespace BrickBreaker_2015.ViewModel
         /// <summary>
         /// Saves the changes made to the options.
         /// </summary>
-        /// <param name="resolution">The resolution.</param>
-        /// <param name="leftMove">The leftMove.</param>
-        /// <param name="rightMove">The rightMove.</param>
-        /// <param name="pauseButton">The pauseButton.</param>
-        /// <param name="fireButton">The fireButton.</param>
-        /// <param name="isMouseEnabled">The isMouseEnabled.</param>
-        /// <param name="isKeyboardEnabled">The isKeyboardEnabled.</param>
-        /// <param name="isSoundEnabled">The isSoundEnabled.</param>
-        public void SaveToXml(string resolution, string leftMove, string rightMove, string pauseButton, string fireButton, bool isMouseEnabled, bool isKeyboardEnabled, bool isSoundEnabled)
+        public void SaveToXml()
         {
-            // Checks if there were any changes made to the options.
-            if (fireButton != OptionModel.FireButton)
-            {
-                OptionModel.FireButton = fireButton;
-                IsChanged = true;
-            }
-
-            if (isKeyboardEnabled != OptionModel.IsKeyboardEnabled)
-            {
-                OptionModel.IsKeyboardEnabled = isKeyboardEnabled;
-                IsChanged = true;
-            }
-
-            if (isMouseEnabled != OptionModel.IsMouseEnabled)
-            {
-                OptionModel.IsMouseEnabled = isMouseEnabled;
-                IsChanged = true;
-            }
-
-            if (isSoundEnabled != OptionModel.IsSoundEnabled)
-            {
-                OptionModel.IsSoundEnabled = isSoundEnabled;
-                IsChanged = true;
-            }
-
-            if (leftMove != OptionModel.LeftMove)
-            {
-                OptionModel.LeftMove = leftMove;
-                IsChanged = true;
-            }
-
-            if (pauseButton != OptionModel.PauseButton)
-            {
-                OptionModel.PauseButton = pauseButton;
-                IsChanged = true;
-            }
-
-            if (resolution != OptionModel.Resolution)
-            {
-                OptionModel.Resolution = resolution;
-                IsChanged = true;
-            }
-
-            if (rightMove != OptionModel.RightMove)
-            {
-                OptionModel.RightMove = rightMove;
-                IsChanged = true;
-            }
-
-            // If changes were made, then save the changed values in the file.
-            if (IsChanged)
-            {
-                optionsXmlAccess.SaveOptions(OptionModel);
-            }
+            optionsXmlAccess.SaveOptions(OptionModel);
+            IsChanged = true;
         }
 
         /// <summary>

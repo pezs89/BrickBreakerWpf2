@@ -98,8 +98,7 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void ApplyButton_Click(object sender, RoutedEventArgs e)
         {
-            optionsVM.SaveToXml(ResolutionComboBox.SelectedItem.ToString(),LeftMoveTextBox.Text, RightMoveTextBox.Text, PauseTextBox.Text, 
-                FireTextBox.Text, MouseCheckBox.IsChecked.Value, KeyboardCheckBox.IsChecked.Value, SoundCheckBox.IsChecked.Value);
+            optionsVM.SaveToXml();
             
             if (optionsVM.IsChanged)
             {
