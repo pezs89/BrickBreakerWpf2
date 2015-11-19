@@ -24,13 +24,13 @@ namespace BrickBreaker_2015.ViewModel
         private OptionsViewModel optionsViewModel;
 
         // The path string of the first map.
-        private string firstMapPath;
+        private string firstMapPath = @"..\..\Resources\Maps\FirstMap.txt";
 
         // The path string of the second map.
-        private string secondMapPath;
+        private string secondMapPath = @"..\..\Resources\Maps\SecondMap.txt";
 
         // The path string of the third map.
-        private string thirdMapPath;
+        private string thirdMapPath = @"..\..\Resources\Maps\ThirdMap.txt";
 
         #endregion Fields
 
