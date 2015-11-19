@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace BrickBreaker_2015.ViewModel
+namespace BrickBreaker_2015.DataAccess
 {
     /// <summary>
     /// Interaction logic for OptionsXmlAccess.

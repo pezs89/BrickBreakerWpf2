@@ -62,11 +62,11 @@
     <Compile Include="Model\MainObject.cs" />
     <Compile Include="Model\Options.cs" />
     <Compile Include="Model\Racket.cs" />
-    <Compile Include="ViewModel\MapTxtAccess.cs" />
+    <Compile Include="DataAccess\MapTxtAccess.cs" />
     <Compile Include="ViewModel\NewGameViewModel.cs" />
     <Compile Include="ViewModel\OptionsViewModel.cs" />
-    <Compile Include="ViewModel\OptionsXmlAccess.cs" />
-    <Compile Include="ViewModel\ScoresXmlAccessViewModel.cs" />
+    <Compile Include="DataAccess\OptionsXmlAccess.cs" />
+    <Compile Include="DataAccess\ScoresXmlAccesss.cs" />
     <Compile Include="View\CreditsWindow.xaml.cs">
       <DependentUpon>CreditsWindow.xaml</DependentUpon>
     </Compile>

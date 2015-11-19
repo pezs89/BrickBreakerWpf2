@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using BrickBreaker_2015.Model;
 
-namespace BrickBreaker_2015.ViewModel
+namespace BrickBreaker_2015.DataAccess
 {
     /// <summary>
     /// Interaction logic for ScoresXmlAccess.
     /// </summary>
-    class ScoresXmlAccessViewModel
+    class ScoresXmlAccess
     {
         #region Fields
 
@@ -58,7 +58,7 @@ namespace BrickBreaker_2015.ViewModel
         /// Initializes a new instance of the <see cref="ScoresXmlAccessViewModel"/> class.
         /// </summary>
         /// <param name="pathstring">The path to the xml file.</param>
-        public ScoresXmlAccessViewModel()
+        public ScoresXmlAccess()
         {
             if (!File.Exists(@"..\..\Resources\Scores.xml"))
             {

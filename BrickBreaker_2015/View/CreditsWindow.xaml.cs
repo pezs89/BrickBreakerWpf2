@@ -1,4 +1,5 @@
-﻿using BrickBreaker_2015.ViewModel;
+﻿using BrickBreaker_2015.DataAccess;
+using BrickBreaker_2015.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace BrickBreaker_2015.View
             this.Height = optionsViewModel.VerticalScaleNumber;
             this.Width = optionsViewModel.HorizontalScaleNumber;
 
-            ScoresXmlAccessViewModel score = new ScoresXmlAccessViewModel();
+            ScoresXmlAccess score = new ScoresXmlAccess();
             this.DataContext = score;
 
         }

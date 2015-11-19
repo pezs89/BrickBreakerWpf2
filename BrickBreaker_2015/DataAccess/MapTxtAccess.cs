@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BrickBreaker_2015.ViewModel
+namespace BrickBreaker_2015.DataAccess
 {
     /// <summary>
     /// Interaction logic for MapTxtAccess.
