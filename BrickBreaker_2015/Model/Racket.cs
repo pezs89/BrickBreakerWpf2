@@ -17,7 +17,7 @@ namespace BrickBreaker_2015.Model
     {
         #region Fields
 
-        const int move = 10;
+        const double move = 10;
 
         #endregion Fields
 

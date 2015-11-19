@@ -21,7 +21,7 @@ namespace BrickBreaker_2015.Model
 
         #region Constructors
 
-        public Brick(int posX, int posY, int width, int height)
+        public Brick(double posX, double posY, double width, double height)
             : base(posX, posY, width, height)
         { }
 
