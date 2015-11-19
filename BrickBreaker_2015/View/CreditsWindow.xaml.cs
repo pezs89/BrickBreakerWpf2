@@ -22,6 +22,16 @@ namespace BrickBreaker_2015.View
     /// </summary>
     public partial class CreditsWindow : Window
     {
+        #region Fields
+
+        // The options viewmodel.
+        private OptionsViewModel optionsViewModel;
+
+        // The highscores viewmodel.
+        private CreditsViewModel creditsViewModel;
+
+        #endregion Fields
+
         #region Constructors
 
         /// <summary>
@@ -31,11 +41,11 @@ namespace BrickBreaker_2015.View
         {
             InitializeComponent();
 
-            OptionsViewModel optionsViewModel = new OptionsViewModel();
+            optionsViewModel = new OptionsViewModel();
             this.Height = optionsViewModel.VerticalScaleNumber;
             this.Width = optionsViewModel.HorizontalScaleNumber;
 
-            CreditsViewModel creditsViewModel = new CreditsViewModel();
+            creditsViewModel = new CreditsViewModel();
             this.DataContext = creditsViewModel.LoadRawScores();
         }
 
