@@ -30,7 +30,7 @@ namespace BrickBreaker_2015.ViewModel
         private double verticalScaleNumber;
 
         // The options xml access layer.
-        private OptionsXmlAccess optionsXmlAccess = new OptionsXmlAccess(@"..\..\Resources\OptionsSettings.xml");
+        private OptionsXmlAccess optionsXmlAccess = new OptionsXmlAccess();
 
         // The changed field.
         private bool isChanged = false;

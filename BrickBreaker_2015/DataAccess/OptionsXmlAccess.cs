@@ -16,7 +16,7 @@ namespace BrickBreaker_2015.DataAccess
         #region Fields
 
         // The path to the xml file.
-        private string pathString;
+        private string pathString = @"..\..\Resources\OptionsSettings.xml";
 
         #endregion Fields
 
@@ -41,11 +41,8 @@ namespace BrickBreaker_2015.DataAccess
         /// <summary>
         /// Initializes a new instance of the <see cref="OptionsXmlAccess"/> class.
         /// </summary>
-        /// <param name="pathstring">The path to the xml file.</param>
-        public OptionsXmlAccess(string pathstring)
+        public OptionsXmlAccess()
         {
-            PathString = pathstring;
-
             try
             {
                 // If the file can't be found then make a new.

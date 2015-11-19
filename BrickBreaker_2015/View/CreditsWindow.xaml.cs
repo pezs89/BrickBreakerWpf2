@@ -36,8 +36,7 @@ namespace BrickBreaker_2015.View
             this.Width = optionsViewModel.HorizontalScaleNumber;
 
             ScoresXmlAccess score = new ScoresXmlAccess();
-            this.DataContext = score;
-
+            this.DataContext = score.LoadRawScores();
         }
 
         #endregion Constructors
