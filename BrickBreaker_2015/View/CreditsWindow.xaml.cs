@@ -35,8 +35,8 @@ namespace BrickBreaker_2015.View
             this.Height = optionsViewModel.VerticalScaleNumber;
             this.Width = optionsViewModel.HorizontalScaleNumber;
 
-            ScoresXmlAccess score = new ScoresXmlAccess();
-            this.DataContext = score.LoadRawScores();
+            CreditsViewModel creditsViewModel = new CreditsViewModel();
+            this.DataContext = creditsViewModel.LoadRawScores();
         }
 
         #endregion Constructors
