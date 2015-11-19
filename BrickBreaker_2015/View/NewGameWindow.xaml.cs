@@ -25,6 +25,9 @@ namespace BrickBreaker_2015.View
         // The options viewmodel.
         private OptionsViewModel optionsViewModel;
 
+        // The game viewmodel.
+        private NewGameViewModel newGameViewModel;
+
         #endregion Fields
 
         #region Constructors
@@ -36,9 +39,14 @@ namespace BrickBreaker_2015.View
         {
             InitializeComponent();
 
+            newGameViewModel = new NewGameViewModel();
             optionsViewModel = new OptionsViewModel();
             this.Height = optionsViewModel.VerticalScaleNumber;
             this.Width = optionsViewModel.HorizontalScaleNumber;
+
+            firstMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.FirstMapPath);
+            secondMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.SecondMapPath);
+            thirdMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.ThirdMapPath);
         }
 
         #endregion Constructors

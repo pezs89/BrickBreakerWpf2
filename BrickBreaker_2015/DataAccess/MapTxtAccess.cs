@@ -40,7 +40,7 @@ namespace BrickBreaker_2015.DataAccess
         /// <param name="brickWidth">The width of the bricks.</param>
         /// <param name="brickHeight">The height of the bricks.</param>
         /// <returns>The brick list or null.</returns>
-        private List<Brick> LoadMap(string pathString, double brickWidth, double brickHeight)
+        public List<Brick> LoadMap(string pathString, double brickWidth, double brickHeight)
         {
             try
             {
@@ -115,7 +115,7 @@ namespace BrickBreaker_2015.DataAccess
         /// </summary>
         /// <param name="pathString">The path to the txt file.</param>
         /// <returns>True if exists, false if not.</returns>
-        private bool FileExists(string pathString)
+        public bool FileExists(string pathString)
         {
             try
             {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BrickBreaker_2015.DataAccess;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,11 +17,60 @@ namespace BrickBreaker_2015.ViewModel
     {
         #region Fields
 
-        private OptionsViewModel optionsViewModel = new OptionsViewModel();
+        // The map txt access layer.
+        private MapTxtAccess mapTxtAccess;
+
+        // The options viewmodel.
+        private OptionsViewModel optionsViewModel;
+
+        // The path string of the first map.
+        private string firstMapPath;
+
+        // The path string of the second map.
+        private string secondMapPath;
+
+        // The path string of the third map.
+        private string thirdMapPath;
 
         #endregion Fields
 
         #region Properties
+
+        /// <summary>
+        /// Gets or sets the firstMapPath.
+        /// </summary>
+        /// <value>
+        /// The firstMapPath.
+        /// </value>
+        public string FirstMapPath
+        {
+            get { return firstMapPath; }
+            set { firstMapPath = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the secondMapPath.
+        /// </summary>
+        /// <value>
+        /// The secondMapPath.
+        /// </value>
+        public string SecondMapPath
+        {
+            get { return secondMapPath; }
+            set { secondMapPath = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the thirdMapPath.
+        /// </summary>
+        /// <value>
+        /// The thirdMapPath.
+        /// </value>
+        public string ThirdMapPath
+        {
+            get { return thirdMapPath; }
+            set { thirdMapPath = value; }
+        }
 
         public Racket Racket { get; set; }
 
@@ -33,9 +83,23 @@ namespace BrickBreaker_2015.ViewModel
         /// <summary>
         /// Initializes a new instance of the <see cref="NewGameViewModel"/> class.
         /// </summary>
-        public NewGameViewModel(double canvasSzelesseg, double canvasMagassag)
+        public NewGameViewModel()
         {
-            Racket = new Racket(canvasSzelesseg / 2 - 40, canvasMagassag - 40, 80, 10);
+            mapTxtAccess = new MapTxtAccess();
+            optionsViewModel = new OptionsViewModel();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NewGameViewModel"/> class.
+        /// </summary>
+        /// <param name="canvasWidth">The width of the canvas.</param>
+        /// <param name="canvasHeight">The height of the canvas.</param>
+        public NewGameViewModel(double canvasWidth, double canvasHeight)
+        {
+            mapTxtAccess = new MapTxtAccess();
+            optionsViewModel = new OptionsViewModel();
+
+            Racket = new Racket(canvasWidth / 2 - 40, canvasHeight - 40, 80, 10);
 
             BallList = new ObservableCollection<Ball>();
             BallList.Add(new Ball(0, 0, 20, 20, 5, 5));
@@ -44,6 +108,23 @@ namespace BrickBreaker_2015.ViewModel
         #endregion Constructors
 
         #region Methods
+
+        /// <summary>
+        /// Finds the map txt file by the given path.
+        /// </summary>
+        /// <param name="pathString">The map's path.</param>
+        /// <returns>True if the map exists, false if it doesn't.</returns>
+        public bool FindMap(string pathString)
+        {
+            try
+            {
+                return mapTxtAccess.FileExists(pathString);
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
         public void KeyUp(KeyEventArgs e)
         {
@@ -88,7 +169,7 @@ namespace BrickBreaker_2015.ViewModel
             }
         }
 
-        public void UtoMozgat(Direction direction)
+        public void UtoMozgat(Racket.Direction direction)
         {
             Racket.Move(direction);
         }
