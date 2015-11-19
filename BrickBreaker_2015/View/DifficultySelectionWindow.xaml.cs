@@ -20,6 +20,13 @@ namespace BrickBreaker_2015.View
     /// </summary>
     public partial class DifficultySelectionWindow : Window
     {
+        #region Fields
+
+        // The options viewmodel.
+        private OptionsViewModel optionsViewModel;
+
+        #endregion Fields
+
         #region Constructors
 
         /// <summary>
@@ -29,7 +36,7 @@ namespace BrickBreaker_2015.View
         {
             InitializeComponent();
 
-            OptionsViewModel optionsViewModel = new OptionsViewModel();
+            optionsViewModel = new OptionsViewModel();
             this.Height = optionsViewModel.VerticalScaleNumber;
             this.Width = optionsViewModel.HorizontalScaleNumber;
         }
@@ -45,7 +52,11 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void EasyButton_Click(object sender, RoutedEventArgs e)
         {
-
+            optionsViewModel.OptionModel.Difficulty = 1;
+            optionsViewModel.SaveToXml();
+            GamePlayWindow childWindow = new GamePlayWindow();
+            this.Close();
+            childWindow.ShowDialog();
         }
 
         /// <summary>
@@ -55,10 +66,11 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void NormalButton_Click(object sender, RoutedEventArgs e)
         {
+            optionsViewModel.OptionModel.Difficulty = 2;
+            optionsViewModel.SaveToXml();
             GamePlayWindow childWindow = new GamePlayWindow();
             this.Close();
             childWindow.ShowDialog();
-            
         }
 
         /// <summary>
@@ -68,7 +80,11 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void HardButton_Click(object sender, RoutedEventArgs e)
         {
-
+            optionsViewModel.OptionModel.Difficulty = 3;
+            optionsViewModel.SaveToXml();
+            GamePlayWindow childWindow = new GamePlayWindow();
+            this.Close();
+            childWindow.ShowDialog();
         }
 
         #endregion Methods

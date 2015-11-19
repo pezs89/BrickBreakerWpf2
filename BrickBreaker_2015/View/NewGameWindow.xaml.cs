@@ -20,6 +20,13 @@ namespace BrickBreaker_2015.View
     /// </summary>
     public partial class NewGameWindow : Window
     {
+        #region Fields
+
+        // The options viewmodel.
+        private OptionsViewModel optionsViewModel;
+
+        #endregion Fields
+
         #region Constructors
 
         /// <summary>
@@ -29,7 +36,7 @@ namespace BrickBreaker_2015.View
         {
             InitializeComponent();
 
-            OptionsViewModel optionsViewModel = new OptionsViewModel();
+            optionsViewModel = new OptionsViewModel();
             this.Height = optionsViewModel.VerticalScaleNumber;
             this.Width = optionsViewModel.HorizontalScaleNumber;
         }
@@ -45,6 +52,8 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void firstMap_Diff_Click(object sender, RoutedEventArgs e)
         {
+            optionsViewModel.OptionModel.MapNumber = 1;
+            optionsViewModel.SaveToXml();
             DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
             this.Close();
             childWindow.ShowDialog();
@@ -57,6 +66,8 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void secondMap_Diff_Click(object sender, RoutedEventArgs e)
         {
+            optionsViewModel.OptionModel.MapNumber = 2;
+            optionsViewModel.SaveToXml();
             DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
             this.Close();
             childWindow.ShowDialog();
@@ -69,6 +80,8 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void thirdMap_Diff_Click(object sender, RoutedEventArgs e)
         {
+            optionsViewModel.OptionModel.MapNumber = 3;
+            optionsViewModel.SaveToXml();
             DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
             this.Close();
             childWindow.ShowDialog();

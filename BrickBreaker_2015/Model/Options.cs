@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Linq;
 
-
 namespace BrickBreaker_2015.Model
 {
     /// <summary>
@@ -39,6 +38,12 @@ namespace BrickBreaker_2015.Model
 
         // The keyboard enabled field of the Options class.
         private bool isKeyboardEnabled;
+
+        // The difficulty of the game.
+        private int difficulty;
+
+        // The number of the map.
+        private int mapNumber;
 
         #endregion Fields
 
@@ -140,7 +145,29 @@ namespace BrickBreaker_2015.Model
             set { isSoundEnabled = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the difficulty.
+        /// </summary>
+        /// <value>
+        /// The difficulty.
+        /// </value>
+        public int Difficulty
+        {
+            get { return difficulty; }
+            set { difficulty = value; }
+        }
 
+        /// <summary>
+        /// Gets or sets the mapNumber.
+        /// </summary>
+        /// <value>
+        /// The mapNumber.
+        /// </value>
+        public int MapNumber
+        {
+            get { return mapNumber; }
+            set { mapNumber = value; }
+        }
 
         #endregion Properties
 
@@ -150,8 +177,7 @@ namespace BrickBreaker_2015.Model
         /// Initializes a new instance of the <see cref="Options"/> class.
         /// </summary>
         public Options()
-        {
-        }
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Options"/> class.
@@ -164,7 +190,9 @@ namespace BrickBreaker_2015.Model
         /// <param name="isMouseEnabled">The isMouseEnabled field.</param>
         /// <param name="isSoundEnabled">The isSoundEnabled field.</param>
         /// <param name="isKeyboardEnabled">The isKeyboardEnabled field.</param>
-        public Options(string resolution, string leftMove, string rightMove, string pauseButton, string fireButton, bool isMouseEnabled, bool isSoundEnabled, bool isKeyboardEnabled)
+        /// <param name="difficulty">The difficulty field.</param>
+        /// <param name="mapNumber">The mapNumber field.</param>
+        public Options(string resolution, string leftMove, string rightMove, string pauseButton, string fireButton, bool isMouseEnabled, bool isSoundEnabled, bool isKeyboardEnabled, int difficulty, int mapNumber)
         {
             Resolution = resolution;
             LeftMove = leftMove;
@@ -174,6 +202,8 @@ namespace BrickBreaker_2015.Model
             IsMouseEnabled = isMouseEnabled;
             IsSoundEnabled = isSoundEnabled;
             IsKeyboardEnabled = isKeyboardEnabled;
+            Difficulty = difficulty;
+            MapNumber = mapNumber;
         }
 
         #endregion Constructors

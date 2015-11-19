@@ -26,6 +26,9 @@ namespace BrickBreaker_2015.View
         // The game ViewModel.
         private NewGameViewModel newGameViewModel;
 
+        // The options ViewModel.
+        private OptionsViewModel optionsViewModel;
+
         // The dispacher timer.
         private DispatcherTimer timer;
 
@@ -39,6 +42,16 @@ namespace BrickBreaker_2015.View
         public GamePlayWindow()
         {
             InitializeComponent();
+
+            newGameViewModel = new NewGameViewModel(canvas.ActualWidth, canvas.ActualHeight);
+            optionsViewModel = new OptionsViewModel();
+
+            this.DataContext = newGameViewModel;
+
+            timer = new DispatcherTimer();
+            timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
+            timer.Tick += Timer_Tick;
+            timer.Start();
         }
 
         #endregion Constructors
@@ -52,14 +65,7 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            newGameViewModel = new NewGameViewModel((int)canvas.ActualWidth, (int)canvas.ActualHeight);
-
-            this.DataContext = newGameViewModel;
-
-            timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
-            timer.Tick += Timer_Tick;
-            timer.Start();
+            
         }
 
         /// <summary>
