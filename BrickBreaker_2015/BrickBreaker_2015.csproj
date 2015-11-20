@@ -57,6 +57,7 @@
     </ApplicationDefinition>
     <Compile Include="Model\Ball.cs" />
     <Compile Include="Model\Bindable.cs" />
+    <Compile Include="Model\Bonus.cs" />
     <Compile Include="Model\Brick.cs" />
     <Compile Include="Model\HighScoreModel.cs" />
     <Compile Include="Model\MainObject.cs" />
