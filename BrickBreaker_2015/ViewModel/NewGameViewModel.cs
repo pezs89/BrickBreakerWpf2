@@ -102,7 +102,7 @@ namespace BrickBreaker_2015.ViewModel
             Racket = new Racket(canvasWidth / 2 - 40, canvasHeight - 40, 80, 10);
 
             BallList = new ObservableCollection<Ball>();
-            BallList.Add(new Ball(0, 0, 20, 20, 5, 5));
+            BallList.Add(new Ball(0, 0, 20, 20, 5, 5, Ball.BallsType.Normal, @"..\..\Resources\Media\Ball\normalball.jpg"));
         }
 
         #endregion Constructors

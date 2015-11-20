@@ -19,9 +19,62 @@ namespace BrickBreaker_2015.Model
         // The ball's horizontal movement.
         private double horizontalMovement;
 
+        // The type of the ball.
+        private BallsType ballType;
+
+        // Shows if the ball is in move.
+        private bool ballInMove;
+
+        // The image of the ball.
+        private string ballImage;
+
+        // The types of the balls.
+        public enum BallsType
+        {
+            Normal,
+            Hard,
+            Steel
+        }
+
         #endregion Fields
 
         #region Properties
+
+        /// <summary>
+        /// Gets or sets the ballImage.
+        /// </summary>
+        /// <value>
+        /// The ballImage.
+        /// </value>
+        public string BallImage
+        {
+            get { return ballImage; }
+            set { ballImage = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the ballType.
+        /// </summary>
+        /// <value>
+        /// The ballType.
+        /// </value>
+        public BallsType BallType
+        {
+            get { return ballType; }
+            set { ballType = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the ballInMove.
+        /// </summary>
+        /// <value>
+        /// The ballInMove.
+        /// </value>
+        public bool BallInMove
+        {
+            get { return ballInMove; }
+            set { ballInMove = value; }
+        }
 
         /// <summary>
         /// Gets or sets the horizontalMovement.
@@ -51,16 +104,45 @@ namespace BrickBreaker_2015.Model
 
         #region Constructors
 
-        public Ball(double posX, double posY, double width, double height, double horizontalMovement, double verticalMovement)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Ball"/> class.
+        /// </summary>
+        /// <param name="posX">The x position of the ball.</param>
+        /// <param name="posY">The y position of the ball.</param>
+        /// <param name="width">The width of the ball.</param>
+        /// <param name="height">The height of the ball.</param>
+        /// <param name="horizontalMovement">The horizontal movement of the ball.</param>
+        /// <param name="verticalMovement">The vertical movement of the ball.</param>
+        /// <param name="ballType">The type of the ball.</param>
+        /// <param name="ballImage">The image of the ball.</param>
+        public Ball(double posX, double posY, double width, double height, double horizontalMovement, double verticalMovement, BallsType ballType, string ballImage)
             : base(posX, posY, width, height)
         {
             HorizontalMovement = horizontalMovement;
             VerticalMovement = verticalMovement;
+            BallType = ballType;
+            BallImage = ballImage;
         }
 
         #endregion Constructors
 
         #region Methods
+        
+        /// <summary>
+        /// Moves the ball.
+        /// </summary>
+        /// <param name="ballSpeed">The spedd of the ball.</param>
+        public void Move(double ballSpeed)
+        {
+            area.X += VerticalMovement * ballSpeed;
+            area.Y += HorizontalMovement * ballSpeed;
+        }
+
+
+        public void Collision()
+        {
+
+        }
 
         public void Mozog(double canvasWidth, double canvasHeight, Racket racket)
         {
