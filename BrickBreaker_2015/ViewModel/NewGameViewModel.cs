@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BrickBreaker_2015.Model;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace BrickBreaker_2015.ViewModel
 {
@@ -17,11 +18,17 @@ namespace BrickBreaker_2015.ViewModel
     {
         #region Fields
 
+        #region ViewModels
+
         // The map txt access layer.
         private MapTxtAccess mapTxtAccess;
 
         // The options viewmodel.
         private OptionsViewModel optionsViewModel;
+
+        #endregion ViewModels
+
+        #region MapPaths
 
         // The path string of the first map.
         private string firstMapPath = @"..\..\Resources\Maps\FirstMap.txt";
@@ -31,6 +38,99 @@ namespace BrickBreaker_2015.ViewModel
 
         // The path string of the third map.
         private string thirdMapPath = @"..\..\Resources\Maps\ThirdMap.txt";
+
+        #endregion MapPaths
+
+        #region GameObjects
+
+        // The list of main objects.
+        private List<MainObject> gameObjectList;
+
+        // The list of balls.
+        private List<Ball> ballList;
+
+        // The list of bricks.
+        private List<Brick> brickList;
+
+        // The list of rackets.
+        private List<Racket> racketList;
+
+        // The list of bonuses.
+        private List<Bonus> bonusList;
+
+        #endregion GameObjects
+
+        #region GameFunctionValues
+
+        #region Ball
+
+        // The speed of the ball.
+        private double ballSpeed = 0;
+
+        // The radius of the ball.
+        private double ballRadius = 0;
+
+        // The horizontal movement of the ball.
+        private double ballHorizontalMovement = 0;
+
+        // The vertical movement of the ball.
+        private double ballVertialMovement = 0;
+
+        #endregion Ball
+
+        #region Bonus
+
+        // The speed of the bonus.
+        private double bonusSpeed = 0;
+
+        // The width of the bonus.
+        private double bonusWidth = 0;
+
+        // The height of the bonus.
+        private double bonusHeight = 0;
+
+        #endregion Bonus
+
+        #region Brick
+
+        // The width of the brick.
+        private double brickWidth = 0;
+
+        // The height of the brick.
+        private double brickHeight = 0;
+
+        #endregion Brick
+
+        #region Racket
+
+        // The width of the racket.
+        private double racketWidth = 0;
+
+        // The height of the racket.
+        private double racketHeight = 0;
+
+        // The speed of the racket.
+        private double racketSpeed = 0;
+
+        // The minimum size of the racket.
+        private double racketMinSize = 0;
+
+        // The maximum size of the racket.
+        private double racketMaxSize = 0;
+
+        #endregion Racket
+
+        #endregion GameFunctionValues
+
+        #region GameMechanicsValues
+
+        // The score point of the player.
+        private int playerScorePoint = 0;
+
+        // The timer.
+        private DispatcherTimer timer;
+
+        #endregion GameMechanicsValues
 
         #endregion Fields
 
