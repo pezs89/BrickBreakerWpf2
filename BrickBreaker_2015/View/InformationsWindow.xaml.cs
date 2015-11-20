@@ -20,6 +20,13 @@ namespace BrickBreaker_2015.View
     /// </summary>
     public partial class InformationsWindow : Window
     {
+        #region Fields
+
+        // The options viewmodel.
+        private OptionsViewModel optionsViewModel;
+
+        #endregion Fields
+
         #region Constructors
 
         /// <summary>
@@ -29,7 +36,7 @@ namespace BrickBreaker_2015.View
         {
             InitializeComponent();
 
-            OptionsViewModel optionsViewModel = new OptionsViewModel();
+            optionsViewModel = new OptionsViewModel();
             this.Height = optionsViewModel.VerticalScaleNumber;
             this.Width = optionsViewModel.HorizontalScaleNumber;
 

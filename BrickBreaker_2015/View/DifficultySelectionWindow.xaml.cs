@@ -54,6 +54,7 @@ namespace BrickBreaker_2015.View
         {
             optionsViewModel.OptionModel.Difficulty = 1;
             optionsViewModel.SaveToXml();
+
             GamePlayWindow childWindow = new GamePlayWindow();
             this.Close();
             childWindow.ShowDialog();
@@ -68,6 +69,7 @@ namespace BrickBreaker_2015.View
         {
             optionsViewModel.OptionModel.Difficulty = 2;
             optionsViewModel.SaveToXml();
+
             GamePlayWindow childWindow = new GamePlayWindow();
             this.Close();
             childWindow.ShowDialog();
@@ -82,6 +84,7 @@ namespace BrickBreaker_2015.View
         {
             optionsViewModel.OptionModel.Difficulty = 3;
             optionsViewModel.SaveToXml();
+
             GamePlayWindow childWindow = new GamePlayWindow();
             this.Close();
             childWindow.ShowDialog();

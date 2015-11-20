@@ -15,6 +15,7 @@ namespace BrickBreaker_2015.Model
     public class Options
     {
         #region Fields
+
         // The resolution field of the Options class.
         private string resolution;
 

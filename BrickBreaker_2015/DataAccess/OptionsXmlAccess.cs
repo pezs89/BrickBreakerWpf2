@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BrickBreaker_2015.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -77,7 +78,7 @@ namespace BrickBreaker_2015.DataAccess
         /// Loads the items from the options xml file.
         /// </summary>
         /// <returns>The list of highscore items or null.</returns>
-        public Model.Options LoadOptions()
+        public Options LoadOptions()
         {
             try
             {
@@ -86,7 +87,7 @@ namespace BrickBreaker_2015.DataAccess
                 var readDataFromXml = highscoresFromXml.Descendants("option");
 
                 // Get the items from the options xml file.
-                Model.Options returnValue = new Model.Options();
+                Options returnValue = new Options();
                 var fromXml = from x in readDataFromXml
                               select x;
 
@@ -101,6 +102,8 @@ namespace BrickBreaker_2015.DataAccess
                     returnValue.RightMove = (string)oneElement.Element("rightkey");
                     returnValue.IsKeyboardEnabled = (bool)oneElement.Element("keyboard");
                     returnValue.IsSoundEnabled = (bool)oneElement.Element("sound");
+                    returnValue.MapNumber = (int)oneElement.Element("map");
+                    returnValue.Difficulty = (int)oneElement.Element("difficulty");
                 }
 
                 return returnValue;
@@ -115,7 +118,7 @@ namespace BrickBreaker_2015.DataAccess
         /// Updates the items in the options xml file.
         /// </summary>
         /// <param name="options">The options.</param>
-        public void SaveOptions(Model.Options options)
+        public void SaveOptions(Options options)
         {
             try
             {
@@ -140,6 +143,8 @@ namespace BrickBreaker_2015.DataAccess
                         fromXml.Single().Element("mouse").Value = options.IsMouseEnabled.ToString();
                         fromXml.Single().Element("keyboard").Value = options.IsKeyboardEnabled.ToString();
                         fromXml.Single().Element("sound").Value = options.IsSoundEnabled.ToString();
+                        fromXml.Single().Element("map").Value = options.MapNumber.ToString();
+                        fromXml.Single().Element("difficulty").Value = options.Difficulty.ToString();
                     }
 
                     // Update the items in the options xml file.

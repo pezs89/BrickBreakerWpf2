@@ -62,6 +62,7 @@ namespace BrickBreaker_2015.View
         {
             optionsViewModel.OptionModel.MapNumber = 1;
             optionsViewModel.SaveToXml();
+
             DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
             this.Close();
             childWindow.ShowDialog();
@@ -76,6 +77,7 @@ namespace BrickBreaker_2015.View
         {
             optionsViewModel.OptionModel.MapNumber = 2;
             optionsViewModel.SaveToXml();
+
             DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
             this.Close();
             childWindow.ShowDialog();
@@ -90,10 +92,10 @@ namespace BrickBreaker_2015.View
         {
             optionsViewModel.OptionModel.MapNumber = 3;
             optionsViewModel.SaveToXml();
+
             DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
             this.Close();
             childWindow.ShowDialog();
-            
         }
 
         /// <summary>

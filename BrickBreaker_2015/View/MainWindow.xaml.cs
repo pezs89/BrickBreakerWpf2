@@ -22,6 +22,13 @@ namespace BrickBreaker_2015
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Fields
+
+        // The options viewmodel.
+        private OptionsViewModel optionsViewModel;
+
+        #endregion Fields
+
         #region Constructors
 
         /// <summary>
@@ -31,7 +38,7 @@ namespace BrickBreaker_2015
         {
             InitializeComponent();
 
-            OptionsViewModel optionsViewModel = new OptionsViewModel();
+            optionsViewModel = new OptionsViewModel();
             this.Height = optionsViewModel.VerticalScaleNumber;
             this.Width = optionsViewModel.HorizontalScaleNumber;
         }
@@ -50,7 +57,6 @@ namespace BrickBreaker_2015
             NewGameWindow childWindow = new NewGameWindow();
             this.Close();
             childWindow.ShowDialog();
-            
         }
 
         /// <summary>
@@ -63,8 +69,6 @@ namespace BrickBreaker_2015
             OptionsWindow childWindow = new OptionsWindow();
             this.Close();
             childWindow.ShowDialog();
-            
-
         }
 
         /// <summary>
@@ -77,7 +81,6 @@ namespace BrickBreaker_2015
             CreditsWindow childWindow = new CreditsWindow();
             this.Close();
             childWindow.ShowDialog();
-            
         }
 
         /// <summary>

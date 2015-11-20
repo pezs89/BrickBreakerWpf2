@@ -30,7 +30,7 @@ namespace BrickBreaker_2015.ViewModel
         private double verticalScaleNumber;
 
         // The options xml access layer.
-        private OptionsXmlAccess optionsXmlAccess = new OptionsXmlAccess();
+        private OptionsXmlAccess optionsXmlAccess;
 
         // The changed field.
         private bool isChanged = false;
@@ -94,6 +94,7 @@ namespace BrickBreaker_2015.ViewModel
         public OptionsViewModel()
         {
             OptionModel = new Options();
+            optionsXmlAccess = new OptionsXmlAccess();
             OptionModel = optionsXmlAccess.LoadOptions();
 
             switch (OptionModel.Resolution)
@@ -155,7 +156,6 @@ namespace BrickBreaker_2015.ViewModel
             
             return true;
         }
-
 
         /// <summary>
         /// Sets a string to the control key bindings for the keys.
