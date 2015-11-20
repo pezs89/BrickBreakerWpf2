@@ -44,19 +44,19 @@ namespace BrickBreaker_2015.ViewModel
         #region GameObjects
 
         // The list of main objects.
-        private List<MainObject> gameObjectList;
+        private ObservableCollection<MainObject> gameObjectList;
 
         // The list of balls.
-        private List<Ball> ballList;
+        private ObservableCollection<Ball> ballList;
 
         // The list of bricks.
-        private List<Brick> brickList;
+        private ObservableCollection<Brick> brickList;
 
         // The list of rackets.
-        private List<Racket> racketList;
+        private ObservableCollection<Racket> racketList;
 
         // The list of bonuses.
-        private List<Bonus> bonusList;
+        private ObservableCollection<Bonus> bonusList;
 
         #endregion GameObjects
 
@@ -69,6 +69,12 @@ namespace BrickBreaker_2015.ViewModel
 
         // The radius of the ball.
         private double ballRadius = 0;
+
+        // The minimum radius of the ball.
+        private double ballMinRadius = 0;
+
+        // The maximum radius of the ball.
+        private double ballMaxRadius = 0;
 
         // The horizontal movement of the ball.
         private double ballHorizontalMovement = 0;
@@ -117,6 +123,9 @@ namespace BrickBreaker_2015.ViewModel
 
         // The maximum size of the racket.
         private double racketMaxSize = 0;
+
+        // The size to modify the racket.
+        private double racketDifference = 0;
 
         #endregion Racket
 
@@ -172,11 +181,11 @@ namespace BrickBreaker_2015.ViewModel
             set { thirdMapPath = value; }
         }
 
+        #endregion Properties
+
         public Racket Racket { get; set; }
 
         public ObservableCollection<Ball> BallList { get; set; }
-
-        #endregion Properties
 
         #region Constructors
 
@@ -199,15 +208,31 @@ namespace BrickBreaker_2015.ViewModel
             mapTxtAccess = new MapTxtAccess();
             optionsViewModel = new OptionsViewModel();
 
-            Racket = new Racket(canvasWidth / 2 - 40, canvasHeight - 40, 80, 10);
-
-            BallList = new ObservableCollection<Ball>();
-            BallList.Add(new Ball(0, 0, 20, 20, 5, 5, Ball.BallsType.Normal, @"..\..\Resources\Media\Ball\normalball.jpg"));
+            PresetValues(canvasWidth, canvasHeight);
         }
 
         #endregion Constructors
 
         #region Methods
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="canvasWidth">The width of the canvas.</param>
+        /// <param name="canvasHeight">The height of the canvas.</param>
+        public void PresetValues(double canvasWidth, double canvasHeight)
+        {
+            gameObjectList = new ObservableCollection<MainObject>();
+            ballList = new ObservableCollection<Ball>();
+            brickList = new ObservableCollection<Brick>();
+            racketList = new ObservableCollection<Racket>();
+            bonusList = new ObservableCollection<Bonus>();
+
+            Racket = new Racket(canvasWidth / 2 - 40, canvasHeight - 40, 80, 10);
+
+            BallList = new ObservableCollection<Ball>();
+            BallList.Add(new Ball(0, 0, 20, 20, 5, 5, Ball.BallsType.Normal, @"..\..\Resources\Media\Ball\normalball.jpg"));
+        }
 
         /// <summary>
         /// Finds the map txt file by the given path.
