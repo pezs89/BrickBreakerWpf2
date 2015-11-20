@@ -1,4 +1,5 @@
 ﻿using BrickBreaker_2015.DataAccess;
+using BrickBreaker_2015.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace BrickBreaker_2015.ViewModel
     /// <summary>
     /// Interaction logic for CreditsViewModel.
     /// </summary>
-    class CreditsViewModel
+    class CreditsViewModel : Bindable
     {
         #region Fields
 

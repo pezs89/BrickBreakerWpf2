@@ -1,20 +1,22 @@
 ﻿using BrickBreaker_2015.DataAccess;
+using BrickBreaker_2015.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BrickBreaker_2015.Model;
 using System.Collections.ObjectModel;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using System.Windows.Media;
 
 namespace BrickBreaker_2015.ViewModel
 {
     /// <summary>
     /// Interaction logic for NewGameViewModel.
     /// </summary>
-    class NewGameViewModel
+    class NewGameViewModel : Bindable
     {
         #region Fields
 
@@ -38,6 +40,12 @@ namespace BrickBreaker_2015.ViewModel
 
         // The path string of the third map.
         private string thirdMapPath = @"..\..\Resources\Maps\ThirdMap.txt";
+
+        // The path string of the fourth map.
+        private string forthMapPath = @"..\..\Resources\Maps\FourthMap.txt";
+
+        // The path string of the fifth map.
+        private string fifthMapPath = @"..\..\Resources\Maps\FifthMap.txt";
 
         #endregion MapPaths
 
@@ -65,67 +73,67 @@ namespace BrickBreaker_2015.ViewModel
         #region Ball
 
         // The speed of the ball.
-        private double ballSpeed = 0;
+        private double ballSpeed;
 
         // The radius of the ball.
-        private double ballRadius = 0;
+        private double ballRadius;
 
         // The minimum radius of the ball.
-        private double ballMinRadius = 0;
+        private double ballMinRadius;
 
         // The maximum radius of the ball.
-        private double ballMaxRadius = 0;
+        private double ballMaxRadius;
 
         // The horizontal movement of the ball.
-        private double ballHorizontalMovement = 0;
+        private double ballHorizontalMovement;
 
         // The vertical movement of the ball.
-        private double ballVertialMovement = 0;
+        private double ballVerticalMovement;
 
         #endregion Ball
 
         #region Bonus
 
         // The speed of the bonus.
-        private double bonusSpeed = 0;
+        private double bonusSpeed;
 
         // The width of the bonus.
-        private double bonusWidth = 0;
+        private double bonusWidth;
 
         // The height of the bonus.
-        private double bonusHeight = 0;
+        private double bonusHeight;
 
         #endregion Bonus
 
         #region Brick
 
         // The width of the brick.
-        private double brickWidth = 0;
+        private double brickWidth;
 
         // The height of the brick.
-        private double brickHeight = 0;
+        private double brickHeight;
 
         #endregion Brick
 
         #region Racket
 
         // The width of the racket.
-        private double racketWidth = 0;
+        private double racketWidth;
 
         // The height of the racket.
-        private double racketHeight = 0;
+        private double racketHeight;
 
         // The speed of the racket.
-        private double racketSpeed = 0;
+        private double racketSpeed;
 
         // The minimum size of the racket.
-        private double racketMinSize = 0;
+        private double racketMinSize;
 
         // The maximum size of the racket.
-        private double racketMaxSize = 0;
+        private double racketMaxSize;
 
         // The size to modify the racket.
-        private double racketDifference = 0;
+        private double racketDifference;
 
         #endregion Racket
 
@@ -133,11 +141,53 @@ namespace BrickBreaker_2015.ViewModel
 
         #region GameMechanicsValues
 
-        // The score point of the player.
-        private int playerScorePoint = 0;
+        // The maximum number of maps.
+        private int mapMaxNumber;
 
-        // The timer.
-        private DispatcherTimer timer;
+        // The score point of the player.
+        private int playerScorePoint;
+
+        // The players life count.
+        private int playerLife;
+
+        // The path of the current map;
+        private string currentMapPath;
+
+        // Shows if the game is paused.
+        private bool gameIsPaused;
+
+        // Shows if the game is over.
+        private bool gameIsOver;
+
+        // Shows if the game is in session.
+        private bool gameInSession;
+
+        // Plays sound.
+        private MediaPlayer mediaPlayer;
+
+        // The scale number for speed.
+        private double speedScale;
+
+        // the examination proximity of the ball.
+        private double ballExaminationProximity;
+
+        // The status of the game when over.
+        private string gameOverStatus;
+
+        // The number to scale the objects with horizontally.
+        private double horizontalScaleNumber;
+
+        // The number to scale the objects with vartically.
+        private double verticalScaleNumber;
+
+        // A random.
+        private Random rnd;
+
+        // The width of the canvas.
+        private double canvasWidth;
+
+        // The height of the canvas.
+        private double canvasHeight;
 
         #endregion GameMechanicsValues
 
@@ -181,11 +231,91 @@ namespace BrickBreaker_2015.ViewModel
             set { thirdMapPath = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the forthMapPath.
+        /// </summary>
+        /// <value>
+        /// The forthMapPath.
+        /// </value>
+        public string ForthMapPath
+        {
+            get { return forthMapPath; }
+            set { forthMapPath = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the fifthMapPath.
+        /// </summary>
+        /// <value>
+        /// The fifthMapPath.
+        /// </value>
+        public string FifthMapPath
+        {
+            get { return fifthMapPath; }
+            set { fifthMapPath = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the ballList.
+        /// </summary>
+        /// <value>
+        /// The ballList.
+        /// </value>
+        public ObservableCollection<Ball> BallList
+        {
+            get { return ballList; }
+            set { ballList = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the racketList.
+        /// </summary>
+        /// <value>
+        /// The racketList.
+        /// </value>
+        public ObservableCollection<Racket> RacketList
+        {
+            get { return racketList; }
+            set { racketList = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the brickList.
+        /// </summary>
+        /// <value>
+        /// The brickList.
+        /// </value>
+        public ObservableCollection<Brick> BrickList
+        {
+            get { return brickList; }
+            set { brickList = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the bonusList.
+        /// </summary>
+        /// <value>
+        /// The bonusList.
+        /// </value>
+        public ObservableCollection<Bonus> BonusList
+        {
+            get { return bonusList; }
+            set { bonusList = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the gameObjectList.
+        /// </summary>
+        /// <value>
+        /// The gameObjectList.
+        /// </value>
+        public ObservableCollection<MainObject> GameObjectList
+        {
+            get { return gameObjectList; }
+            set { gameObjectList = value; }
+        }
+
         #endregion Properties
-
-        public Racket Racket { get; set; }
-
-        public ObservableCollection<Ball> BallList { get; set; }
 
         #region Constructors
 
@@ -208,7 +338,16 @@ namespace BrickBreaker_2015.ViewModel
             mapTxtAccess = new MapTxtAccess();
             optionsViewModel = new OptionsViewModel();
 
-            PresetValues(canvasWidth, canvasHeight);
+            this.canvasWidth = canvasWidth;
+            this.canvasHeight = canvasHeight;
+            PresetValues();
+
+            //// Show the scorepoints.
+            //ScoreLabel.Content = "Score: " + scoreValue;
+            //// Show the lifepoints.
+            //LifeLabel.Content = "Life: " + lifePoint;
+            //// Show the time.
+            //TimeLabel.Content = "Time: " + timeOfGame.ToString("HH:mm:ss");
         }
 
         #endregion Constructors
@@ -218,20 +357,152 @@ namespace BrickBreaker_2015.ViewModel
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="canvasWidth">The width of the canvas.</param>
-        /// <param name="canvasHeight">The height of the canvas.</param>
-        public void PresetValues(double canvasWidth, double canvasHeight)
+        private void PresetValues()
         {
+            #region PresetValues
+
+            playerLife = 3;
+            playerScorePoint = 0;
+            gameInSession = false;
+            gameIsPaused = false;
+            gameIsOver = false;
+            gameOverStatus = "";
+            currentMapPath = "";
+            bonusSpeed = 1;
+            mapMaxNumber = 5;
+            ballHorizontalMovement = 5;
+            ballVerticalMovement = 5;
+            racketSpeed = 10;
+            ballSpeed = 1;
+            speedScale = 1;
+            brickWidth = 27.7;
+            brickHeight = 8;
+            racketWidth = 80;
+            racketHeight = 8;
+            bonusWidth = 24;
+            bonusHeight = 24;
+            ballRadius = 5;
+            ballMinRadius = 3;
+            ballMaxRadius = 15;
+            ballExaminationProximity = 4;
+            horizontalScaleNumber = 1;
+            verticalScaleNumber = 1;
+            racketMaxSize = 160;
+            racketMinSize = 40;
+            racketDifference = 16;
+            mediaPlayer = new MediaPlayer();
+            rnd = new Random();
+
+            // Initialize the lists.
             gameObjectList = new ObservableCollection<MainObject>();
             ballList = new ObservableCollection<Ball>();
             brickList = new ObservableCollection<Brick>();
             racketList = new ObservableCollection<Racket>();
             bonusList = new ObservableCollection<Bonus>();
 
-            Racket = new Racket(canvasWidth / 2 - 40, canvasHeight - 40, 80, 10);
+            #endregion PresetValues
 
-            BallList = new ObservableCollection<Ball>();
-            BallList.Add(new Ball(0, 0, 20, 20, 5, 5, Ball.BallsType.Normal, @"..\..\Resources\Media\Ball\normalball.jpg"));
+            #region SetScaling
+
+            switch (GetOption().Resolution)
+            {
+                case "580x420":
+                    horizontalScaleNumber = 1;
+                    verticalScaleNumber = 1;
+                    break;
+                case "640x480":
+                    horizontalScaleNumber = 1.25;
+                    verticalScaleNumber = 1.25;
+                    break;
+                case "800x600":
+                    horizontalScaleNumber = 1.6;
+                    verticalScaleNumber = 1.6;
+                    break;
+            }
+
+            switch (GetOption().Difficulty)
+            {
+                case 1:
+                    speedScale = 1;
+                    break;
+                case 2:
+                    speedScale = 1.2;
+                    break;
+                case 3:
+                    speedScale = 1.4;
+                    break;
+            }
+
+            // Set the scaling.
+            bonusWidth *= horizontalScaleNumber;
+            bonusHeight *= verticalScaleNumber;
+            racketWidth *= horizontalScaleNumber;
+            racketHeight *= verticalScaleNumber;
+            brickWidth *= horizontalScaleNumber;
+            brickHeight *= verticalScaleNumber;
+            ballHorizontalMovement *= speedScale;
+            ballVerticalMovement *= speedScale;
+            ballRadius *= horizontalScaleNumber;
+            ballMinRadius *= horizontalScaleNumber;
+            ballMaxRadius *= horizontalScaleNumber;
+            bonusSpeed *= speedScale;
+            ballSpeed *= speedScale;
+            racketSpeed *= speedScale;
+            ballExaminationProximity *= horizontalScaleNumber;
+            racketMaxSize *= horizontalScaleNumber;
+            racketMinSize *= horizontalScaleNumber;
+            racketDifference *= horizontalScaleNumber;
+
+            #endregion SetScaling
+
+            #region MapSelection
+
+            switch (GetOption().MapNumber)
+            {
+                case 1:
+                    currentMapPath = firstMapPath;
+                    break;
+                case 2:
+                    currentMapPath = secondMapPath;
+                    break;
+                case 3:
+                    currentMapPath = thirdMapPath;
+                    break;
+                case 4:
+                    currentMapPath = forthMapPath;
+                    break;
+                case 5:
+                    currentMapPath = fifthMapPath;
+                    break;
+            }
+
+            #endregion MapSelection
+
+            #region FillLists
+
+            racketList.Add(new Racket(canvasWidth / 2 - racketWidth / 2, canvasHeight - racketHeight, racketWidth, racketHeight, @""));
+            racketList[0].Direction = Racket.Directions.Stay;
+            racketList[0].StickyRacket = false;
+            gameObjectList.Add(racketList[0]);
+            ballList.Add(new Ball(canvasWidth / 2 - ballRadius, canvasHeight - racketHeight - ballRadius * 2, ballRadius, ballRadius, ballHorizontalMovement, ballVerticalMovement, Ball.BallsType.Normal, @""));
+            ballList[0].BallInMove = false;
+            gameObjectList.Add(ballList[0]);
+            brickList = mapTxtAccess.LoadMap(currentMapPath, brickWidth, brickHeight);
+            if (brickList.Count > 0)
+            {
+                for (int i = 0; i < brickList.Count; i++)
+                {
+                    gameObjectList.Add(brickList[i]);
+                }
+            }
+
+            #endregion FillLists
+
+            #region SetValues
+
+            mediaPlayer.Open(new Uri(@"..\..\Resources\Media\Sounds\play_this.mp3", UriKind.Relative));
+
+            #endregion SetValues
         }
 
         /// <summary>
@@ -251,37 +522,73 @@ namespace BrickBreaker_2015.ViewModel
             }
         }
 
-        public void KeyUp(KeyEventArgs e)
+        /// <summary>
+        /// Adds a bonus.
+        /// </summary>
+        /// <param name="oneBrick">The brick.</param>
+        private void AddBonus(Brick oneBrick)
         {
+            string bonusImage = "";
+            Bonus.BonusesType type = Bonus.BonusesType.BallBigger;
 
-        }
-
-        public void KeyDown(KeyEventArgs e)
-        {
-            if (SpecKeys(e.Key) == GetOption().LeftMove)
+            switch (rnd.Next(1, 11))
             {
-                //racket.direction.left
+                case 1:
+                    type = Bonus.BonusesType.BallBigger;
+                    bonusImage = @"..\..\Resources\Media\Bonus\ballbigger.jpg";
+                    break;
+                case 2:
+                    type = Bonus.BonusesType.BallSmaller;
+                    bonusImage = @"..\..\Resources\Media\Bonus\ballsmaller.jpg";
+                    break;
+                case 3:
+                    type = Bonus.BonusesType.HardBall;
+                    bonusImage = @"..\..\Resources\Media\Bonus\hardball.jpg";
+                    break;
+                case 4:
+                    type = Bonus.BonusesType.LifeDown;
+                    bonusImage = @"..\..\Resources\Media\Bonus\lifedown.jpg";
+                    break;
+                case 5:
+                    type = Bonus.BonusesType.LifeUp;
+                    bonusImage = @"..\..\Resources\Media\Bonus\lifeup.jpg";
+                    break;
+                case 6:
+                    type = Bonus.BonusesType.NewBall;
+                    bonusImage = @"..\..\Resources\Media\Bonus\newball.jpg";
+                    break;
+                case 7:
+                    type = Bonus.BonusesType.RacketLengthen;
+                    bonusImage = @"..\..\Resources\Media\Bonus\racketlengthen.jpg";
+                    break;
+                case 8:
+                    type = Bonus.BonusesType.RacketShorten;
+                    bonusImage = @"..\..\Resources\Media\Bonus\racketshorten.jpg";
+                    break;
+                case 9:
+                    type = Bonus.BonusesType.SteelBall;
+                    bonusImage = @"..\..\Resources\Media\Bonus\steelball.jpg";
+                    break;
+                case 10:
+                    type = Bonus.BonusesType.StickyRacket;
+                    bonusImage = @"..\..\Resources\Media\Bonus\stickyracket.jpg";
+                    break;
             }
-            else if (SpecKeys(e.Key) == GetOption().RightMove)
+
+            Bonus bonus = new Bonus(oneBrick.Area.X + (oneBrick.Area.Width / 2) - (bonusWidth / 2), oneBrick.Area.Y + oneBrick.Area.Height, bonusHeight, bonusWidth, type, bonusImage);
+            bonus.ScorePoint = 5;
+            bonusList.Add(bonus);
+
+            if (bonus.Descend(bonusSpeed, canvasWidth, canvasHeight))
             {
-                //racket.direction.right
-            }
-            else
-            {
-                //racket.direction.stay
+                bonusList.Remove(bonus);
             }
         }
 
-        public void MouseMove(MouseEventArgs e)
-        {
-
-        }
-
-        public void MouseDown(MouseButtonEventArgs e)
-        {
-
-        }
-
+        /// <summary>
+        /// Gets the options.
+        /// </summary>
+        /// <returns>The options object or null.</returns>
         public Options GetOption()
         {
             try
@@ -294,31 +601,54 @@ namespace BrickBreaker_2015.ViewModel
             }
         }
 
-        public void UtoMozgat(Racket.Direction direction)
-        {
-            Racket.Move(direction);
-        }
+        #region KeyboardAndMouse
 
-        public void LabdaMozgat(double canvasSzelesseg, double canvasMagassag) //  összes labda!
+        #region MouseControls
+
+
+        public void MouseMove(Canvas sender, MouseEventArgs e)
         {
-            foreach (Ball labda in BallList)
+            if (e.GetPosition(sender).X != racketList[0].Area.X + racketList[0].Area.Width / 2)
             {
-                labda.Mozog(canvasSzelesseg, canvasMagassag, Racket);
+                
             }
         }
 
-        public bool Vege(double canvasMagassag)
+
+        public void MouseDown(MouseButtonEventArgs e)
         {
-            foreach (Ball labda in BallList)
+
+        }
+
+        #endregion MouseControls
+
+        #region KeyboardControls
+
+
+        public void KeyUp(KeyEventArgs e)
+        {
+            if ((SpecKeys(e.Key) == GetOption().LeftMove || SpecKeys(e.Key) == GetOption().RightMove) && racketList[0].Direction != Racket.Directions.Stay)
             {
-                if (labda.Area.Top > canvasMagassag)
-                {
-                    return true;
-                }
+                racketList[0].Direction = Racket.Directions.Stay;
+            }
+        }
+
+
+        public void KeyDown(KeyEventArgs e)
+        {
+            if (SpecKeys(e.Key) == GetOption().LeftMove && racketList[0].Direction != Racket.Directions.Left)
+            {
+                racketList[0].Direction = Racket.Directions.Left;
+            }
+            else if (SpecKeys(e.Key) == GetOption().RightMove && racketList[0].Direction != Racket.Directions.Right)
+            {
+                racketList[0].Direction = Racket.Directions.Right;
             }
 
-            return false;
+            racketList[0].KeyMove(racketSpeed, 0, 0);
         }
+
+        #endregion KeyboardControls
 
         /// <summary>
         /// Sets a string to the control key bindings for the keys.
@@ -432,6 +762,8 @@ namespace BrickBreaker_2015.ViewModel
 
             return retVal;
         }
+
+        #endregion KeyboardAndMouse
 
         #endregion Methods
     }

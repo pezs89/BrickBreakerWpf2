@@ -43,6 +43,8 @@ namespace BrickBreaker_2015.View
         {
             InitializeComponent();
 
+            //canvas.Background = new SolidColorBrush(Colors.White);
+
             newGameViewModel = new NewGameViewModel(canvas.ActualWidth, canvas.ActualHeight);
             optionsViewModel = new OptionsViewModel();
 
@@ -57,16 +59,6 @@ namespace BrickBreaker_2015.View
         #endregion Constructors
 
         #region Methods
-
-        /// <summary>
-        /// Handles the Loaded event of the Window control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            
-        }
 
         /// <summary>
         /// Handles the KeyDown event of the Window control.
@@ -95,7 +87,7 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
-            newGameViewModel.MouseMove(e);
+            newGameViewModel.MouseMove(canvas, e);
         }
 
         /// <summary>
@@ -115,7 +107,7 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void Timer_Tick(object sender, EventArgs e)
         {
-            newGameViewModel.LabdaMozgat((int)canvas.ActualWidth, (int)canvas.ActualHeight);
+            //newGameViewModel.LabdaMozgat((int)canvas.ActualWidth, (int)canvas.ActualHeight);
         }
 
         #endregion Methods

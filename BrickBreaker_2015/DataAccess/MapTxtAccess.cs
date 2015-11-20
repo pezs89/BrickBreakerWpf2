@@ -1,6 +1,7 @@
 ﻿using BrickBreaker_2015.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -40,7 +41,7 @@ namespace BrickBreaker_2015.DataAccess
         /// <param name="brickWidth">The width of the bricks.</param>
         /// <param name="brickHeight">The height of the bricks.</param>
         /// <returns>The brick list or null.</returns>
-        public List<Brick> LoadMap(string pathString, double brickWidth, double brickHeight)
+        public ObservableCollection<Brick> LoadMap(string pathString, double brickWidth, double brickHeight)
         {
             try
             {
@@ -48,6 +49,7 @@ namespace BrickBreaker_2015.DataAccess
                 {
                     double X = 0;
                     double Y = 0;
+                    ObservableCollection<Brick> returnValue = new ObservableCollection<Brick>();
 
                     // Open a connection to the txt file.
                     FileStream fs = new FileStream(pathString, FileMode.Open, FileAccess.Read, FileShare.None);
@@ -70,21 +72,25 @@ namespace BrickBreaker_2015.DataAccess
                                     Brick brick1 = new Brick(X, Y, brickHeight, brickWidth, Brick.BricksType.Easy, @"..\..\Resources\Media\Brick\easybrick.jpg");
                                     brick1.ScorePoint = 10;
                                     brick1.BreakNumber = 1;
+                                    returnValue.Add(brick1);
                                     break;
                                 case '2':
                                     Brick brick2 = new Brick(X, Y, brickHeight, brickWidth, Brick.BricksType.Medium, @"..\..\Resources\Media\Brick\mediumbrick.jpg");
                                     brick2.ScorePoint = 20;
                                     brick2.BreakNumber = 2;
+                                    returnValue.Add(brick2);
                                     break;
                                 case '3':
                                     Brick brick3 = new Brick(X, Y, brickHeight, brickWidth, Brick.BricksType.Hard, @"..\..\Resources\Media\Brick\hardbrick.jpg");
                                     brick3.ScorePoint = 30;
                                     brick3.BreakNumber = 5;
+                                    returnValue.Add(brick3);
                                     break;
                                 case '4':
                                     Brick brick4 = new Brick(X, Y, brickHeight, brickWidth, Brick.BricksType.Steel, @"..\..\Resources\Media\Brick\steelbrick.jpg");
                                     brick4.ScorePoint = 40;
                                     brick4.BreakNumber = 1;
+                                    returnValue.Add(brick4);
                                     break;
                             }
 
@@ -100,6 +106,8 @@ namespace BrickBreaker_2015.DataAccess
                     // Close the BinaryReader and the FileStream.
                     rd.Close();
                     fs.Close();
+
+                    return returnValue;
                 }
 
                 return null;
