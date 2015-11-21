@@ -535,12 +535,12 @@ namespace BrickBreaker_2015.ViewModel
             {
                 if (!string.IsNullOrEmpty(currentMapPath) && currentMapPath != "notfound")
                 {
-                    racketList.Add(new Racket(canvasWidth / 2 - racketWidth / 2, canvasHeight - racketHeight, racketWidth, racketHeight, @""));
+                    racketList.Add(new Racket(canvasWidth / 2 - racketWidth / 2, canvasHeight - racketHeight, racketWidth, racketHeight, @"..\..\Resources\Media\Racket\normalracket.jpg"));
                     racketList[0].Direction = Racket.Directions.Stay;
                     racketList[0].StickyRacket = false;
                     gameObjectList.Add(racketList[0]);
 
-                    ballList.Add(new Ball(canvasWidth / 2 - ballRadius, canvasHeight - racketHeight - ballRadius * 2, ballRadius * 2, ballRadius * 2, ballHorizontalMovement, ballVerticalMovement, Ball.BallsType.Normal, @""));
+                    ballList.Add(new Ball(canvasWidth / 2 - ballRadius, canvasHeight - racketHeight - ballRadius * 2, ballRadius * 2, ballRadius * 2, ballHorizontalMovement, ballVerticalMovement, Ball.BallsType.Normal, @"..\..\Resources\Media\Ball\normalball.jpg"));
                     ballList[0].BallInMove = false;
                     gameObjectList.Add(ballList[0]);
 
