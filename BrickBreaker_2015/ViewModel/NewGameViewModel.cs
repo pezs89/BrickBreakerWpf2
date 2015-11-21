@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Windows.Media;
+using System.Windows;
 
 namespace BrickBreaker_2015.ViewModel
 {
@@ -1510,7 +1511,7 @@ namespace BrickBreaker_2015.ViewModel
             // The mouse is a controller item and the game is not paused.
             if (GetOption().IsMouseEnabled && !gameIsPaused)
             {
-                // There are at least one racket.
+                // There is at least one racket.
                 if (racketList.Count > 0)
                 {
                     // Check each racket.
@@ -1519,7 +1520,7 @@ namespace BrickBreaker_2015.ViewModel
                         // Move the racket.
                         oneRacket.MouseMove(racketSpeed, canvasWidth, e.GetPosition(sender).X);
 
-                        // There are at least one ball.
+                        // There is at least one ball.
                         if (ballList.Count > 0)
                         {
                             // Check each ball.
@@ -1556,7 +1557,7 @@ namespace BrickBreaker_2015.ViewModel
                     gameInSession = true;
                 }
 
-                // There are at leat one ball.
+                // There is at least one ball.
                 if (ballList.Count > 0)
                 {
                     bool oneGo = false;
@@ -1588,17 +1589,25 @@ namespace BrickBreaker_2015.ViewModel
         /// <param name="e">The key event.</param>
         public void KeyUp(KeyEventArgs e)
         {
-            // The is a controller item.
+            // The keyboard is a controller item.
             if (GetOption().IsKeyboardEnabled)
             {
                 // The released key is one of the racket moving keys.
                 if (SpecKeys(e.Key) == GetOption().LeftMove || SpecKeys(e.Key) == GetOption().RightMove)
                 {
-                    // The racket's direction is not stay.
-                    if (racketList[0].Direction != Racket.Directions.Stay)
+                    // There is at least one racket.
+                    if (racketList.Count > 0)
                     {
-                        // The racket's direction change to stay.
-                        racketList[0].Direction = Racket.Directions.Stay;
+                        // Check each racket.
+                        foreach (Racket oneRacket in racketList)
+                        {
+                            // The racket's direction is not stay.
+                            if (oneRacket.Direction != Racket.Directions.Stay)
+                            {
+                                // The racket's direction change to stay.
+                                oneRacket.Direction = Racket.Directions.Stay;
+                            }
+                        }
                     }
                 }
             }
@@ -1611,130 +1620,152 @@ namespace BrickBreaker_2015.ViewModel
         /// <param name="dispatcherTimer">The timer.</param>
         public void KeyDown(KeyEventArgs e, DispatcherTimer dispatcherTimer)
         {
-            //if (e.Key == Key.Escape)
-            //{
-            //    // Pause the game and send message.
-            //    dispatcherTimer.Stop();
-            //    gameIsPaused = true;
-            //    TimeLabel.Content = "The game is paused.";
+            // The pressed key is the Esc key.
+            if (e.Key == Key.Escape)
+            {
+                // Pause the game and send message.
+                dispatcherTimer.Stop();
+                gameIsPaused = true;
+                //TimeLabel.Content = "The game is paused.";
 
-            //    if (MessageBox.Show("Do you want to quit?", "Warning", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            //    {
-            //        MapSelection returnToMapSelection = new MapSelection();
-            //        returnToMapSelection.Show();
-            //        Close();
-            //    }
-            //}
-            //else if (SpecKeys(e.Key) == optionsSettings.FireKey || SpecKeys(e.Key) == optionsSettings.PauseKey || SpecKeys(e.Key) == optionsSettings.LeftKey || SpecKeys(e.Key) == optionsSettings.RightKey)
-            //{
-            //    if ((SpecKeys(e.Key) == optionsSettings.LeftKey || SpecKeys(e.Key) == optionsSettings.RightKey) && optionsSettings.KeyboardIsOn && !gameIsPaused)
-            //    {
-            //        if (SpecKeys(e.Key) == optionsSettings.LeftKey)
-            //        {
-            //            // Move the racket left.
-            //            if (racketList.Count > 0)
-            //            {
-            //                foreach (var oneRacket in racketList)
-            //                {
-            //                    oneRacket.MoveKey(racketHorizontalMovement, "left", canvasLayer);
+                if (MessageBox.Show("Do you want to quit?", "Warning", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    //View.DifficultySelectionWindow returnToMapSelection = new View.DifficultySelectionWindow();
+                    //returnToMapSelection.Show();
+                    //Close();
+                }
+            }
+            // The pressed key is one of the binded keys.
+            else if (SpecKeys(e.Key) == GetOption().FireButton || SpecKeys(e.Key) == GetOption().PauseButton || SpecKeys(e.Key) == GetOption().LeftMove || 
+                SpecKeys(e.Key) == GetOption().RightMove)
+            {
+                // The pressed key is one of the movement keys, the keyboard is controller item and the game is not paused.
+                if ((SpecKeys(e.Key) == GetOption().LeftMove || SpecKeys(e.Key) == GetOption().RightMove) && GetOption().IsKeyboardEnabled && !gameIsPaused)
+                {
+                    #region LeftMovement
 
-            //                    if (ballList.Count > 0)
-            //                    {
-            //                        foreach (var oneBall in ballList)
-            //                        {
-            //                            if (!oneBall.BallInMove)
-            //                            {
-            //                                // Move the ball with the racket left if ball is not moving.
-            //                                oneBall.MoveKey(racketHorizontalMovement, "left", canvasLayer, oneRacket);
-            //                            }
-            //                        }
-            //                    }
-            //                }
-            //            }
-            //        }
-            //        else if (SpecKeys(e.Key) == optionsSettings.RightKey)
-            //        {
-            //            // Move the racket right.
-            //            if (racketList.Count > 0)
-            //            {
-            //                foreach (var oneRacket in racketList)
-            //                {
-            //                    oneRacket.MoveKey(racketHorizontalMovement, "right", canvasLayer);
+                    // The pressed key is the left movement key.
+                    if (SpecKeys(e.Key) == GetOption().LeftMove)
+                    {
+                        // There is at least one racket.
+                        if (racketList.Count > 0)
+                        {
+                            // Check each racket.
+                            foreach (var oneRacket in racketList)
+                            {
+                                oneRacket.Direction = Racket.Directions.Left;
+                                oneRacket.KeyMove(racketSpeed, canvasWidth);
 
-            //                    if (ballList.Count > 0)
-            //                    {
-            //                        foreach (var oneBall in ballList)
-            //                        {
-            //                            if (!oneBall.BallInMove)
-            //                            {
-            //                                // Move the ball with the racket right if ball is not moving.
-            //                                oneBall.MoveKey(racketHorizontalMovement, "right", canvasLayer, oneRacket);
-            //                            }
-            //                        }
-            //                    }
-            //                }
-            //            }
-            //        }
-            //    }
-            //    else if (SpecKeys(e.Key) == optionsSettings.FireKey)
-            //    {
-            //        if (optionsSettings.KeyboardIsOn && !gameIsPaused && !gameInSession)
-            //        {
-            //            if (!movingTimer.IsEnabled)
-            //            {
-            //                // Start the game.
-            //                movingTimer.Start();
-            //                gameInSession = true;
-            //            }
+                                // There is at least one ball.
+                                if (ballList.Count > 0)
+                                {
+                                    // Check each ball.
+                                    foreach (var oneBall in ballList)
+                                    {
+                                        // The ball is on the racket.
+                                        if (!oneBall.BallInMove)
+                                        {
+                                            // Move the ball with the racket left if ball is not moving.
+                                            oneBall.KeyMove(racketSpeed, canvasWidth, oneRacket);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
 
-            //            if (ballList.Count > 0)
-            //            {
-            //                bool oneGo = false;
-            //                int iteratorCounter = 0;
+                    #endregion LeftMovement
 
-            //                while (!oneGo && iteratorCounter < ballList.Count)
-            //                {
-            //                    // Start a ball.
-            //                    if (!ballList[iteratorCounter].BallInMove)
-            //                    {
-            //                        ballList[iteratorCounter].BallInMove = true;
-            //                        oneGo = true;
-            //                    }
+                    #region RightMovement
 
-            //                    iteratorCounter++;
-            //                }
-            //            }
-            //        }
-            //    }
-            //    else if (SpecKeys(e.Key) == optionsSettings.PauseKey)
-            //    {
-            //        // Pause the game.
-            //        if (!gameIsPaused)
-            //        {
-            //            dispatcherTimer.Stop();
-            //            gameIsPaused = true;
-            //            TimeLabel.Content = "The game is paused.";
-            //        }
-            //        else
-            //        {
-            //            dispatcherTimer.Start();
-            //            gameIsPaused = false;
-            //            TimeLabel.Content = "Time: " + timeOfGame.ToString("HH:mm:ss");
-            //        }
-            //    }
-            //    // Process the control keys.
-            //}
+                    // The pressed key is the right movement key.
+                    else if (SpecKeys(e.Key) == GetOption().RightMove)
+                    {
+                        // There is at least one racket.
+                        if (racketList.Count > 0)
+                        {
+                            // Check each racket.
+                            foreach (var oneRacket in racketList)
+                            {
+                                oneRacket.Direction = Racket.Directions.Right;
+                                oneRacket.KeyMove(racketSpeed, canvasWidth);
 
-            //if (SpecKeys(e.Key) == GetOption().LeftMove && racketList[0].Direction != Racket.Directions.Left)
-            //{
-            //    racketList[0].Direction = Racket.Directions.Left;
-            //}
-            //else if (SpecKeys(e.Key) == GetOption().RightMove && racketList[0].Direction != Racket.Directions.Right)
-            //{
-            //    racketList[0].Direction = Racket.Directions.Right;
-            //}
+                                // There is at least one ball.
+                                if (ballList.Count > 0)
+                                {
+                                    // Check each ball.
+                                    foreach (var oneBall in ballList)
+                                    {
+                                        // The ball is on the racket.
+                                        if (!oneBall.BallInMove)
+                                        {
+                                            // Move the ball with the racket right if ball is not moving.
+                                            oneBall.KeyMove(racketSpeed, canvasWidth, oneRacket);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
 
-            //racketList[0].KeyMove(racketSpeed, 0, 0);
+                    #endregion RightMovement
+                }
+                // The pressed key is the fire key.
+                else if (SpecKeys(e.Key) == GetOption().FireButton)
+                {
+                    // The keyboard is a controller item, the game is not paused and the game didn't begin yet.
+                    if (GetOption().IsKeyboardEnabled && !gameIsPaused && !gameInSession)
+                    {
+                        // The timer didn't start yet.
+                        if (!dispatcherTimer.IsEnabled)
+                        {
+                            // Start the game.
+                            dispatcherTimer.Start();
+                            gameInSession = true;
+                        }
+
+                        // There is at least one ball.
+                        if (ballList.Count > 0)
+                        {
+                            bool oneGo = false;
+                            int iteratorCounter = 0;
+
+                            // Move the first ball.
+                            while (!oneGo && iteratorCounter < ballList.Count)
+                            {
+                                // Start a ball.
+                                if (!ballList[iteratorCounter].BallInMove)
+                                {
+                                    ballList[iteratorCounter].BallInMove = true;
+                                    oneGo = true;
+                                }
+
+                                iteratorCounter++;
+                            }
+                        }
+                    }
+                }
+                // The pressed key is the pause key.
+                else if (SpecKeys(e.Key) == GetOption().PauseButton)
+                {
+                    // The game is not paused.
+                    if (!gameIsPaused)
+                    {
+                        // Pause the game.
+                        dispatcherTimer.Stop();
+                        gameIsPaused = true;
+                        //TimeLabel.Content = "The game is paused.";
+                    }
+                    // The game is paused.
+                    else
+                    {
+                        // Continue the game.
+                        dispatcherTimer.Start();
+                        gameIsPaused = false;
+                        //TimeLabel.Content = "Time: " + timeOfGame.ToString("HH:mm:ss");
+                    }
+                }
+            }
         }
 
         #endregion KeyboardControls
