@@ -92,31 +92,90 @@ namespace BrickBreaker_2015.Model
 
         #region Methods
 
-        public void MouseMove()
+        /// <summary>
+        /// Move the racket by mouse.
+        /// </summary>
+        /// <param name="racketSpeed">The racketSpeed.</param>
+        /// <param name="canvasWidth">The canvasWidth.</param>
+        /// <param name="mousePositionX">The mousePositionX.</param>
+        public void MouseMove(double racketSpeed, double canvasWidth, double mousePositionX)
         {
+            // The mouse is left to the racket.
+            if (mousePositionX < area.X + area.Width / 2)
+            {
+                // The racket is at the edge of the canvas.
+                if (area.X <= 0)
+                {
+                    area.X = 0;
+                }
+                // There is space to move.
+                else
+                {
+                    // The differance is greater than the length the racket can move in a tick.
+                    if (area.X + area.Width / 2 - mousePositionX >= racketSpeed)
+                    {
+                        area.X -= racketSpeed;
+                    }
+                    // The differance is smaller than the length the racket can move in a tick.
+                    else
+                    {
+                        area.X -= area.X + area.Width / 2 - mousePositionX;
+                    }
+                }
+            }
+            // The mouse is right to the racket.
+            else if (mousePositionX > area.X + area.Width / 2)
+            {
+                // The racket is at the edge of the canvas.
+                if (area.X + area.Width >= canvasWidth)
+                {
+                    area.X = canvasWidth - area.Width;
+                }
+                // There is space to move.
+                else
+                {
+                    // The differance is greater than the length the racket can move in a tick.
+                    if (mousePositionX - area.X + area.Width / 2 >= racketSpeed)
+                    {
+                        area.X += racketSpeed;
+                    }
+                    // The differance is smaller than the length the racket can move in a tick.
+                    else
+                    {
+                        area.X += mousePositionX - area.X + area.Width / 2;
+                    }
+                }
+            }
 
+            onPropertyChanged("Area");
         }
 
         /// <summary>
         /// Move the racket by key.
         /// </summary>
         /// <param name="racketSpeed">The racketSpeed.</param>
-        public void KeyMove(double racketSpeed, double canvasWidth, double canvasHeight)
+        /// <param name="canvasWidth">The canvasWidth.</param>
+        public void KeyMove(double racketSpeed, double canvasWidth)
         {
+            // The racket is at the edge of the canvas.
             if (area.X <= 0)
             {
                 area.X = 0;
             }
+            // The racket is at the edge of the canvas.
             else if (area.X + area.Width >= canvasWidth)
             {
                 area.X = canvasWidth - area.Width;
             }
+            // There is space to move.
             else
             {
+                // The left key is pushed.
                 if (Direction == Directions.Left)
                 {
                     area.X -= racketSpeed;
                 }
+                // The right key is pushed.
                 else if (Direction == Directions.Right)
                 {
                     area.X += racketSpeed;

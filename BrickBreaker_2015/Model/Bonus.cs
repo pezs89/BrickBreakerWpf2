@@ -119,6 +119,7 @@ namespace BrickBreaker_2015.Model
             {
                 // If the bouns top didn't reaches the bottom of the canvas, then move it down.
                 area.Y += bonusSpeed;
+                onPropertyChanged("Area");
 
                 return false;
             }

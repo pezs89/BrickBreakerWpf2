@@ -136,30 +136,116 @@ namespace BrickBreaker_2015.Model
         {
             area.X += VerticalMovement * ballSpeed;
             area.Y += HorizontalMovement * ballSpeed;
+
+            onPropertyChanged("Area");
         }
 
-
-        public void Collision()
+        /// <summary>
+        /// Move the ball by mouse if it's on the racket.
+        /// </summary>
+        /// <param name="racketSpeed">The racketSpeed.</param>
+        /// <param name="canvasWidth">The canvasWidth.</param>
+        /// <param name="mousePositionX">The mousePositionX.</param>
+        /// <param name="racket">The racket.</param>
+        public void MouseMove(double racketSpeed, double canvasWidth, double mousePositionX, Racket racket)
         {
-
-        }
-
-        public void Mozog(double canvasWidth, double canvasHeight, Racket racket)
-        {
-            //Rect -> ütközésvizsgálat!
-            area.X += HorizontalMovement;
-            area.Y += VerticalMovement;
-
-            if (area.Top < 0 || this.area.IntersectsWith(racket.Area))
+            // The mouse is left to the racket.
+            if (mousePositionX < racket.Area.X + racket.Area.Width / 2)
             {
-                VerticalMovement = -VerticalMovement;
-                //terulet.Y = -terulet.Y;
+                // The racket is at the edge of the canvas.
+                if (racket.Area.X <= 0)
+                {
+                    // The ball sticks out to the left side.
+                    if (area.X <= racket.Area.X)
+                    {
+                        area.X = 0;
+                    }
+                }
+                // There is space to move.
+                else
+                {
+                    // The differance is greater than the length the racket can move in a tick.
+                    if (racket.Area.X + racket.Area.Width / 2 - mousePositionX >= racketSpeed)
+                    {
+                        area.X -= racketSpeed;
+                    }
+                    // The differance is smaller than the length the racket can move in a tick.
+                    else
+                    {
+                        area.X -= racket.Area.X + racket.Area.Width / 2 - mousePositionX;
+                    }
+                }
+            }
+            // The mouse is right to the racket.
+            else if (mousePositionX > racket.Area.X + racket.Area.Width / 2)
+            {
+                // The racket is at the edge of the canvas.
+                if (racket.Area.X + racket.Area.Width >= canvasWidth)
+                {
+                    // The ball sticks out to the right side.
+                    if (area.X >= racket.Area.X + racket.Area.Width - area.Width)
+                    {
+                        area.X = canvasWidth - area.Width;
+                    }
+                }
+                // There is space to move.
+                else
+                {
+                    // The differance is greater than the length the racket can move in a tick.
+                    if (mousePositionX - racket.Area.X + racket.Area.Width / 2 >= racketSpeed)
+                    {
+                        area.X += racketSpeed;
+                    }
+                    // The differance is smaller than the length the racket can move in a tick.
+                    else
+                    {
+                        area.X += mousePositionX - racket.Area.X + racket.Area.Width / 2;
+                    }
+                }
             }
 
-            if (area.Left < 0 || area.Right > canvasWidth)
+            onPropertyChanged("Area");
+        }
+
+        /// <summary>
+        /// Move the ball by key if it's on the racket.
+        /// </summary>
+        /// <param name="racketSpeed">The racketSpeed.</param>
+        /// <param name="canvasWidth">The canvasWidth.</param>
+        /// <param name="racket">The racket.</param>
+        public void KeyMove(double racketSpeed, double canvasWidth, Racket racket)
+        {
+            // The racket is at the edge of the canvas.
+            if (racket.Area.X <= 0)
             {
-                HorizontalMovement = -HorizontalMovement;
-                //terulet.X = -terulet.X;
+                // The ball sticks out to the left side.
+                if (area.X <= racket.Area.X)
+                {
+                    area.X = 0;
+                }
+            }
+            // The racket is at the edge of the canvas.
+            else if (racket.Area.X + racket.Area.Width >= canvasWidth)
+            {
+                // The ball sticks out to the right side.
+                if (area.X >= racket.Area.X + racket.Area.Width - area.Width)
+                {
+                    area.X = canvasWidth - area.Width;
+                }
+            }
+            // There is space to move.
+            else
+            {
+                // The left key is pushed.
+                if (racket.Direction == Racket.Directions.Left)
+                {
+                    area.X -= racketSpeed;
+                }
+                // The right key is pushed.
+                else if (racket.Direction == Racket.Directions.Right)
+                {
+                    area.X += racketSpeed;
+                }
             }
 
             onPropertyChanged("Area");

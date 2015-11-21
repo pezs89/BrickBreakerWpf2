@@ -137,6 +137,29 @@ namespace BrickBreaker_2015.Model
             }
         }
 
+        /// <summary>
+        /// Calculation of bonus chance.
+        /// </summary>
+        /// <returns>True if brick contains bonus.</returns>
+        public bool CalculateBonusChance()
+        {
+            bool retVal = false;
+
+            if (BrickType == BricksType.Medium || BrickType == BricksType.Hard)
+            {
+                // Bonus is only available with medium and hard bricks.
+                Random rnd = new Random();
+
+                if (rnd.Next(1, 101) <= 25)
+                {
+                    // 25% chance of bonus in medium and hard bricks.
+                    retVal = true;
+                }
+            }
+
+            return retVal;
+        }
+
         #endregion Methods
     }
 }
