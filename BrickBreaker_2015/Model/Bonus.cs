@@ -78,7 +78,12 @@ namespace BrickBreaker_2015.Model
         public Bonus(double posX, double posY, double width, double height, string imagePath, BonusesType bonusType)
             : base(posX, posY, width, height, imagePath)
         {
-            BonusType = bonusType;
+            try
+            {
+                BonusType = bonusType;
+            }
+            catch
+            { }
         }
 
         #endregion Constructors
@@ -94,17 +99,24 @@ namespace BrickBreaker_2015.Model
         /// <returns>True if the bonus can be removed.</returns>
         public bool Descend(double bonusSpeed, double canvasWidth, double canvasHeight)
         {
-            if (Area.Y >= canvasHeight)
+            try
             {
-                // If the bouns top reaches the bottom of the canvas, then it can be removed.
-                return true;
-            }
-            else
-            {
-                // If the bouns top didn't reaches the bottom of the canvas, then move it down.
-                area.Y += bonusSpeed;
-                onPropertyChanged("Area");
+                if (Area.Y >= canvasHeight)
+                {
+                    // If the bouns top reaches the bottom of the canvas, then it can be removed.
+                    return true;
+                }
+                else
+                {
+                    // If the bouns top didn't reaches the bottom of the canvas, then move it down.
+                    area.Y += bonusSpeed;
+                    onPropertyChanged("Area");
 
+                    return false;
+                }
+            }
+            catch
+            {
                 return false;
             }
         }

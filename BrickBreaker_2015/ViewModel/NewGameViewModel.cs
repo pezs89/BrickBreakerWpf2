@@ -26,6 +26,9 @@ namespace BrickBreaker_2015.ViewModel
         // The map txt access layer.
         private MapTxtAccess mapTxtAccess;
 
+        // The score xml access layer.
+        private ScoresXmlAccess scoreXmlAccess;
+
         // The options viewmodel.
         private OptionsViewModel optionsViewModel;
 
@@ -141,6 +144,9 @@ namespace BrickBreaker_2015.ViewModel
         #endregion GameFunctionValues
 
         #region GameMechanicsValues
+
+        // The limit of the number of highscores to save.
+        private int highscoreLimit;
 
         // The maximum number of maps.
         private int mapMaxNumber;
@@ -365,6 +371,7 @@ namespace BrickBreaker_2015.ViewModel
         public NewGameViewModel()
         {
             mapTxtAccess = new MapTxtAccess();
+            scoreXmlAccess = new ScoresXmlAccess();
             optionsViewModel = new OptionsViewModel();
         }
 
@@ -398,429 +405,12 @@ namespace BrickBreaker_2015.ViewModel
 
         #region Methods
 
-        /// <summary>
-        /// Presets the values.
-        /// </summary>
-        private void PresetValues()
-        {
-            #region PresetValues
-
-            playerLife = 3;
-            playerScorePoint = 0;
-            gameInSession = false;
-            gameIsPaused = false;
-            gameIsOver = false;
-            gameOverStatus = "";
-            currentMapPath = "notfound";
-            bonusSpeed = 1;
-            mapMaxNumber = 5;
-            ballHorizontalMovement = 5;
-            ballVerticalMovement = 5;
-            racketSpeed = 10;
-            ballSpeed = 1;
-            speedScale = 1;
-            brickWidth = 27.7;
-            brickHeight = 8;
-            racketWidth = 80;
-            racketHeight = 8;
-            bonusWidth = 24;
-            bonusHeight = 24;
-            ballRadius = 5;
-            ballMinRadius = 3;
-            ballMaxRadius = 15;
-            ballExaminationProximity = 4;
-            horizontalScaleNumber = 1;
-            verticalScaleNumber = 1;
-            racketMaxSize = 160;
-            racketMinSize = 40;
-            racketDifference = 16;
-            mediaPlayer = new MediaPlayer();
-            rnd = new Random();
-
-            // Initialize the lists.
-            gameObjectList = new ObservableCollection<MainObject>();
-            ballList = new ObservableCollection<Ball>();
-            brickList = new ObservableCollection<Brick>();
-            racketList = new ObservableCollection<Racket>();
-            bonusList = new ObservableCollection<Bonus>();
-
-            #endregion PresetValues
-
-            #region SetScaling
-
-            switch (GetOption().Resolution)
-            {
-                case "580x420":
-                    horizontalScaleNumber = 1;
-                    verticalScaleNumber = 1;
-                    break;
-                case "640x480":
-                    horizontalScaleNumber = 1.25;
-                    verticalScaleNumber = 1.25;
-                    break;
-                case "800x600":
-                    horizontalScaleNumber = 1.6;
-                    verticalScaleNumber = 1.6;
-                    break;
-            }
-
-            switch (GetOption().Difficulty)
-            {
-                case 1:
-                    speedScale = 1;
-                    break;
-                case 2:
-                    speedScale = 1.2;
-                    break;
-                case 3:
-                    speedScale = 1.4;
-                    break;
-            }
-
-            // Set the scaling.
-            bonusWidth *= horizontalScaleNumber;
-            bonusHeight *= verticalScaleNumber;
-            racketWidth *= horizontalScaleNumber;
-            racketHeight *= verticalScaleNumber;
-            brickWidth *= horizontalScaleNumber;
-            brickHeight *= verticalScaleNumber;
-            ballHorizontalMovement *= speedScale;
-            ballVerticalMovement *= speedScale;
-            ballRadius *= horizontalScaleNumber;
-            ballMinRadius *= horizontalScaleNumber;
-            ballMaxRadius *= horizontalScaleNumber;
-            bonusSpeed *= speedScale;
-            ballSpeed *= speedScale;
-            racketSpeed *= speedScale;
-            ballExaminationProximity *= horizontalScaleNumber;
-            racketMaxSize *= horizontalScaleNumber;
-            racketMinSize *= horizontalScaleNumber;
-            racketDifference *= horizontalScaleNumber;
-
-            #endregion SetScaling
-
-            #region MapSelection
-
-            try
-            {
-                if (GetOption().MapNumber > 0 && GetOption().MapNumber < 6)
-                {
-                    switch (GetOption().MapNumber)
-                    {
-                        case 1:
-                            currentMapPath = firstMapPath;
-                            break;
-                        case 2:
-                            currentMapPath = secondMapPath;
-                            break;
-                        case 3:
-                            currentMapPath = thirdMapPath;
-                            break;
-                        case 4:
-                            currentMapPath = forthMapPath;
-                            break;
-                        case 5:
-                            currentMapPath = fifthMapPath;
-                            break;
-                    }
-                }
-            }
-            catch
-            { }
-
-            #endregion MapSelection
-
-            #region FillLists
-
-            try
-            {
-                if (!string.IsNullOrEmpty(currentMapPath) && currentMapPath != "notfound")
-                {
-                    racketList.Add(new Racket(canvasWidth / 2 - racketWidth / 2, canvasHeight - racketHeight, racketWidth, racketHeight, @"..\..\Resources\Media\Racket\normalracket.jpg"));
-                    racketList[0].Direction = Racket.Directions.Stay;
-                    racketList[0].StickyRacket = false;
-                    gameObjectList.Add(racketList[0]);
-
-                    ballList.Add(new Ball(canvasWidth / 2 - ballRadius, canvasHeight - racketHeight - ballRadius * 2, ballRadius * 2, ballRadius * 2, @"..\..\Resources\Media\Ball\normalball.jpg", ballHorizontalMovement, ballVerticalMovement, Ball.BallsType.Normal));
-                    ballList[0].BallInMove = false;
-                    gameObjectList.Add(ballList[0]);
-
-                    brickList = mapTxtAccess.LoadMap(currentMapPath, brickWidth, brickHeight);
-                    if (brickList.Count > 0)
-                    {
-                        for (int i = 0; i < brickList.Count; i++)
-                        {
-                            gameObjectList.Add(brickList[i]);
-                        }
-                    }
-                }
-
-                mediaPlayer.Open(new Uri(@"..\..\Resources\Media\Sounds\play_this.mp3", UriKind.Relative));
-            }
-            catch
-            { }
-
-            #endregion FillLists
-        }
-
         #region InProgress
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void WindowLoaded()
-        {
-            //// If no map or no options file was found then close the window.
-            //if (!String.IsNullOrEmpty(currentMapPath) && currentMapPath == "notfound")
-            //{
-            //    MessageBox.Show("Couldn't find the map file.", "Error");
-
-            //    MapSelection returnToMapSelection = new MapSelection();
-            //    returnToMapSelection.Show();
-            //    Close();
-            //}
-            //else if (String.IsNullOrEmpty(currentMapPath))
-            //{
-            //    MessageBox.Show("Couldn't find the options xml file.", "Error");
-
-            //    MapSelection returnToMapSelection = new MapSelection();
-            //    returnToMapSelection.Show();
-            //    Close();
-            //}
-
-            //lifePoint = gamePresets != null && gamePresets.LifePoint != 0 ? gamePresets.LifePoint : 3;
-            //scoreValue = gamePresets != null && gamePresets.ScorePoint != 0 ? gamePresets.ScorePoint : 0;
-
-            //ScoreLabel.Content = "Score: " + scoreValue;
-            //// Show the scorepoints.
-            //LifeLabel.Content = "Life: " + lifePoint;
-            //// Show the lifepoints.
-            //TimeLabel.Content = "Time: " + timeOfGame.ToString("HH:mm:ss");
-            //// Show the time.
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void TimerTick()
-        {
-            //// Draw.
-            //MoveObjects();
-            //BallAtContact();
-            //RacketAtContactWithBonus();
-
-            #region RefreshValues
-
-            //timeOfGame = timeOfGame.AddMilliseconds(timeSpan);
-            //// Add the timeSpan value to the timeOfGame in every tick to make the time go.
-            //TimeLabel.Content = "Time: " + timeOfGame.ToString("HH:mm:ss");
-            //// Show the time.
-
-            #endregion RefreshValues
-
-            //RefreshCanvas();
-
-            #region GameOver
-
-            //if (ballList.Count > 0)
-            //{
-            //    int steelBallCount = 0;
-
-            //    foreach (var oneBall in ballList)
-            //    {
-            //        // See if there is any steel ball.
-            //        if (oneBall.TypeOfBall == Ball.ballType.Steel)
-            //        {
-            //            steelBallCount++;
-            //        }
-            //    }
-
-            //    if (steelBallCount > 0)
-            //    {
-            //        // If there is at least one steel ball.
-            //        if (brickList.Count == 0)
-            //        {
-            //            // If no brick left.
-            //            if (bonusList.Count == 0)
-            //            {
-            //                // If no bonus left.
-            //                gameOver = true;
-            //                gameOverStatus = "success";
-            //            }
-            //        }
-
-            //    }
-            //    else
-            //    {
-            //        // If no steel ball.
-            //        if (brickList.Count > 0)
-            //        {
-            //            // There are still bricks left.
-            //            int notSteelBrickCount = 0;
-
-            //            foreach (var oneBrick in brickList)
-            //            {
-            //                // See how many not steel bricks are there
-            //                if (oneBrick.TypeOfBrick != Brick.brickType.Steel)
-            //                {
-            //                    notSteelBrickCount++;
-            //                }
-            //            }
-
-            //            if (notSteelBrickCount == 0)
-            //            {
-            //                // If only steel bricks left.
-            //                gameOver = true;
-            //                gameOverStatus = "success";
-            //            }
-            //        }
-            //        else
-            //        {
-            //            // If no brick left.
-            //            if (bonusList.Count == 0)
-            //            {
-            //                // If no bonus left.
-            //                gameOver = true;
-            //                gameOverStatus = "success";
-            //            }
-            //        }
-            //    }
-            //}
-
-            //if (gameOver && !String.IsNullOrEmpty(gameOverStatus) && gameInSession)
-            //{
-            //    GameOver(gameOverStatus);
-            //}
-
-            #endregion GameOver
-        }
-
-        /// <summary>
-        /// Checks if the racket is in contact with a bonus.
-        /// </summary>
-        private void RacketAtContactWithBonus()
-        {
-            //if (racketList.Count > 0)
-            //{
-            //    foreach (var oneRacket in racketList)
-            //    {
-            //        if (bonusList.Count > 0)
-            //        {
-            //            for (int i = 0; i < bonusList.Count; i++)
-            //            {
-            //                if (oneRacket.PositionX < bonusList[i].PositionX + bonusList[i].Width &&    /* bonus rigth side */
-            //                    oneRacket.PositionX + oneRacket.Width > bonusList[i].PositionX &&       /* bonus left side */
-            //                    oneRacket.PositionY < bonusList[i].PositionY + bonusList[i].Height)     /* bonus bottom */
-            //                {
-            //                    scoreValue += bonusList[i].ScorePoint;
-            //                    ScoreLabel.Content = "Score: " + scoreValue;
-
-                                #region AddBonusEffect
-
-                                //switch (bonusList[i].TypeOfBonus)
-                                //{
-                                //    case Bonus.bonusType.LifeUp:
-                                //        lifePoint++;
-                                //        break;
-                                //    case Bonus.bonusType.LifeDown:
-                                //        lifePoint--;
-                                //        break;
-                                //    case Bonus.bonusType.NewBall:
-                                //        Ball ball = new Ball(oneRacket.PositionX + (oneRacket.Width / 2) - ballRadius, oneRacket.PositionY - (ballRadius * 2), ballRadius, Ball.ballType.Normal, @"media\ball\normalball.jpg");
-                                //        ball.VerticalMovement = ballVerticalMovement > 0 ? ballVerticalMovement : -ballVerticalMovement;
-                                //        ball.HorizontalMovement = ballHorizontalMovement < 0 ? ballHorizontalMovement : -ballHorizontalMovement;
-                                //        ball.BallInMove = false;
-                                //        ballList.Add(ball);
-                                //        canvasLayer.Children.Add(ball.GetEllipse());
-                                //        break;
-                                //    case Bonus.bonusType.RacketLengthen:
-                                //        oneRacket.Width += (oneRacket.Width < racketMaxSize ? racketDifference : 0);
-                                //        break;
-                                //    case Bonus.bonusType.RacketShorten:
-                                //        oneRacket.Width -= (oneRacket.Width > racketMinSize ? racketDifference : 0);
-                                //        break;
-                                //    case Bonus.bonusType.BallBigger:
-                                //        if (ballList.Count > 0)
-                                //        {
-                                //            foreach (var oneBall in ballList)
-                                //            {
-                                //                if (oneBall.PositionX + (bigBall * 2) > canvasLayer.Width)
-                                //                {
-                                //                    oneBall.PositionX -= ((bigBall - ballRadius) * 2);
-                                //                }
-                                //                else if (oneBall.PositionY + (bigBall * 2) + racketHeight > canvasLayer.Height)
-                                //                {
-                                //                    oneBall.PositionY -= ((bigBall - ballRadius) * 2);
-                                //                }
-                                //                // Reposition the ball, so that it will not trigger an error when obtaining bonus effect.
-
-                                //                oneBall.Radius = bigBall;
-                                //            }
-                                //        }
-                                //        break;
-                                //    case Bonus.bonusType.BallSmaller:
-                                //        if (ballList.Count > 0)
-                                //        {
-                                //            foreach (var oneBall in ballList)
-                                //            {
-                                //                oneBall.Radius = smallBall;
-                                //            }
-                                //        }
-                                //        break;
-                                //    case Bonus.bonusType.StickyRacket:
-                                //        if (!oneRacket.StickyRacket)
-                                //        {
-                                //            oneRacket.StickyRacket = true;
-                                //            oneRacket.RacketImage = @"media\racket\stickyracket.jpg";
-                                //        }
-                                //        break;
-                                //    case Bonus.bonusType.HardBall:
-                                //        if (ballList.Count > 0)
-                                //        {
-                                //            foreach (var oneBall in ballList)
-                                //            {
-                                //                oneBall.TypeOfBall = Ball.ballType.Hard;
-                                //                oneBall.BallImage = @"media\ball\hardball.jpg";
-                                //            }
-                                //        }
-                                //        break;
-                                //    case Bonus.bonusType.SteelBall:
-                                //        if (ballList.Count > 0)
-                                //        {
-                                //            foreach (var oneBall in ballList)
-                                //            {
-                                //                oneBall.TypeOfBall = Ball.ballType.Steel;
-                                //                oneBall.BallImage = @"media\ball\steelball.jpg";
-                                //            }
-                                //        }
-                                //        break;
-                                //}
-                                //// Add the bonus effect.
-
-                                //LifeLabel.Content = "Life: " + lifePoint;
-
-                                //if (lifePoint <= 0)
-                                //{
-                                //    gameOverStatus = "fail";
-                                //    gameOver = true;
-                                //}
-
-                                #endregion AddBonusEffect
-
-            //                    bonusList.Remove(bonusList[i]);
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-
-            //RefreshCanvas();
-        }
 
         /// <summary>
         /// Checks if the ball is in contact with an object.
         /// </summary>
-        private void BallAtContact()
+        public void BallAtContact()
         {
             //if (ballList.Count > 0)
             //{
@@ -1113,36 +703,6 @@ namespace BrickBreaker_2015.ViewModel
         }
 
         /// <summary>
-        /// Movethe objects.
-        /// </summary>
-        private void MoveObjects()
-        {
-            //if (ballList.Count > 0)
-            //{
-            //    foreach (var oneBall in ballList)
-            //    {
-            //        if (oneBall.BallInMove)
-            //        {
-            //            oneBall.Move(ballSpeed);
-            //        }
-            //    }
-            //}
-            //// Move balls.
-
-            //if (bonusList.Count > 0)
-            //{
-            //    for (int i = 0; i < bonusList.Count; i++)
-            //    {
-            //        if (bonusList[i].Descend(bonusSpeed, canvasLayer))
-            //        {
-            //            bonusList.Remove(bonusList[i]);
-            //        }
-            //    }
-            //}
-            //// Move bonuses.
-        }
-
-        /// <summary>
         /// Brick is at contact with ball.
         /// </summary>
         /// <param name="oneBall">One ball.</param>
@@ -1225,168 +785,130 @@ namespace BrickBreaker_2015.ViewModel
             //}
         }
 
+        #endregion InProgress
+
         /// <summary>
-        /// Handles the event when the ball falls down.
+        /// 
         /// </summary>
-        private void DisposeOfBall()
+        public void WindowLoaded()
         {
-            //canvasLayer.Children.Clear();
-            //racketList.Clear();
-            //ballList.Clear();
-            //bonusList.Clear();
-            //// Dispose balls, rackets, bonuses.
+            try
+            {
+                // If no map or no options file was found then close the window.
+                if (!String.IsNullOrEmpty(currentMapPath) && currentMapPath == "notfound")
+                {
+                    MessageBox.Show("Couldn't find the map file.", "Error");
 
-            //Racket racket = new Racket((canvasLayer.Width / 2) - (racketWidth / 2), canvasLayer.Height - racketHeight, racketHeight, racketWidth, @"media\racket\normalracket.jpg");
-            //racketList.Add(racket);
-            //canvasLayer.Children.Add(racket.GetRectangle());
-            //// Add new racket.
+                    //MapSelection returnToMapSelection = new MapSelection();
+                    //returnToMapSelection.Show();
+                    //Close();
+                }
+                else if (String.IsNullOrEmpty(currentMapPath))
+                {
+                    MessageBox.Show("Couldn't find the options xml file.", "Error");
 
-            //Ball ball = new Ball((canvasLayer.Width / 2) - ballRadius, canvasLayer.Height - racketHeight - (ballRadius * 2), ballRadius, Ball.ballType.Normal, @"media\ball\normalball.jpg");
-            //ball.VerticalMovement = ballVerticalMovement > 0 ? ballVerticalMovement : -ballVerticalMovement;
-            //ball.HorizontalMovement = ballHorizontalMovement < 0 ? ballHorizontalMovement : -ballHorizontalMovement;
-            //// TODO: bug at new ball movement
-            //ball.BallInMove = false;
-            //ballList.Add(ball);
-            //canvasLayer.Children.Add(ball.GetEllipse());
-            //// Add new ball.
+                    //MapSelection returnToMapSelection = new MapSelection();
+                    //returnToMapSelection.Show();
+                    //Close();
+                }
 
-            //RefreshCanvas();
+                //playerLife = gamePresets != null && gamePresets.LifePoint != 0 ? gamePresets.LifePoint : 3;
+                //playerScorePoint = gamePresets != null && gamePresets.ScorePoint != 0 ? gamePresets.ScorePoint : 0;
+
+                //// Show the scorepoints.
+                //ScoreLabel.Content = "Score: " + scoreValue;
+                //// Show the lifepoints.
+                //LifeLabel.Content = "Life: " + lifePoint;
+                //// Show the time.
+                //TimeLabel.Content = "Time: " + timeOfGame.ToString("HH:mm:ss");
+            }
+            catch
+            { }
         }
 
         /// <summary>
-        /// Handles the end of the game.
+        /// Checks for game ending consequences.
         /// </summary>
-        /// <param name="status">The status.</param>
-        private void GameOver(string status)
+        /// <param name="timer">The timer.</param>
+        public void CheckForGameOver(ref DispatcherTimer timer)
         {
-            //if (status == "fail")
-            //{
-            //    movingTimer.Stop();
+            try
+            {
+                // There is at least one ball.
+                if (ballList.Count > 0)
+                {
+                    int steelBallCount = 0;
 
-            //    MessageBox.Show("You've failed.", "Game Over");
+                    // Check each ball.
+                    foreach (Ball oneBall in ballList)
+                    {
+                        // See if there is any steel ball.
+                        if (oneBall.BallType == Ball.BallsType.Steel)
+                        {
+                            steelBallCount++;
+                        }
+                    }
 
-            //    gameOver = false;
-            //    gameOverStatus = null;
+                    // There is at least one steal ball.
+                    if (steelBallCount > 0)
+                    {
+                        // No bricks left.
+                        if (brickList.Count == 0)
+                        {
+                            // No bonuses left.
+                            if (bonusList.Count == 0)
+                            {
+                                gameIsOver = true;
+                                gameOverStatus = "success";
+                            }
+                        }
+                    }
+                    // There are no steal balls.
+                    else
+                    {
+                        // There are still bricks left.
+                        if (brickList.Count > 0)
+                        {
+                            int notSteelBrickCount = 0;
 
-            //    if (CheckHighScores(scoreValue))
-            //    {
-            //        HighScores(scoreValue);
-            //        Close();
-            //    }
-            //    else
-            //    {
-            //        MapSelection returnToMap = new MapSelection();
-            //        returnToMap.Show();
-            //        Close();
-            //    }
-            //}
-            //else if (status == "success")
-            //{
-            //    movingTimer.Stop();
+                            // Check each brick.
+                            foreach (Brick oneBrick in brickList)
+                            {
+                                // See how many not steel bricks are there.
+                                if (oneBrick.BrickType != Brick.BricksType.Steel)
+                                {
+                                    notSteelBrickCount++;
+                                }
+                            }
 
-            //    MessageBox.Show("You've succeeded.", "Game Over");
+                            // No steel bricks left.
+                            if (notSteelBrickCount == 0)
+                            {
+                                gameIsOver = true;
+                                gameOverStatus = "success";
+                            }
+                        }
+                        // No bricks left.
+                        else
+                        {
+                            // No bonuses left.
+                            if (bonusList.Count == 0)
+                            {
+                                gameIsOver = true;
+                                gameOverStatus = "success";
+                            }
+                        }
+                    }
+                }
 
-            //    gameOver = false;
-            //    gameOverStatus = null;
-
-            //    if (optionsSettings.MapNumber < mapMaxNumber)
-            //    {
-            //        if (MessageBox.Show("You've succeeded. \n Would you like to continue.", "Game Over", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            //        {
-            //            try
-            //            {
-            //                XDocument settingsFromXml = XDocument.Load("OptionsSettings.xml");
-            //                var readDataFromXml = settingsFromXml.Descendants("option");
-            //                var fromXml = from x in readDataFromXml
-            //                              select x;
-            //                // Load the values stored in the xml.
-
-            //                fromXml.Single().Element("map").Value = (optionsSettings.MapNumber + 1).ToString();
-            //                // Sets the number of the map to the xml for later use.
-
-            //                settingsFromXml.Save("OptionsSettings.xml");
-            //                // Save the changes in the values of the xml.
-            //            }
-            //            catch
-            //            {
-
-            //            }
-
-            //            Drawer newMap = new Drawer();
-            //            newMap.gamePresets = new GamePresets(lifePoint, scoreValue);
-            //            newMap.Show();
-            //            Close();
-            //        }
-            //        else
-            //        {
-            //            if (CheckHighScores(scoreValue))
-            //            {
-            //                HighScores(scoreValue);
-            //                Close();
-            //            }
-            //            else
-            //            {
-            //                MapSelection returnToMap = new MapSelection();
-            //                returnToMap.Show();
-            //                Close();
-            //            }
-            //        }
-            //    }
-            //    else
-            //    {
-            //        if (CheckHighScores(scoreValue))
-            //        {
-            //            HighScores(scoreValue);
-            //            Close();
-            //        }
-            //        else
-            //        {
-            //            MapSelection returnToMap = new MapSelection();
-            //            returnToMap.Show();
-            //            Close();
-            //        }
-            //    }
-            //}
-        }
-
-        /// <summary>
-        /// Checks if the score is in the highscores.
-        /// </summary>
-        /// <param name="scoreValue">The score.</param>
-        /// <returns></returns>
-        private bool CheckHighScores(int score)
-        {
-            //bool retVal = false;
-
-            //if (File.Exists("Scores.xml"))
-            //{
-            //    XDocument settingsFromXml = XDocument.Load("Scores.xml");
-            //    var readDataFromXml = settingsFromXml.Descendants("Data");
-            //    var fromXml = from x in readDataFromXml
-            //                  select x;
-            //    // Load the values stored in the xml.
-
-            //    int elementNumber = 0;
-
-            //    foreach (var oneElement in fromXml)
-            //    {
-            //        if (scoreValue > (int)oneElement.Element("Score") && !retVal)
-            //        {
-            //            retVal = true;
-            //        }
-
-            //        elementNumber += 1;
-            //    }
-
-            //    if (elementNumber < 10 && !retVal)
-            //    {
-            //        retVal = true;
-            //    }
-            //    // See if there is a smaller scorepoint then the player's score.
-            //}
-
-            //return retVal;
-            return false;
+                // The game is over, the status is given and the game is still is session.
+                if (gameIsOver && !string.IsNullOrEmpty(gameOverStatus) && gameInSession)
+                {
+                    GameOver(gameOverStatus, timer);
+                }
+            }
+            catch
+            { }
         }
 
         /// <summary>
@@ -1394,12 +916,555 @@ namespace BrickBreaker_2015.ViewModel
         /// </summary>
         private void HighScores(int score)
         {
-            //GameOver submitScore = new GameOver();
-            //submitScore.ScoreLabel.Content = score;
-            //submitScore.Show();
+            try
+            {
+                //GameOver submitScore = new GameOver();
+                //submitScore.ScoreLabel.Content = score;
+                //submitScore.Show();
+            }
+            catch
+            { }
         }
 
-        #endregion InProgress
+        /// <summary>
+        /// Handles the end of the game.
+        /// </summary>
+        /// <param name="status">The status.</param>
+        private void GameOver(string status, DispatcherTimer dispatcherTimer)
+        {
+            try
+            {
+                #region Fail
+
+                if (status == "fail")
+                {
+                    dispatcherTimer.Stop();
+
+                    MessageBox.Show("You've failed.", "Game Over");
+
+                    gameIsOver = false;
+                    gameOverStatus = null;
+
+                    if (CheckHighScores(playerScorePoint))
+                    {
+                        HighScores(playerScorePoint);
+                        //Close();
+                    }
+                    else
+                    {
+                        //MapSelection returnToMap = new MapSelection();
+                        //returnToMap.Show();
+                        //Close();
+                    }
+                }
+
+                #endregion Fail
+
+                #region Success
+
+                else if (status == "success")
+                {
+                    dispatcherTimer.Stop();
+
+                    MessageBox.Show("You've succeeded.", "Game Over");
+
+                    gameIsOver = false;
+                    gameOverStatus = null;
+
+                    #region NotLastMap
+
+                    if (GetOption().MapNumber < mapMaxNumber)
+                    {
+                        #region Continue
+
+                        if (MessageBox.Show("You've succeeded. \n Would you like to continue.", "Game Over", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                        {
+                            try
+                            {
+                                optionsViewModel.OptionModel.MapNumber += 1;
+                                optionsViewModel.SaveToXml();
+                            }
+                            catch
+                            {
+
+                            }
+
+                            //Drawer newMap = new Drawer();
+                            //newMap.gamePresets = new GamePresets(lifePoint, scoreValue);
+                            //newMap.Show();
+                            //Close();
+                        }
+
+                        #endregion Constinue
+
+                        #region Exit
+
+                        else
+                        {
+                            if (CheckHighScores(playerScorePoint))
+                            {
+                                HighScores(playerScorePoint);
+                                //Close();
+                            }
+                            else
+                            {
+                                //MapSelection returnToMap = new MapSelection();
+                                //returnToMap.Show();
+                                //Close();
+                            }
+                        }
+
+                        #endregion Exit
+                    }
+
+                    #endregion NotLastMap
+
+                    #region LastMap
+
+                    else
+                    {
+                        if (CheckHighScores(playerScorePoint))
+                        {
+                            HighScores(playerScorePoint);
+                            //Close();
+                        }
+                        else
+                        {
+                            //MapSelection returnToMap = new MapSelection();
+                            //returnToMap.Show();
+                            //Close();
+                        }
+                    }
+
+                    #endregion LastMap
+                }
+
+                #endregion Success
+            }
+            catch
+            { }
+        }
+
+        /// <summary>
+        /// Checks if the score is in the highscores.
+        /// </summary>
+        /// <param name="scoreValue">The score.</param>
+        /// <returns>True if the score can be submitted, false if not.</returns>
+        private bool CheckHighScores(int score)
+        {
+            try
+            {
+                bool retVal = false;
+                List<HighScoreModel> scores = scoreXmlAccess.LoadScores();
+                int i = 0;
+
+                while (i < scores.Count && !retVal)
+                {
+                    if (int.Parse(scores[i].PlayerScore) < playerScorePoint)
+                    {
+                        retVal = true;
+                    }
+
+                    i++;
+                }
+
+                if (i < highscoreLimit && !retVal)
+                {
+                    retVal = true;
+                }
+
+                return retVal;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Handles the event when the ball falls down.
+        /// </summary>
+        private void DisposeOfBall()
+        {
+            try
+            {
+                // Dispose balls, rackets, bonuses.
+                racketList.Clear();
+                ballList.Clear();
+                bonusList.Clear();
+                //gameObjectList
+
+                // Add new racket.
+                Racket racket = new Racket((canvasWidth / 2) - (racketWidth / 2), canvasHeight - racketHeight, racketHeight, racketWidth,
+                    @"..\..\Resources\Media\Racket\normalracket.jpg");
+                racket.Direction = Racket.Directions.Stay;
+                racket.StickyRacket = false;
+                racketList.Add(racket);
+                gameObjectList.Add(racket);
+
+                // Add new ball.
+                Ball ball = new Ball((canvasWidth / 2) - ballRadius, canvasHeight - racketHeight - (ballRadius * 2), ballRadius * 2, ballRadius * 2,
+                    @"..\..\Resources\Media\Ball\normalball.jpg", ballHorizontalMovement, ballVerticalMovement, Ball.BallsType.Normal);
+                ball.VerticalMovement = ballVerticalMovement > 0 ? ballVerticalMovement : -ballVerticalMovement;
+                ball.HorizontalMovement = ballHorizontalMovement < 0 ? ballHorizontalMovement : -ballHorizontalMovement;
+                ball.BallInMove = false;
+                ballList.Add(ball);
+                gameObjectList.Add(ball);
+            }
+            catch
+            { }
+        }
+
+        /// <summary>
+        /// Checks if the racket is in contact with a bonus.
+        /// </summary>
+        public void RacketAtContactWithBonus()
+        {
+            try
+            {
+                // There is at least one racket.
+                if (racketList.Count > 0)
+                {
+                    // Check each racket.
+                    foreach (Racket oneRacket in racketList)
+                    {
+                        // There is at least one bonus.
+                        if (bonusList.Count > 0)
+                        {
+                            // Check each bonus.
+                            for (int i = 0; i < bonusList.Count; i++)
+                            {
+                                // The racket and the bonus overleap somewhere.
+                                if (oneRacket.Area.X < bonusList[i].Area.X + bonusList[i].Area.Width &&    /* bonus rigth side */
+                                    oneRacket.Area.X + oneRacket.Area.Width > bonusList[i].Area.X &&       /* bonus left side */
+                                    oneRacket.Area.Y < bonusList[i].Area.Y + bonusList[i].Area.Height)     /* bonus bottom */
+                                {
+                                    playerScorePoint += bonusList[i].ScorePoint;
+                                    //ScoreLabel.Content = "Score: " + scoreValue;
+
+                                    #region AddBonusEffect
+
+                                    // Add the bonus effect.
+                                    switch (bonusList[i].BonusType)
+                                    {
+                                        case Bonus.BonusesType.LifeUp:
+                                            playerLife++;
+                                            break;
+                                        case Bonus.BonusesType.LifeDown:
+                                            playerLife--;
+                                            break;
+                                        case Bonus.BonusesType.NewBall:
+                                            Ball ball = new Ball(oneRacket.Area.X + (oneRacket.Area.Width / 2) - ballRadius, oneRacket.Area.Y - (ballRadius * 2),
+                                                ballRadius * 2, ballRadius * 2, @"..\..\Resources\Media\Ball\normalball.jpg", 0, 0, Ball.BallsType.Normal);
+                                            ball.VerticalMovement = ballVerticalMovement > 0 ? ballVerticalMovement : -ballVerticalMovement;
+                                            ball.HorizontalMovement = ballHorizontalMovement < 0 ? ballHorizontalMovement : -ballHorizontalMovement;
+                                            ball.BallInMove = false;
+                                            ballList.Add(ball);
+                                            gameObjectList.Add(ball);
+                                            break;
+                                        case Bonus.BonusesType.RacketLengthen:
+                                            oneRacket.Lengthen(racketMaxSize, racketDifference);
+                                            break;
+                                        case Bonus.BonusesType.RacketShorten:
+                                            oneRacket.Shorthen(racketMinSize, racketDifference);
+                                            break;
+                                        case Bonus.BonusesType.BallBigger:
+                                            // There are at least one ball.
+                                            if (ballList.Count > 0)
+                                            {
+                                                // Check each ball.
+                                                foreach (var oneBall in ballList)
+                                                {
+                                                    oneBall.ChangeBallToLarge(ballMaxRadius, ballRadius, canvasWidth, canvasHeight, racketHeight);
+                                                }
+                                            }
+                                            break;
+                                        case Bonus.BonusesType.BallSmaller:
+                                            // There is at least one ball.
+                                            if (ballList.Count > 0)
+                                            {
+                                                // Check each ball.
+                                                foreach (var oneBall in ballList)
+                                                {
+                                                    oneBall.ChangeBallToSmall(ballMinRadius);
+                                                }
+                                            }
+                                            break;
+                                        case Bonus.BonusesType.StickyRacket:
+                                            // The racket is not sticky.
+                                            if (!oneRacket.StickyRacket)
+                                            {
+                                                oneRacket.ChangeToSticky();
+                                            }
+                                            break;
+                                        case Bonus.BonusesType.HardBall:
+                                            // There is at least one ball.
+                                            if (ballList.Count > 0)
+                                            {
+                                                // Check each ball.
+                                                foreach (var oneBall in ballList)
+                                                {
+                                                    oneBall.ChangeToHard();
+                                                }
+                                            }
+                                            break;
+                                        case Bonus.BonusesType.SteelBall:
+                                            // There is at least one ball.
+                                            if (ballList.Count > 0)
+                                            {
+                                                // Check each ball.
+                                                foreach (var oneBall in ballList)
+                                                {
+                                                    oneBall.ChangeToSteel();
+                                                }
+                                            }
+                                            break;
+                                    }
+
+                                    //LifeLabel.Content = "Life: " + lifePoint;
+
+                                    // The player's life points reached 0, game over.
+                                    if (playerLife <= 0)
+                                    {
+                                        gameOverStatus = "fail";
+                                        gameIsOver = true;
+                                    }
+
+                                    #endregion AddBonusEffect
+
+                                    bonusList.Remove(bonusList[i]);
+                                    gameObjectList.Remove(bonusList[i]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            { }
+        }
+
+        /// <summary>
+        /// Presets the values.
+        /// </summary>
+        private void PresetValues()
+        {
+            try
+            {
+                #region PresetValues
+
+                highscoreLimit = 10;
+                playerLife = 3;
+                playerScorePoint = 0;
+                gameInSession = false;
+                gameIsPaused = false;
+                gameIsOver = false;
+                gameOverStatus = "";
+                currentMapPath = "notfound";
+                bonusSpeed = 1;
+                mapMaxNumber = 5;
+                ballHorizontalMovement = 5;
+                ballVerticalMovement = 5;
+                racketSpeed = 10;
+                ballSpeed = 1;
+                speedScale = 1;
+                brickWidth = 27.7;
+                brickHeight = 8;
+                racketWidth = 80;
+                racketHeight = 8;
+                bonusWidth = 24;
+                bonusHeight = 24;
+                ballRadius = 5;
+                ballMinRadius = 3;
+                ballMaxRadius = 15;
+                ballExaminationProximity = 4;
+                horizontalScaleNumber = 1;
+                verticalScaleNumber = 1;
+                racketMaxSize = 160;
+                racketMinSize = 40;
+                racketDifference = 16;
+                mediaPlayer = new MediaPlayer();
+                rnd = new Random();
+
+                // Initialize the lists.
+                gameObjectList = new ObservableCollection<MainObject>();
+                ballList = new ObservableCollection<Ball>();
+                brickList = new ObservableCollection<Brick>();
+                racketList = new ObservableCollection<Racket>();
+                bonusList = new ObservableCollection<Bonus>();
+
+                #endregion PresetValues
+
+                #region SetScaling
+
+                switch (GetOption().Resolution)
+                {
+                    case "580x420":
+                        horizontalScaleNumber = 1;
+                        verticalScaleNumber = 1;
+                        break;
+                    case "640x480":
+                        horizontalScaleNumber = 1.25;
+                        verticalScaleNumber = 1.25;
+                        break;
+                    case "800x600":
+                        horizontalScaleNumber = 1.6;
+                        verticalScaleNumber = 1.6;
+                        break;
+                }
+
+                switch (GetOption().Difficulty)
+                {
+                    case 1:
+                        speedScale = 1;
+                        break;
+                    case 2:
+                        speedScale = 1.2;
+                        break;
+                    case 3:
+                        speedScale = 1.4;
+                        break;
+                }
+
+                // Set the scaling.
+                bonusWidth *= horizontalScaleNumber;
+                bonusHeight *= verticalScaleNumber;
+                racketWidth *= horizontalScaleNumber;
+                racketHeight *= verticalScaleNumber;
+                brickWidth *= horizontalScaleNumber;
+                brickHeight *= verticalScaleNumber;
+                ballHorizontalMovement *= speedScale;
+                ballVerticalMovement *= speedScale;
+                ballRadius *= horizontalScaleNumber;
+                ballMinRadius *= horizontalScaleNumber;
+                ballMaxRadius *= horizontalScaleNumber;
+                bonusSpeed *= speedScale;
+                ballSpeed *= speedScale;
+                racketSpeed *= speedScale;
+                ballExaminationProximity *= horizontalScaleNumber;
+                racketMaxSize *= horizontalScaleNumber;
+                racketMinSize *= horizontalScaleNumber;
+                racketDifference *= horizontalScaleNumber;
+
+                #endregion SetScaling
+
+                #region MapSelection
+
+                try
+                {
+                    if (GetOption().MapNumber > 0 && GetOption().MapNumber < 6)
+                    {
+                        switch (GetOption().MapNumber)
+                        {
+                            case 1:
+                                currentMapPath = firstMapPath;
+                                break;
+                            case 2:
+                                currentMapPath = secondMapPath;
+                                break;
+                            case 3:
+                                currentMapPath = thirdMapPath;
+                                break;
+                            case 4:
+                                currentMapPath = forthMapPath;
+                                break;
+                            case 5:
+                                currentMapPath = fifthMapPath;
+                                break;
+                        }
+                    }
+                }
+                catch
+                { }
+
+                #endregion MapSelection
+
+                #region FillLists
+
+                try
+                {
+                    if (!string.IsNullOrEmpty(currentMapPath) && currentMapPath != "notfound")
+                    {
+                        // Add a racket.
+                        racketList.Add(new Racket(canvasWidth / 2 - racketWidth / 2, canvasHeight - racketHeight, racketWidth, racketHeight, @"..\..\Resources\Media\Racket\normalracket.jpg"));
+                        racketList[0].Direction = Racket.Directions.Stay;
+                        racketList[0].StickyRacket = false;
+                        gameObjectList.Add(racketList[0]);
+
+                        // Add a ball.
+                        ballList.Add(new Ball(canvasWidth / 2 - ballRadius, canvasHeight - racketHeight - ballRadius * 2, ballRadius * 2, ballRadius * 2, @"..\..\Resources\Media\Ball\normalball.jpg", ballHorizontalMovement, ballVerticalMovement, Ball.BallsType.Normal));
+                        ballList[0].BallInMove = false;
+                        gameObjectList.Add(ballList[0]);
+
+                        // Add the bricks.
+                        brickList = mapTxtAccess.LoadMap(currentMapPath, brickWidth, brickHeight);
+                        if (brickList.Count > 0)
+                        {
+                            for (int i = 0; i < brickList.Count; i++)
+                            {
+                                gameObjectList.Add(brickList[i]);
+                            }
+                        }
+                    }
+
+                    mediaPlayer.Open(new Uri(@"..\..\Resources\Media\Sounds\play_this.mp3", UriKind.Relative));
+                }
+                catch
+                { }
+
+                #endregion FillLists
+            }
+            catch
+            { }
+        }
+
+        /// <summary>
+        /// Movethe objects.
+        /// </summary>
+        public void MoveObjects()
+        {
+            try
+            {
+                #region MoveBalls
+
+                // There is at least one ball.
+                if (ballList.Count > 0)
+                {
+                    // Check each ball.
+                    foreach (var oneBall in ballList)
+                    {
+                        // The ball is not on the racket.
+                        if (oneBall.BallInMove)
+                        {
+                            oneBall.Move(ballSpeed);
+                        }
+                    }
+                }
+
+                #endregion MoveBalls
+
+                #region MoveBonuses
+
+                // There is at least one bonus.
+                if (bonusList.Count > 0)
+                {
+                    // Check each bonus.
+                    for (int i = 0; i < bonusList.Count; i++)
+                    {
+                        // Descend the bonus and remove it if it's out of the canvas.
+                        if (bonusList[i].Descend(bonusSpeed, canvasWidth, canvasHeight))
+                        {
+                            bonusList.Remove(bonusList[i]);
+                            gameObjectList.Remove(bonusList[i]);
+                        }
+                    }
+                }
+
+                #endregion MoveBonuses
+            }
+            catch
+            { }
+        }
 
         /// <summary>
         /// Finds the map txt file by the given path.
@@ -1424,61 +1489,68 @@ namespace BrickBreaker_2015.ViewModel
         /// <param name="oneBrick">The brick.</param>
         private void AddBonus(Brick oneBrick)
         {
-            string bonusImage = "";
-            Bonus.BonusesType type = Bonus.BonusesType.BallBigger;
-
-            switch (rnd.Next(1, 11))
+            try
             {
-                case 1:
-                    type = Bonus.BonusesType.BallBigger;
-                    bonusImage = @"..\..\Resources\Media\Bonus\ballbigger.jpg";
-                    break;
-                case 2:
-                    type = Bonus.BonusesType.BallSmaller;
-                    bonusImage = @"..\..\Resources\Media\Bonus\ballsmaller.jpg";
-                    break;
-                case 3:
-                    type = Bonus.BonusesType.HardBall;
-                    bonusImage = @"..\..\Resources\Media\Bonus\hardball.jpg";
-                    break;
-                case 4:
-                    type = Bonus.BonusesType.LifeDown;
-                    bonusImage = @"..\..\Resources\Media\Bonus\lifedown.jpg";
-                    break;
-                case 5:
-                    type = Bonus.BonusesType.LifeUp;
-                    bonusImage = @"..\..\Resources\Media\Bonus\lifeup.jpg";
-                    break;
-                case 6:
-                    type = Bonus.BonusesType.NewBall;
-                    bonusImage = @"..\..\Resources\Media\Bonus\newball.jpg";
-                    break;
-                case 7:
-                    type = Bonus.BonusesType.RacketLengthen;
-                    bonusImage = @"..\..\Resources\Media\Bonus\racketlengthen.jpg";
-                    break;
-                case 8:
-                    type = Bonus.BonusesType.RacketShorten;
-                    bonusImage = @"..\..\Resources\Media\Bonus\racketshorten.jpg";
-                    break;
-                case 9:
-                    type = Bonus.BonusesType.SteelBall;
-                    bonusImage = @"..\..\Resources\Media\Bonus\steelball.jpg";
-                    break;
-                case 10:
-                    type = Bonus.BonusesType.StickyRacket;
-                    bonusImage = @"..\..\Resources\Media\Bonus\stickyracket.jpg";
-                    break;
-            }
+                string bonusImage = "";
+                Bonus.BonusesType type = Bonus.BonusesType.BallBigger;
 
-            Bonus bonus = new Bonus(oneBrick.Area.X + (oneBrick.Area.Width / 2) - (bonusWidth / 2), oneBrick.Area.Y + oneBrick.Area.Height, bonusHeight, bonusWidth, bonusImage, type);
-            bonus.ScorePoint = 5;
-            bonusList.Add(bonus);
+                switch (rnd.Next(1, 11))
+                {
+                    case 1:
+                        type = Bonus.BonusesType.BallBigger;
+                        bonusImage = @"..\..\Resources\Media\Bonus\ballbigger.jpg";
+                        break;
+                    case 2:
+                        type = Bonus.BonusesType.BallSmaller;
+                        bonusImage = @"..\..\Resources\Media\Bonus\ballsmaller.jpg";
+                        break;
+                    case 3:
+                        type = Bonus.BonusesType.HardBall;
+                        bonusImage = @"..\..\Resources\Media\Bonus\hardball.jpg";
+                        break;
+                    case 4:
+                        type = Bonus.BonusesType.LifeDown;
+                        bonusImage = @"..\..\Resources\Media\Bonus\lifedown.jpg";
+                        break;
+                    case 5:
+                        type = Bonus.BonusesType.LifeUp;
+                        bonusImage = @"..\..\Resources\Media\Bonus\lifeup.jpg";
+                        break;
+                    case 6:
+                        type = Bonus.BonusesType.NewBall;
+                        bonusImage = @"..\..\Resources\Media\Bonus\newball.jpg";
+                        break;
+                    case 7:
+                        type = Bonus.BonusesType.RacketLengthen;
+                        bonusImage = @"..\..\Resources\Media\Bonus\racketlengthen.jpg";
+                        break;
+                    case 8:
+                        type = Bonus.BonusesType.RacketShorten;
+                        bonusImage = @"..\..\Resources\Media\Bonus\racketshorten.jpg";
+                        break;
+                    case 9:
+                        type = Bonus.BonusesType.SteelBall;
+                        bonusImage = @"..\..\Resources\Media\Bonus\steelball.jpg";
+                        break;
+                    case 10:
+                        type = Bonus.BonusesType.StickyRacket;
+                        bonusImage = @"..\..\Resources\Media\Bonus\stickyracket.jpg";
+                        break;
+                }
 
-            if (bonus.Descend(bonusSpeed, canvasWidth, canvasHeight))
-            {
-                bonusList.Remove(bonus);
+                Bonus bonus = new Bonus(oneBrick.Area.X + (oneBrick.Area.Width / 2) - (bonusWidth / 2), oneBrick.Area.Y + oneBrick.Area.Height, bonusHeight, bonusWidth, bonusImage, type);
+                bonus.ScorePoint = 5;
+                bonusList.Add(bonus);
+                gameObjectList.Add(bonus);
+
+                if (bonus.Descend(bonusSpeed, canvasWidth, canvasHeight))
+                {
+                    bonusList.Remove(bonus);
+                    gameObjectList.Remove(bonus);
+                }
             }
+            catch
+            { }
         }
 
         /// <summary>
@@ -1508,35 +1580,40 @@ namespace BrickBreaker_2015.ViewModel
         /// <param name="e">The mouse event.</param>
         public void MouseMove(Canvas sender, MouseEventArgs e)
         {
-            // The mouse is a controller item and the game is not paused.
-            if (GetOption().IsMouseEnabled && !gameIsPaused)
+            try
             {
-                // There is at least one racket.
-                if (racketList.Count > 0)
+                // The mouse is a controller item and the game is not paused.
+                if (GetOption().IsMouseEnabled && !gameIsPaused)
                 {
-                    // Check each racket.
-                    foreach (Racket oneRacket in racketList)
+                    // There is at least one racket.
+                    if (racketList.Count > 0)
                     {
-                        // Move the racket.
-                        oneRacket.MouseMove(racketSpeed, canvasWidth, e.GetPosition(sender).X);
-
-                        // There is at least one ball.
-                        if (ballList.Count > 0)
+                        // Check each racket.
+                        foreach (Racket oneRacket in racketList)
                         {
-                            // Check each ball.
-                            foreach (Ball oneBall in ballList)
+                            // Move the racket.
+                            oneRacket.MouseMove(racketSpeed, canvasWidth, e.GetPosition(sender).X);
+
+                            // There is at least one ball.
+                            if (ballList.Count > 0)
                             {
-                                // The ball is on the racket.
-                                if (!oneBall.BallInMove)
+                                // Check each ball.
+                                foreach (Ball oneBall in ballList)
                                 {
-                                    // Move the ball.
-                                    oneBall.MouseMove(racketSpeed, canvasWidth, e.GetPosition(sender).X, oneRacket);
+                                    // The ball is on the racket.
+                                    if (!oneBall.BallInMove)
+                                    {
+                                        // Move the ball.
+                                        oneBall.MouseMove(racketSpeed, canvasWidth, e.GetPosition(sender).X, oneRacket);
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+            catch
+            { }
         }
 
         /// <summary>
@@ -1544,39 +1621,44 @@ namespace BrickBreaker_2015.ViewModel
         /// </summary>
         /// <param name="e">The mouse button event.</param>
         /// <param name="dispatcherTimer">The timer.</param>
-        public void MouseLeftButtonDown(MouseButtonEventArgs e, DispatcherTimer dispatcherTimer)
+        public void MouseLeftButtonDown(MouseButtonEventArgs e, ref DispatcherTimer dispatcherTimer)
         {
-            // The mouse is a controller item and the game is not paused.
-            if (GetOption().IsMouseEnabled && !gameIsPaused)
+            try
             {
-                // The timer is not going and the game has not been started.
-                if (!dispatcherTimer.IsEnabled && !gameInSession)
+                // The mouse is a controller item and the game is not paused.
+                if (GetOption().IsMouseEnabled && !gameIsPaused)
                 {
-                    // Start the game.
-                    dispatcherTimer.Start();
-                    gameInSession = true;
-                }
-
-                // There is at least one ball.
-                if (ballList.Count > 0)
-                {
-                    bool oneGo = false;
-                    int iteratorCounter = 0;
-
-                    // Move the first ball.
-                    while (!oneGo && iteratorCounter < ballList.Count)
+                    // The timer is not going and the game has not been started.
+                    if (!dispatcherTimer.IsEnabled && !gameInSession)
                     {
-                        // Start a ball.
-                        if (!ballList[iteratorCounter].BallInMove)
-                        {
-                            ballList[iteratorCounter].BallInMove = true;
-                            oneGo = true;
-                        }
+                        // Start the game.
+                        dispatcherTimer.Start();
+                        gameInSession = true;
+                    }
 
-                        iteratorCounter++;
+                    // There is at least one ball.
+                    if (ballList.Count > 0)
+                    {
+                        bool oneGo = false;
+                        int iteratorCounter = 0;
+
+                        // Move the first ball.
+                        while (!oneGo && iteratorCounter < ballList.Count)
+                        {
+                            // Start a ball.
+                            if (!ballList[iteratorCounter].BallInMove)
+                            {
+                                ballList[iteratorCounter].BallInMove = true;
+                                oneGo = true;
+                            }
+
+                            iteratorCounter++;
+                        }
                     }
                 }
             }
+            catch
+            { }
         }
 
         #endregion MouseControls
@@ -1589,28 +1671,33 @@ namespace BrickBreaker_2015.ViewModel
         /// <param name="e">The key event.</param>
         public void KeyUp(KeyEventArgs e)
         {
-            // The keyboard is a controller item.
-            if (GetOption().IsKeyboardEnabled)
+            try
             {
-                // The released key is one of the racket moving keys.
-                if (SpecKeys(e.Key) == GetOption().LeftMove || SpecKeys(e.Key) == GetOption().RightMove)
+                // The keyboard is a controller item.
+                if (GetOption().IsKeyboardEnabled)
                 {
-                    // There is at least one racket.
-                    if (racketList.Count > 0)
+                    // The released key is one of the racket moving keys.
+                    if (SpecKeys(e.Key) == GetOption().LeftMove || SpecKeys(e.Key) == GetOption().RightMove)
                     {
-                        // Check each racket.
-                        foreach (Racket oneRacket in racketList)
+                        // There is at least one racket.
+                        if (racketList.Count > 0)
                         {
-                            // The racket's direction is not stay.
-                            if (oneRacket.Direction != Racket.Directions.Stay)
+                            // Check each racket.
+                            foreach (Racket oneRacket in racketList)
                             {
-                                // The racket's direction change to stay.
-                                oneRacket.Direction = Racket.Directions.Stay;
+                                // The racket's direction is not stay.
+                                if (oneRacket.Direction != Racket.Directions.Stay)
+                                {
+                                    // The racket's direction change to stay.
+                                    oneRacket.Direction = Racket.Directions.Stay;
+                                }
                             }
                         }
                     }
                 }
             }
+            catch
+            { }
         }
 
         /// <summary>
@@ -1618,154 +1705,182 @@ namespace BrickBreaker_2015.ViewModel
         /// </summary>
         /// <param name="e">The key event.</param>
         /// <param name="dispatcherTimer">The timer.</param>
-        public void KeyDown(KeyEventArgs e, DispatcherTimer dispatcherTimer)
+        public void KeyDown(KeyEventArgs e, ref DispatcherTimer dispatcherTimer)
         {
-            // The pressed key is the Esc key.
-            if (e.Key == Key.Escape)
+            try
             {
-                // Pause the game and send message.
-                dispatcherTimer.Stop();
-                gameIsPaused = true;
-                //TimeLabel.Content = "The game is paused.";
+                #region EscapeKey
 
-                if (MessageBox.Show("Do you want to quit?", "Warning", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                // The pressed key is the Esc key.
+                if (e.Key == Key.Escape)
                 {
-                    //View.DifficultySelectionWindow returnToMapSelection = new View.DifficultySelectionWindow();
-                    //returnToMapSelection.Show();
-                    //Close();
-                }
-            }
-            // The pressed key is one of the binded keys.
-            else if (SpecKeys(e.Key) == GetOption().FireButton || SpecKeys(e.Key) == GetOption().PauseButton || SpecKeys(e.Key) == GetOption().LeftMove || 
-                SpecKeys(e.Key) == GetOption().RightMove)
-            {
-                // The pressed key is one of the movement keys, the keyboard is controller item and the game is not paused.
-                if ((SpecKeys(e.Key) == GetOption().LeftMove || SpecKeys(e.Key) == GetOption().RightMove) && GetOption().IsKeyboardEnabled && !gameIsPaused)
-                {
-                    #region LeftMovement
+                    // Pause the game and send message.
+                    dispatcherTimer.Stop();
+                    gameIsPaused = true;
+                    //TimeLabel.Content = "The game is paused.";
 
-                    // The pressed key is the left movement key.
-                    if (SpecKeys(e.Key) == GetOption().LeftMove)
+                    if (MessageBox.Show("Do you want to quit?", "Warning", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
-                        // There is at least one racket.
-                        if (racketList.Count > 0)
-                        {
-                            // Check each racket.
-                            foreach (var oneRacket in racketList)
-                            {
-                                oneRacket.Direction = Racket.Directions.Left;
-                                oneRacket.KeyMove(racketSpeed, canvasWidth);
+                        //View.DifficultySelectionWindow returnToMapSelection = new View.DifficultySelectionWindow();
+                        //returnToMapSelection.Show();
+                        //Close();
+                    }
+                }
 
-                                // There is at least one ball.
-                                if (ballList.Count > 0)
+                #endregion EscapeKey
+
+                #region OptionBindedKeys
+
+                // The pressed key is one of the binded keys.
+                else if (SpecKeys(e.Key) == GetOption().FireButton || SpecKeys(e.Key) == GetOption().PauseButton || SpecKeys(e.Key) == GetOption().LeftMove ||
+                    SpecKeys(e.Key) == GetOption().RightMove)
+                {
+                    #region MovementKeys
+
+                    // The pressed key is one of the movement keys, the keyboard is controller item and the game is not paused.
+                    if ((SpecKeys(e.Key) == GetOption().LeftMove || SpecKeys(e.Key) == GetOption().RightMove) && GetOption().IsKeyboardEnabled && !gameIsPaused)
+                    {
+                        #region LeftMovement
+
+                        // The pressed key is the left movement key.
+                        if (SpecKeys(e.Key) == GetOption().LeftMove)
+                        {
+                            // There is at least one racket.
+                            if (racketList.Count > 0)
+                            {
+                                // Check each racket.
+                                foreach (var oneRacket in racketList)
                                 {
-                                    // Check each ball.
-                                    foreach (var oneBall in ballList)
+                                    oneRacket.Direction = Racket.Directions.Left;
+                                    oneRacket.KeyMove(racketSpeed, canvasWidth);
+
+                                    // There is at least one ball.
+                                    if (ballList.Count > 0)
                                     {
-                                        // The ball is on the racket.
-                                        if (!oneBall.BallInMove)
+                                        // Check each ball.
+                                        foreach (var oneBall in ballList)
                                         {
-                                            // Move the ball with the racket left if ball is not moving.
-                                            oneBall.KeyMove(racketSpeed, canvasWidth, oneRacket);
+                                            // The ball is on the racket.
+                                            if (!oneBall.BallInMove)
+                                            {
+                                                // Move the ball with the racket left if ball is not moving.
+                                                oneBall.KeyMove(racketSpeed, canvasWidth, oneRacket);
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
 
-                    #endregion LeftMovement
+                        #endregion LeftMovement
 
-                    #region RightMovement
+                        #region RightMovement
 
-                    // The pressed key is the right movement key.
-                    else if (SpecKeys(e.Key) == GetOption().RightMove)
-                    {
-                        // There is at least one racket.
-                        if (racketList.Count > 0)
+                        // The pressed key is the right movement key.
+                        else if (SpecKeys(e.Key) == GetOption().RightMove)
                         {
-                            // Check each racket.
-                            foreach (var oneRacket in racketList)
+                            // There is at least one racket.
+                            if (racketList.Count > 0)
                             {
-                                oneRacket.Direction = Racket.Directions.Right;
-                                oneRacket.KeyMove(racketSpeed, canvasWidth);
-
-                                // There is at least one ball.
-                                if (ballList.Count > 0)
+                                // Check each racket.
+                                foreach (var oneRacket in racketList)
                                 {
-                                    // Check each ball.
-                                    foreach (var oneBall in ballList)
+                                    oneRacket.Direction = Racket.Directions.Right;
+                                    oneRacket.KeyMove(racketSpeed, canvasWidth);
+
+                                    // There is at least one ball.
+                                    if (ballList.Count > 0)
                                     {
-                                        // The ball is on the racket.
-                                        if (!oneBall.BallInMove)
+                                        // Check each ball.
+                                        foreach (var oneBall in ballList)
                                         {
-                                            // Move the ball with the racket right if ball is not moving.
-                                            oneBall.KeyMove(racketSpeed, canvasWidth, oneRacket);
+                                            // The ball is on the racket.
+                                            if (!oneBall.BallInMove)
+                                            {
+                                                // Move the ball with the racket right if ball is not moving.
+                                                oneBall.KeyMove(racketSpeed, canvasWidth, oneRacket);
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
+
+                        #endregion RightMovement
                     }
 
-                    #endregion RightMovement
-                }
-                // The pressed key is the fire key.
-                else if (SpecKeys(e.Key) == GetOption().FireButton)
-                {
-                    // The keyboard is a controller item, the game is not paused and the game didn't begin yet.
-                    if (GetOption().IsKeyboardEnabled && !gameIsPaused && !gameInSession)
+                    #endregion MovementKeys
+
+                    #region FireKey
+
+                    // The pressed key is the fire key.
+                    else if (SpecKeys(e.Key) == GetOption().FireButton)
                     {
-                        // The timer didn't start yet.
-                        if (!dispatcherTimer.IsEnabled)
+                        // The keyboard is a controller item, the game is not paused and the game didn't begin yet.
+                        if (GetOption().IsKeyboardEnabled && !gameIsPaused && !gameInSession)
                         {
-                            // Start the game.
+                            // The timer didn't start yet.
+                            if (!dispatcherTimer.IsEnabled)
+                            {
+                                // Start the game.
+                                dispatcherTimer.Start();
+                                gameInSession = true;
+                            }
+
+                            // There is at least one ball.
+                            if (ballList.Count > 0)
+                            {
+                                bool oneGo = false;
+                                int iteratorCounter = 0;
+
+                                // Move the first ball.
+                                while (!oneGo && iteratorCounter < ballList.Count)
+                                {
+                                    // Start a ball.
+                                    if (!ballList[iteratorCounter].BallInMove)
+                                    {
+                                        ballList[iteratorCounter].BallInMove = true;
+                                        oneGo = true;
+                                    }
+
+                                    iteratorCounter++;
+                                }
+                            }
+                        }
+                    }
+
+                    #endregion FireKey
+
+                    #region PauseKey
+
+                    // The pressed key is the pause key.
+                    else if (SpecKeys(e.Key) == GetOption().PauseButton)
+                    {
+                        // The game is not paused.
+                        if (!gameIsPaused)
+                        {
+                            // Pause the game.
+                            dispatcherTimer.Stop();
+                            gameIsPaused = true;
+                            //TimeLabel.Content = "The game is paused.";
+                        }
+                        // The game is paused.
+                        else
+                        {
+                            // Continue the game.
                             dispatcherTimer.Start();
-                            gameInSession = true;
-                        }
-
-                        // There is at least one ball.
-                        if (ballList.Count > 0)
-                        {
-                            bool oneGo = false;
-                            int iteratorCounter = 0;
-
-                            // Move the first ball.
-                            while (!oneGo && iteratorCounter < ballList.Count)
-                            {
-                                // Start a ball.
-                                if (!ballList[iteratorCounter].BallInMove)
-                                {
-                                    ballList[iteratorCounter].BallInMove = true;
-                                    oneGo = true;
-                                }
-
-                                iteratorCounter++;
-                            }
+                            gameIsPaused = false;
+                            //TimeLabel.Content = "Time: " + timeOfGame.ToString("HH:mm:ss");
                         }
                     }
+
+                    #endregion PauseKey
                 }
-                // The pressed key is the pause key.
-                else if (SpecKeys(e.Key) == GetOption().PauseButton)
-                {
-                    // The game is not paused.
-                    if (!gameIsPaused)
-                    {
-                        // Pause the game.
-                        dispatcherTimer.Stop();
-                        gameIsPaused = true;
-                        //TimeLabel.Content = "The game is paused.";
-                    }
-                    // The game is paused.
-                    else
-                    {
-                        // Continue the game.
-                        dispatcherTimer.Start();
-                        gameIsPaused = false;
-                        //TimeLabel.Content = "Time: " + timeOfGame.ToString("HH:mm:ss");
-                    }
-                }
+
+                #endregion OptionBindedKeys
             }
+            catch
+            { }
         }
 
         #endregion KeyboardControls
@@ -1777,110 +1892,117 @@ namespace BrickBreaker_2015.ViewModel
         /// <returns>The string for the key.</returns>
         public string SpecKeys(Key inputKey)
         {
-            string retVal = "";
-
-            switch (inputKey)
+            try
             {
-                case Key.Left:
-                    retVal = "Left";
-                    break;
-                case Key.Right:
-                    retVal = "Right";
-                    break;
-                case Key.Up:
-                    retVal = "Up";
-                    break;
-                case Key.Down:
-                    retVal = "Down";
-                    break;
-                case Key.Enter:
-                    // Also known as Key.Return.
-                    retVal = "Enter";
-                    break;
-                case Key.Space:
-                    retVal = "Space";
-                    break;
-                case Key.LeftShift:
-                    retVal = "LeftShift";
-                    break;
-                case Key.RightShift:
-                    retVal = "RightShift";
-                    break;
-                case Key.LeftCtrl:
-                    retVal = "LeftCtrl";
-                    break;
-                case Key.RightCtrl:
-                    retVal = "RightCtrl";
-                    break;
-                case Key.LeftAlt:
-                    retVal = "LeftAlt";
-                    break;
-                case Key.RightAlt:
-                    retVal = "RightAlt";
-                    break;
-                case Key.Tab:
-                    retVal = "Tab";
-                    break;
-                case Key.F1:
-                    retVal = "F1";
-                    break;
-                case Key.F2:
-                    retVal = "F2";
-                    break;
-                case Key.F3:
-                    retVal = "F3";
-                    break;
-                case Key.F4:
-                    retVal = "F4";
-                    break;
-                case Key.F5:
-                    retVal = "F5";
-                    break;
-                case Key.F6:
-                    retVal = "F6";
-                    break;
-                case Key.F7:
-                    retVal = "F7";
-                    break;
-                case Key.F8:
-                    retVal = "F8";
-                    break;
-                case Key.F9:
-                    retVal = "F9";
-                    break;
-                case Key.F10:
-                    retVal = "F10";
-                    break;
-                case Key.F11:
-                    retVal = "F11";
-                    break;
-                case Key.F12:
-                    retVal = "F12";
-                    break;
-                case Key.PageUp:
-                    retVal = "PageUp";
-                    break;
-                case Key.PageDown:
-                    retVal = "PageDown";
-                    break;
-                case Key.Home:
-                    retVal = "Home";
-                    break;
-                case Key.Insert:
-                    retVal = "Insert";
-                    break;
-                case Key.End:
-                    retVal = "End";
-                    break;
-                case Key.Delete:
-                    retVal = "Delete";
-                    break;
-                default:
-                    retVal = inputKey.ToString();
-                    break;
-            }
+                string retVal = "";
 
-            return retVal;
+                switch (inputKey)
+                {
+                    case Key.Left:
+                        retVal = "Left";
+                        break;
+                    case Key.Right:
+                        retVal = "Right";
+                        break;
+                    case Key.Up:
+                        retVal = "Up";
+                        break;
+                    case Key.Down:
+                        retVal = "Down";
+                        break;
+                    case Key.Enter:
+                        // Also known as Key.Return.
+                        retVal = "Enter";
+                        break;
+                    case Key.Space:
+                        retVal = "Space";
+                        break;
+                    case Key.LeftShift:
+                        retVal = "LeftShift";
+                        break;
+                    case Key.RightShift:
+                        retVal = "RightShift";
+                        break;
+                    case Key.LeftCtrl:
+                        retVal = "LeftCtrl";
+                        break;
+                    case Key.RightCtrl:
+                        retVal = "RightCtrl";
+                        break;
+                    case Key.LeftAlt:
+                        retVal = "LeftAlt";
+                        break;
+                    case Key.RightAlt:
+                        retVal = "RightAlt";
+                        break;
+                    case Key.Tab:
+                        retVal = "Tab";
+                        break;
+                    case Key.F1:
+                        retVal = "F1";
+                        break;
+                    case Key.F2:
+                        retVal = "F2";
+                        break;
+                    case Key.F3:
+                        retVal = "F3";
+                        break;
+                    case Key.F4:
+                        retVal = "F4";
+                        break;
+                    case Key.F5:
+                        retVal = "F5";
+                        break;
+                    case Key.F6:
+                        retVal = "F6";
+                        break;
+                    case Key.F7:
+                        retVal = "F7";
+                        break;
+                    case Key.F8:
+                        retVal = "F8";
+                        break;
+                    case Key.F9:
+                        retVal = "F9";
+                        break;
+                    case Key.F10:
+                        retVal = "F10";
+                        break;
+                    case Key.F11:
+                        retVal = "F11";
+                        break;
+                    case Key.F12:
+                        retVal = "F12";
+                        break;
+                    case Key.PageUp:
+                        retVal = "PageUp";
+                        break;
+                    case Key.PageDown:
+                        retVal = "PageDown";
+                        break;
+                    case Key.Home:
+                        retVal = "Home";
+                        break;
+                    case Key.Insert:
+                        retVal = "Insert";
+                        break;
+                    case Key.End:
+                        retVal = "End";
+                        break;
+                    case Key.Delete:
+                        retVal = "Delete";
+                        break;
+                    default:
+                        retVal = inputKey.ToString();
+                        break;
+                }
+
+                return retVal;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         #endregion KeyboardAndMouse

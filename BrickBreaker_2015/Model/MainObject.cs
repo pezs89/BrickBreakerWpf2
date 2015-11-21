@@ -54,8 +54,13 @@ namespace BrickBreaker_2015.Model
 
         public MainObject(double posX, double posY, double width, double height, string imagePath)
         {
-            Area = new Rect(posX, posY, width, height);
-            ImagePath = imagePath;
+            try
+            {
+                Area = new Rect(posX, posY, width, height);
+                ImagePath = imagePath;
+            }
+            catch
+            { }
         }
 
         #endregion Constructors

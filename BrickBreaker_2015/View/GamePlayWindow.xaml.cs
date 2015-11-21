@@ -53,7 +53,7 @@ namespace BrickBreaker_2015.View
             timer = new DispatcherTimer();
             timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
             timer.Tick += Timer_Tick;
-            timer.Start();
+            //timer.Start();
         }
 
         #endregion Constructors
@@ -67,7 +67,7 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            newGameViewModel.KeyDown(e, timer);
+            newGameViewModel.KeyDown(e, ref timer);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="MouseButtonEventArgs"/> instance containing the event data.</param>
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            newGameViewModel.MouseLeftButtonDown(e, timer);
+            newGameViewModel.MouseLeftButtonDown(e, ref timer);
         }
 
         /// <summary>
@@ -107,7 +107,20 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void Timer_Tick(object sender, EventArgs e)
         {
-            //newGameViewModel.LabdaMozgat((int)canvas.ActualWidth, (int)canvas.ActualHeight);
+            newGameViewModel.MoveObjects();
+            newGameViewModel.BallAtContact();
+            newGameViewModel.RacketAtContactWithBonus();
+            newGameViewModel.CheckForGameOver(ref timer);
+        }
+
+        /// <summary>
+        /// Handles the Loaded event of the Window control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            newGameViewModel.WindowLoaded();
         }
 
         #endregion Methods

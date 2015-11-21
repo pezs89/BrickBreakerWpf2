@@ -87,7 +87,12 @@ namespace BrickBreaker_2015.Model
         public Brick(double posX, double posY, double width, double height, string imagePath, BricksType brickType)
             : base(posX, posY, width, height, imagePath)
         {
-            BrickType = brickType;
+            try
+            {
+                BrickType = brickType;
+            }
+            catch
+            { }
         }
 
         #endregion Constructors
@@ -99,26 +104,33 @@ namespace BrickBreaker_2015.Model
         /// </summary>
         public void DecrementBreakNumber()
         {
-            if (BreakNumber > 0)
+            try
             {
-                BreakNumber--;
-
-                switch (BrickType)
+                if (BreakNumber > 0)
                 {
-                    case BricksType.Medium:
-                        if (ImagePath != @"..\..\Resources\Media\Brick\brokenmediumbrick.jpg")
-                        {
-                            ImagePath = @"..\..\Resources\Media\Brick\brokenmediumbrick.jpg";
-                        }
-                        break;
-                    case BricksType.Hard:
-                        if (ImagePath != @"..\..\Resources\Media\Brick\brokenhardbrick.jpg")
-                        {
-                            ImagePath = @"..\..\Resources\Media\Brick\brokenhardbrick.jpg";
-                        }
-                        break;
+                    BreakNumber--;
+
+                    switch (BrickType)
+                    {
+                        case BricksType.Medium:
+                            if (ImagePath != @"..\..\Resources\Media\Brick\brokenmediumbrick.jpg")
+                            {
+                                ImagePath = @"..\..\Resources\Media\Brick\brokenmediumbrick.jpg";
+                            }
+                            break;
+                        case BricksType.Hard:
+                            if (ImagePath != @"..\..\Resources\Media\Brick\brokenhardbrick.jpg")
+                            {
+                                ImagePath = @"..\..\Resources\Media\Brick\brokenhardbrick.jpg";
+                            }
+                            break;
+                    }
+
+                    onPropertyChanged("Area");
                 }
             }
+            catch
+            { }
         }
 
         /// <summary>
@@ -127,21 +139,28 @@ namespace BrickBreaker_2015.Model
         /// <returns>True if brick contains bonus.</returns>
         public bool CalculateBonusChance()
         {
-            bool retVal = false;
-
-            if (BrickType == BricksType.Medium || BrickType == BricksType.Hard)
+            try
             {
-                // Bonus is only available with medium and hard bricks.
-                Random rnd = new Random();
+                bool retVal = false;
 
-                if (rnd.Next(1, 101) <= 25)
+                if (BrickType == BricksType.Medium || BrickType == BricksType.Hard)
                 {
-                    // 25% chance of bonus in medium and hard bricks.
-                    retVal = true;
-                }
-            }
+                    // Bonus is only available with medium and hard bricks.
+                    Random rnd = new Random();
 
-            return retVal;
+                    if (rnd.Next(1, 101) <= 25)
+                    {
+                        // 25% chance of bonus in medium and hard bricks.
+                        retVal = true;
+                    }
+                }
+
+                return retVal;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         #endregion Methods

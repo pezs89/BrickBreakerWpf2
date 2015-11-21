@@ -83,54 +83,59 @@ namespace BrickBreaker_2015.Model
         /// <param name="mousePositionX">The mousePositionX.</param>
         public void MouseMove(double racketSpeed, double canvasWidth, double mousePositionX)
         {
-            // The mouse is left to the racket.
-            if (mousePositionX < Area.X + Area.Width / 2)
+            try
             {
-                // The racket is at the edge of the canvas.
-                if (Area.X <= 0)
+                // The mouse is left to the racket.
+                if (mousePositionX < Area.X + Area.Width / 2)
                 {
-                    area.X = 0;
-                }
-                // There is space to move.
-                else
-                {
-                    // The differance is greater than the length the racket can move in a tick.
-                    if (Area.X + Area.Width / 2 - mousePositionX >= racketSpeed)
+                    // The racket is at the edge of the canvas.
+                    if (Area.X <= 0)
                     {
-                        area.X -= racketSpeed;
+                        area.X = 0;
                     }
-                    // The differance is smaller than the length the racket can move in a tick.
+                    // There is space to move.
                     else
                     {
-                        area.X -= Area.X + Area.Width / 2 - mousePositionX;
+                        // The differance is greater than the length the racket can move in a tick.
+                        if (Area.X + Area.Width / 2 - mousePositionX >= racketSpeed)
+                        {
+                            area.X -= racketSpeed;
+                        }
+                        // The differance is smaller than the length the racket can move in a tick.
+                        else
+                        {
+                            area.X -= Area.X + Area.Width / 2 - mousePositionX;
+                        }
                     }
                 }
-            }
-            // The mouse is right to the racket.
-            else if (mousePositionX > Area.X + Area.Width / 2)
-            {
-                // The racket is at the edge of the canvas.
-                if (Area.X + Area.Width >= canvasWidth)
+                // The mouse is right to the racket.
+                else if (mousePositionX > Area.X + Area.Width / 2)
                 {
-                    area.X = canvasWidth - Area.Width;
-                }
-                // There is space to move.
-                else
-                {
-                    // The differance is greater than the length the racket can move in a tick.
-                    if (mousePositionX - Area.X + Area.Width / 2 >= racketSpeed)
+                    // The racket is at the edge of the canvas.
+                    if (Area.X + Area.Width >= canvasWidth)
                     {
-                        area.X += racketSpeed;
+                        area.X = canvasWidth - Area.Width;
                     }
-                    // The differance is smaller than the length the racket can move in a tick.
+                    // There is space to move.
                     else
                     {
-                        area.X += mousePositionX - Area.X + Area.Width / 2;
+                        // The differance is greater than the length the racket can move in a tick.
+                        if (mousePositionX - Area.X + Area.Width / 2 >= racketSpeed)
+                        {
+                            area.X += racketSpeed;
+                        }
+                        // The differance is smaller than the length the racket can move in a tick.
+                        else
+                        {
+                            area.X += mousePositionX - Area.X + Area.Width / 2;
+                        }
                     }
                 }
-            }
 
-            onPropertyChanged("Area");
+                onPropertyChanged("Area");
+            }
+            catch
+            { }
         }
 
         /// <summary>
@@ -140,32 +145,87 @@ namespace BrickBreaker_2015.Model
         /// <param name="canvasWidth">The canvasWidth.</param>
         public void KeyMove(double racketSpeed, double canvasWidth)
         {
-            // The racket is at the edge of the canvas.
-            if (Area.X <= 0)
+            try
             {
-                area.X = 0;
-            }
-            // The racket is at the edge of the canvas.
-            else if (Area.X + Area.Width >= canvasWidth)
-            {
-                area.X = canvasWidth - Area.Width;
-            }
-            // There is space to move.
-            else
-            {
-                // The left key is pushed.
-                if (Direction == Directions.Left)
+                // The racket is at the edge of the canvas.
+                if (Area.X <= 0)
                 {
-                    area.X -= racketSpeed;
+                    area.X = 0;
                 }
-                // The right key is pushed.
-                else if (Direction == Directions.Right)
+                // The racket is at the edge of the canvas.
+                else if (Area.X + Area.Width >= canvasWidth)
                 {
-                    area.X += racketSpeed;
+                    area.X = canvasWidth - Area.Width;
                 }
-            }
+                // There is space to move.
+                else
+                {
+                    // The left key is pushed.
+                    if (Direction == Directions.Left)
+                    {
+                        area.X -= racketSpeed;
+                    }
+                    // The right key is pushed.
+                    else if (Direction == Directions.Right)
+                    {
+                        area.X += racketSpeed;
+                    }
+                }
 
-            onPropertyChanged("Area");
+                onPropertyChanged("Area");
+            }
+            catch
+            { }
+        }
+
+        /// <summary>
+        /// Changes the racket to sticky.
+        /// </summary>
+        public void ChangeToSticky()
+        {
+            try
+            {
+                StickyRacket = true;
+                ImagePath = @"..\..\Resources\Media\Racket\stickyracket.jpg";
+
+                onPropertyChanged("Area");
+            }
+            catch
+            { }
+        }
+
+        /// <summary>
+        /// Makes the racket longer if it's in a given size.
+        /// </summary>
+        /// <param name="racketMaxSize">The max size of the racket.</param>
+        /// <param name="racketDifference">The difference that is added to the racket.</param>
+        public void Lengthen(double racketMaxSize, double racketDifference)
+        {
+            try
+            {
+                area.Width += (Area.Width < racketMaxSize ? racketDifference : 0);
+
+                onPropertyChanged("Area");
+            }
+            catch
+            { }
+        }
+
+        /// <summary>
+        /// Makes the racket shorter if it's in a given size.
+        /// </summary>
+        /// <param name="racketMinSize">The min size of the racket.</param>
+        /// <param name="racketDifference">The difference that is subtracted from the racket.</param>
+        public void Shorthen(double racketMinSize, double racketDifference)
+        {
+            try
+            {
+                area.Width -= (Area.Width > racketMinSize ? racketDifference : 0);
+
+                onPropertyChanged("Area");
+            }
+            catch
+            { }
         }
 
         #endregion Methods
