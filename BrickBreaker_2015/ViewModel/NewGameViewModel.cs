@@ -540,7 +540,7 @@ namespace BrickBreaker_2015.ViewModel
                     racketList[0].StickyRacket = false;
                     gameObjectList.Add(racketList[0]);
 
-                    ballList.Add(new Ball(canvasWidth / 2 - ballRadius, canvasHeight - racketHeight - ballRadius * 2, ballRadius * 2, ballRadius * 2, ballHorizontalMovement, ballVerticalMovement, Ball.BallsType.Normal, @"..\..\Resources\Media\Ball\normalball.jpg"));
+                    ballList.Add(new Ball(canvasWidth / 2 - ballRadius, canvasHeight - racketHeight - ballRadius * 2, ballRadius * 2, ballRadius * 2, @"..\..\Resources\Media\Ball\normalball.jpg", ballHorizontalMovement, ballVerticalMovement, Ball.BallsType.Normal));
                     ballList[0].BallInMove = false;
                     gameObjectList.Add(ballList[0]);
 
@@ -1470,7 +1470,7 @@ namespace BrickBreaker_2015.ViewModel
                     break;
             }
 
-            Bonus bonus = new Bonus(oneBrick.Area.X + (oneBrick.Area.Width / 2) - (bonusWidth / 2), oneBrick.Area.Y + oneBrick.Area.Height, bonusHeight, bonusWidth, type, bonusImage);
+            Bonus bonus = new Bonus(oneBrick.Area.X + (oneBrick.Area.Width / 2) - (bonusWidth / 2), oneBrick.Area.Y + oneBrick.Area.Height, bonusHeight, bonusWidth, bonusImage, type);
             bonus.ScorePoint = 5;
             bonusList.Add(bonus);
 
@@ -1500,23 +1500,35 @@ namespace BrickBreaker_2015.ViewModel
 
         #region MouseControls
 
-
+        /// <summary>
+        /// Moves the racket by the mouse.
+        /// </summary>
+        /// <param name="sender">The canvas.</param>
+        /// <param name="e">The mouse event.</param>
         public void MouseMove(Canvas sender, MouseEventArgs e)
         {
+            // The mouse is a controller item and the game is not paused.
             if (GetOption().IsMouseEnabled && !gameIsPaused)
             {
+                // There are at least one racket.
                 if (racketList.Count > 0)
                 {
+                    // Check each racket.
                     foreach (Racket oneRacket in racketList)
                     {
+                        // Move the racket.
                         oneRacket.MouseMove(racketSpeed, canvasWidth, e.GetPosition(sender).X);
 
+                        // There are at least one ball.
                         if (ballList.Count > 0)
                         {
+                            // Check each ball.
                             foreach (Ball oneBall in ballList)
                             {
+                                // The ball is on the racket.
                                 if (!oneBall.BallInMove)
                                 {
+                                    // Move the ball.
                                     oneBall.MouseMove(racketSpeed, canvasWidth, e.GetPosition(sender).X, oneRacket);
                                 }
                             }
@@ -1524,18 +1536,19 @@ namespace BrickBreaker_2015.ViewModel
                     }
                 }
             }
-
-            //if (e.GetPosition(sender).X != racketList[0].Area.X + racketList[0].Area.Width / 2)
-            //{
-                
-            //}
         }
 
-
-        public void MouseDown(MouseButtonEventArgs e, DispatcherTimer dispatcherTimer)
+        /// <summary>
+        /// Handles the left button click of the mouse.
+        /// </summary>
+        /// <param name="e">The mouse button event.</param>
+        /// <param name="dispatcherTimer">The timer.</param>
+        public void MouseLeftButtonDown(MouseButtonEventArgs e, DispatcherTimer dispatcherTimer)
         {
+            // The mouse is a controller item and the game is not paused.
             if (GetOption().IsMouseEnabled && !gameIsPaused)
             {
+                // The timer is not going and the game has not been started.
                 if (!dispatcherTimer.IsEnabled && !gameInSession)
                 {
                     // Start the game.
@@ -1543,11 +1556,13 @@ namespace BrickBreaker_2015.ViewModel
                     gameInSession = true;
                 }
 
+                // There are at leat one ball.
                 if (ballList.Count > 0)
                 {
                     bool oneGo = false;
                     int iteratorCounter = 0;
 
+                    // Move the first ball.
                     while (!oneGo && iteratorCounter < ballList.Count)
                     {
                         // Start a ball.
@@ -1567,18 +1582,33 @@ namespace BrickBreaker_2015.ViewModel
 
         #region KeyboardControls
 
-
+        /// <summary>
+        /// Stop the racket's movevent by key.
+        /// </summary>
+        /// <param name="e">The key event.</param>
         public void KeyUp(KeyEventArgs e)
         {
-
-
-            //if ((SpecKeys(e.Key) == GetOption().LeftMove || SpecKeys(e.Key) == GetOption().RightMove) && racketList[0].Direction != Racket.Directions.Stay)
-            //{
-            //    racketList[0].Direction = Racket.Directions.Stay;
-            //}
+            // The is a controller item.
+            if (GetOption().IsKeyboardEnabled)
+            {
+                // The released key is one of the racket moving keys.
+                if (SpecKeys(e.Key) == GetOption().LeftMove || SpecKeys(e.Key) == GetOption().RightMove)
+                {
+                    // The racket's direction is not stay.
+                    if (racketList[0].Direction != Racket.Directions.Stay)
+                    {
+                        // The racket's direction change to stay.
+                        racketList[0].Direction = Racket.Directions.Stay;
+                    }
+                }
+            }
         }
 
-
+        /// <summary>
+        /// Handle all the key events.
+        /// </summary>
+        /// <param name="e">The key event.</param>
+        /// <param name="dispatcherTimer">The timer.</param>
         public void KeyDown(KeyEventArgs e, DispatcherTimer dispatcherTimer)
         {
             //if (e.Key == Key.Escape)

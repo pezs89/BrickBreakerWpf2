@@ -69,25 +69,25 @@ namespace BrickBreaker_2015.DataAccess
                                 case '.':
                                     break;
                                 case '1':
-                                    Brick brick1 = new Brick(X, Y, brickHeight, brickWidth, Brick.BricksType.Easy, @"..\..\Resources\Media\Brick\easybrick.jpg");
+                                    Brick brick1 = new Brick(X, Y, brickHeight, brickWidth, @"..\..\Resources\Media\Brick\easybrick.jpg", Brick.BricksType.Easy);
                                     brick1.ScorePoint = 10;
                                     brick1.BreakNumber = 1;
                                     returnValue.Add(brick1);
                                     break;
                                 case '2':
-                                    Brick brick2 = new Brick(X, Y, brickHeight, brickWidth, Brick.BricksType.Medium, @"..\..\Resources\Media\Brick\mediumbrick.jpg");
+                                    Brick brick2 = new Brick(X, Y, brickHeight, brickWidth, @"..\..\Resources\Media\Brick\mediumbrick.jpg", Brick.BricksType.Medium);
                                     brick2.ScorePoint = 20;
                                     brick2.BreakNumber = 2;
                                     returnValue.Add(brick2);
                                     break;
                                 case '3':
-                                    Brick brick3 = new Brick(X, Y, brickHeight, brickWidth, Brick.BricksType.Hard, @"..\..\Resources\Media\Brick\hardbrick.jpg");
+                                    Brick brick3 = new Brick(X, Y, brickHeight, brickWidth, @"..\..\Resources\Media\Brick\hardbrick.jpg", Brick.BricksType.Hard);
                                     brick3.ScorePoint = 30;
                                     brick3.BreakNumber = 5;
                                     returnValue.Add(brick3);
                                     break;
                                 case '4':
-                                    Brick brick4 = new Brick(X, Y, brickHeight, brickWidth, Brick.BricksType.Steel, @"..\..\Resources\Media\Brick\steelbrick.jpg");
+                                    Brick brick4 = new Brick(X, Y, brickHeight, brickWidth, @"..\..\Resources\Media\Brick\steelbrick.jpg", Brick.BricksType.Steel);
                                     brick4.ScorePoint = 40;
                                     brick4.BreakNumber = 1;
                                     returnValue.Add(brick4);

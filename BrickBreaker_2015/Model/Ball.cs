@@ -25,9 +25,6 @@ namespace BrickBreaker_2015.Model
         // Shows if the ball is in move.
         private bool ballInMove;
 
-        // The image of the ball.
-        private string ballImage;
-
         // The types of the balls.
         public enum BallsType
         {
@@ -39,18 +36,6 @@ namespace BrickBreaker_2015.Model
         #endregion Fields
 
         #region Properties
-
-        /// <summary>
-        /// Gets or sets the ballImage.
-        /// </summary>
-        /// <value>
-        /// The ballImage.
-        /// </value>
-        public string BallImage
-        {
-            get { return ballImage; }
-            set { ballImage = value; }
-        }
 
         /// <summary>
         /// Gets or sets the ballType.
@@ -114,14 +99,13 @@ namespace BrickBreaker_2015.Model
         /// <param name="horizontalMovement">The horizontal movement of the ball.</param>
         /// <param name="verticalMovement">The vertical movement of the ball.</param>
         /// <param name="ballType">The type of the ball.</param>
-        /// <param name="ballImage">The image of the ball.</param>
-        public Ball(double posX, double posY, double width, double height, double horizontalMovement, double verticalMovement, BallsType ballType, string ballImage)
-            : base(posX, posY, width, height)
+        /// <param name="imagePath">The image of the ball.</param>
+        public Ball(double posX, double posY, double width, double height, string imagePath, double horizontalMovement, double verticalMovement, BallsType ballType)
+            : base(posX, posY, width, height, imagePath)
         {
             HorizontalMovement = horizontalMovement;
             VerticalMovement = verticalMovement;
             BallType = ballType;
-            BallImage = ballImage;
         }
 
         #endregion Constructors
@@ -156,7 +140,7 @@ namespace BrickBreaker_2015.Model
                 if (racket.Area.X <= 0)
                 {
                     // The ball sticks out to the left side.
-                    if (area.X <= racket.Area.X)
+                    if (Area.X <= racket.Area.X)
                     {
                         area.X = 0;
                     }
@@ -183,9 +167,9 @@ namespace BrickBreaker_2015.Model
                 if (racket.Area.X + racket.Area.Width >= canvasWidth)
                 {
                     // The ball sticks out to the right side.
-                    if (area.X >= racket.Area.X + racket.Area.Width - area.Width)
+                    if (Area.X >= racket.Area.X + racket.Area.Width - Area.Width)
                     {
-                        area.X = canvasWidth - area.Width;
+                        area.X = canvasWidth - Area.Width;
                     }
                 }
                 // There is space to move.
@@ -219,7 +203,7 @@ namespace BrickBreaker_2015.Model
             if (racket.Area.X <= 0)
             {
                 // The ball sticks out to the left side.
-                if (area.X <= racket.Area.X)
+                if (Area.X <= racket.Area.X)
                 {
                     area.X = 0;
                 }
@@ -228,9 +212,9 @@ namespace BrickBreaker_2015.Model
             else if (racket.Area.X + racket.Area.Width >= canvasWidth)
             {
                 // The ball sticks out to the right side.
-                if (area.X >= racket.Area.X + racket.Area.Width - area.Width)
+                if (Area.X >= racket.Area.X + racket.Area.Width - Area.Width)
                 {
-                    area.X = canvasWidth - area.Width;
+                    area.X = canvasWidth - Area.Width;
                 }
             }
             // There is space to move.

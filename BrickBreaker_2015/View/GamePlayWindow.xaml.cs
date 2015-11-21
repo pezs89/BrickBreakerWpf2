@@ -91,13 +91,13 @@ namespace BrickBreaker_2015.View
         }
 
         /// <summary>
-        /// Handles the MouseDown event of the Window control.
+        /// Handles the MouseLeftButtonDown event of the Window control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="MouseButtonEventArgs"/> instance containing the event data.</param>
-        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            newGameViewModel.MouseDown(e, timer);
+            newGameViewModel.MouseLeftButtonDown(e, timer);
         }
 
         /// <summary>

@@ -17,6 +17,9 @@ namespace BrickBreaker_2015.Model
         // The area.
         protected Rect area;
 
+        // The image path.
+        private string imagePath;
+
         #endregion Fields
 
         #region Properties
@@ -33,13 +36,26 @@ namespace BrickBreaker_2015.Model
             set { area = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the imagePath.
+        /// </summary>
+        /// <value>
+        /// The imagePath.
+        /// </value>
+        public string ImagePath
+        {
+            get { return imagePath; }
+            set { imagePath = value; }
+        }
+
         #endregion Properties
 
         #region Constructors
 
-        public MainObject(double posX, double posY, double width, double height)
+        public MainObject(double posX, double posY, double width, double height, string imagePath)
         {
             Area = new Rect(posX, posY, width, height);
+            ImagePath = imagePath;
         }
 
         #endregion Constructors

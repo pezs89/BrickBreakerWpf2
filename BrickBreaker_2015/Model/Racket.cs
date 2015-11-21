@@ -16,9 +16,6 @@ namespace BrickBreaker_2015.Model
         // Bonus: the racket gets sticky, so the ball sticks to it.
         private bool stickyRacket;
 
-        // The picture of the racket.
-        private string racketPicture;
-
         // The direction of the racket.
         private Directions direction;
         
@@ -47,18 +44,6 @@ namespace BrickBreaker_2015.Model
         }
 
         /// <summary>
-        /// Gets or sets the racketPicture.
-        /// </summary>
-        /// <value>
-        /// The racketPicture.
-        /// </value>
-        public string RacketPicture
-        {
-            get { return racketPicture; }
-            set { racketPicture = value; }
-        }
-
-        /// <summary>
         /// Gets or sets the direction.
         /// </summary>
         /// <value>
@@ -81,12 +66,10 @@ namespace BrickBreaker_2015.Model
         /// <param name="posY">The y position of the racket.</param>
         /// <param name="width">The width of the racket.</param>
         /// <param name="height">The height of the racket.</param>
-        /// <param name="racketPicture">The picture of the racket.</param>
-        public Racket(double posX, double posY, double width, double height, string racketPicture)
-            : base(posX, posY, width, height)
-        {
-            RacketPicture = racketPicture;
-        }
+        /// <param name="imagePath">The image of the racket.</param>
+        public Racket(double posX, double posY, double width, double height, string imagePath)
+            : base(posX, posY, width, height, imagePath)
+        { }
 
         #endregion Constructors
 
@@ -101,10 +84,10 @@ namespace BrickBreaker_2015.Model
         public void MouseMove(double racketSpeed, double canvasWidth, double mousePositionX)
         {
             // The mouse is left to the racket.
-            if (mousePositionX < area.X + area.Width / 2)
+            if (mousePositionX < Area.X + Area.Width / 2)
             {
                 // The racket is at the edge of the canvas.
-                if (area.X <= 0)
+                if (Area.X <= 0)
                 {
                     area.X = 0;
                 }
@@ -112,37 +95,37 @@ namespace BrickBreaker_2015.Model
                 else
                 {
                     // The differance is greater than the length the racket can move in a tick.
-                    if (area.X + area.Width / 2 - mousePositionX >= racketSpeed)
+                    if (Area.X + Area.Width / 2 - mousePositionX >= racketSpeed)
                     {
                         area.X -= racketSpeed;
                     }
                     // The differance is smaller than the length the racket can move in a tick.
                     else
                     {
-                        area.X -= area.X + area.Width / 2 - mousePositionX;
+                        area.X -= Area.X + Area.Width / 2 - mousePositionX;
                     }
                 }
             }
             // The mouse is right to the racket.
-            else if (mousePositionX > area.X + area.Width / 2)
+            else if (mousePositionX > Area.X + Area.Width / 2)
             {
                 // The racket is at the edge of the canvas.
-                if (area.X + area.Width >= canvasWidth)
+                if (Area.X + Area.Width >= canvasWidth)
                 {
-                    area.X = canvasWidth - area.Width;
+                    area.X = canvasWidth - Area.Width;
                 }
                 // There is space to move.
                 else
                 {
                     // The differance is greater than the length the racket can move in a tick.
-                    if (mousePositionX - area.X + area.Width / 2 >= racketSpeed)
+                    if (mousePositionX - Area.X + Area.Width / 2 >= racketSpeed)
                     {
                         area.X += racketSpeed;
                     }
                     // The differance is smaller than the length the racket can move in a tick.
                     else
                     {
-                        area.X += mousePositionX - area.X + area.Width / 2;
+                        area.X += mousePositionX - Area.X + Area.Width / 2;
                     }
                 }
             }
@@ -158,14 +141,14 @@ namespace BrickBreaker_2015.Model
         public void KeyMove(double racketSpeed, double canvasWidth)
         {
             // The racket is at the edge of the canvas.
-            if (area.X <= 0)
+            if (Area.X <= 0)
             {
                 area.X = 0;
             }
             // The racket is at the edge of the canvas.
-            else if (area.X + area.Width >= canvasWidth)
+            else if (Area.X + Area.Width >= canvasWidth)
             {
-                area.X = canvasWidth - area.Width;
+                area.X = canvasWidth - Area.Width;
             }
             // There is space to move.
             else

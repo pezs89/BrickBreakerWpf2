@@ -16,9 +16,6 @@ namespace BrickBreaker_2015.Model
         // The score value of the bouns.
         private int scorePoint;
 
-        // The picture of the bonus.
-        private string bonusPicture;
-
         // The type of the bonus.
         private BonusesType bonusType;
 
@@ -65,18 +62,6 @@ namespace BrickBreaker_2015.Model
             set { scorePoint = value; }
         }
 
-        /// <summary>
-        /// Gets or sets the bonusPicture.
-        /// </summary>
-        /// <value>
-        /// The bonusPicture.
-        /// </value>
-        public string BonusPicture
-        {
-            get { return bonusPicture; }
-            set { bonusPicture = value; }
-        }
-
         #endregion Properties
 
         #region Constructors
@@ -89,12 +74,11 @@ namespace BrickBreaker_2015.Model
         /// <param name="width">The width of the bonus.</param>
         /// <param name="height">The height of the bonus.</param>
         /// <param name="bonusType">The type of the bonus.</param>
-        /// <param name="bonusPicture">The picture of the bonus.</param>
-        public Bonus(double posX, double posY, double width, double height, BonusesType bonusType, string bonusPicture)
-            : base(posX, posY, width, height)
+        /// <param name="imagePath">The image of the bonus.</param>
+        public Bonus(double posX, double posY, double width, double height, string imagePath, BonusesType bonusType)
+            : base(posX, posY, width, height, imagePath)
         {
             BonusType = bonusType;
-            BonusPicture = bonusPicture;
         }
 
         #endregion Constructors
@@ -110,7 +94,7 @@ namespace BrickBreaker_2015.Model
         /// <returns>True if the bonus can be removed.</returns>
         public bool Descend(double bonusSpeed, double canvasWidth, double canvasHeight)
         {
-            if (area.Y >= canvasHeight)
+            if (Area.Y >= canvasHeight)
             {
                 // If the bouns top reaches the bottom of the canvas, then it can be removed.
                 return true;

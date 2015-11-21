@@ -22,9 +22,6 @@ namespace BrickBreaker_2015.Model
         // The number to break the brick.
         private int breakNumber;
 
-        // The path to tha brick's picture.
-        private string brickPicture;
-
         // The brick types.
         public enum BricksType
         {
@@ -74,18 +71,6 @@ namespace BrickBreaker_2015.Model
             set { breakNumber = value; }
         }
 
-        /// <summary>
-        /// Gets or sets the brickPicture.
-        /// </summary>
-        /// <value>
-        /// The brickPicture.
-        /// </value>
-        public string BrickPicture
-        {
-            get { return brickPicture; }
-            set { brickPicture = value; }
-        }
-
         #endregion Properties
 
         #region Constructors
@@ -98,12 +83,11 @@ namespace BrickBreaker_2015.Model
         /// <param name="width">The width of the brick.</param>
         /// <param name="height">The height of the brick.</param>
         /// <param name="brickType">The type of the brick.</param>
-        /// <param name="brickPicture">The picture of the brick.</param>
-        public Brick(double posX, double posY, double width, double height, BricksType brickType, string brickPicture)
-            : base(posX, posY, width, height)
+        /// <param name="imagePath">The image of the brick.</param>
+        public Brick(double posX, double posY, double width, double height, string imagePath, BricksType brickType)
+            : base(posX, posY, width, height, imagePath)
         {
             BrickType = brickType;
-            BrickPicture = brickPicture;
         }
 
         #endregion Constructors
@@ -122,15 +106,15 @@ namespace BrickBreaker_2015.Model
                 switch (BrickType)
                 {
                     case BricksType.Medium:
-                        if (BrickPicture != @"..\..\Resources\Media\Brick\brokenmediumbrick.jpg")
+                        if (ImagePath != @"..\..\Resources\Media\Brick\brokenmediumbrick.jpg")
                         {
-                            BrickPicture = @"..\..\Resources\Media\Brick\brokenmediumbrick.jpg";
+                            ImagePath = @"..\..\Resources\Media\Brick\brokenmediumbrick.jpg";
                         }
                         break;
                     case BricksType.Hard:
-                        if (BrickPicture != @"..\..\Resources\Media\Brick\brokenhardbrick.jpg")
+                        if (ImagePath != @"..\..\Resources\Media\Brick\brokenhardbrick.jpg")
                         {
-                            BrickPicture = @"..\..\Resources\Media\Brick\brokenhardbrick.jpg";
+                            ImagePath = @"..\..\Resources\Media\Brick\brokenhardbrick.jpg";
                         }
                         break;
                 }
