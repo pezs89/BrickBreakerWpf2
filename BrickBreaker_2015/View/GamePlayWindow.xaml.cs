@@ -67,7 +67,7 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            newGameViewModel.KeyDown(e);
+            newGameViewModel.KeyDown(e, timer);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="MouseButtonEventArgs"/> instance containing the event data.</param>
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            newGameViewModel.MouseDown(e);
+            newGameViewModel.MouseDown(e, timer);
         }
 
         /// <summary>
