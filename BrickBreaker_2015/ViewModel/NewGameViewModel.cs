@@ -23,6 +23,9 @@ namespace BrickBreaker_2015.ViewModel
 
         #region ViewModels
 
+        // The error log viewmodel.
+        private ErrorLogViewModel errorLogViewModel;
+
         // The map txt access layer.
         private MapTxtAccess mapTxtAccess;
 
@@ -372,6 +375,7 @@ namespace BrickBreaker_2015.ViewModel
         {
             try
             {
+                errorLogViewModel = new ErrorLogViewModel();
                 mapTxtAccess = new MapTxtAccess();
                 scoreXmlAccess = new ScoresXmlAccess();
                 optionsViewModel = new OptionsViewModel();
@@ -762,8 +766,10 @@ namespace BrickBreaker_2015.ViewModel
                     }
                 }
             }
-            catch
-            { }
+            catch (Exception e)
+            {
+                errorLogViewModel.LogError(e);
+            }
         }
 
         /// <summary>
@@ -853,8 +859,10 @@ namespace BrickBreaker_2015.ViewModel
                     mediaPlayer.Play();
                 }
             }
-            catch
-            { }
+            catch (Exception e)
+            {
+                errorLogViewModel.LogError(e);
+            }
         }
 
         /// <summary>
@@ -892,8 +900,10 @@ namespace BrickBreaker_2015.ViewModel
                 //// Show the time.
                 //TimeLabel.Content = "Time: " + timeOfGame.ToString("HH:mm:ss");
             }
-            catch
-            { }
+            catch (Exception e)
+            {
+                errorLogViewModel.LogError(e);
+            }
         }
 
         /// <summary>
@@ -977,8 +987,10 @@ namespace BrickBreaker_2015.ViewModel
                     GameOver(gameOverStatus, timer);
                 }
             }
-            catch
-            { }
+            catch (Exception e)
+            {
+                errorLogViewModel.LogError(e);
+            }
         }
 
         /// <summary>
@@ -992,8 +1004,10 @@ namespace BrickBreaker_2015.ViewModel
                 //submitScore.ScoreLabel.Content = score;
                 //submitScore.Show();
             }
-            catch
-            { }
+            catch (Exception e)
+            {
+                errorLogViewModel.LogError(e);
+            }
         }
 
         /// <summary>
@@ -1111,8 +1125,10 @@ namespace BrickBreaker_2015.ViewModel
 
                 #endregion Success
             }
-            catch
-            { }
+            catch (Exception e)
+            {
+                errorLogViewModel.LogError(e);
+            }
         }
 
         /// <summary>
@@ -1145,8 +1161,10 @@ namespace BrickBreaker_2015.ViewModel
 
                 return retVal;
             }
-            catch
+            catch (Exception e)
             {
+                errorLogViewModel.LogError(e);
+
                 return false;
             }
         }
@@ -1188,8 +1206,10 @@ namespace BrickBreaker_2015.ViewModel
                 ballList.Add(ball);
                 gameObjectList.Add(ball);
             }
-            catch
-            { }
+            catch (Exception e)
+            {
+                errorLogViewModel.LogError(e);
+            }
         }
 
         /// <summary>
@@ -1317,8 +1337,10 @@ namespace BrickBreaker_2015.ViewModel
                     }
                 }
             }
-            catch
-            { }
+            catch (Exception e)
+            {
+                errorLogViewModel.LogError(e);
+            }
         }
 
         /// <summary>
@@ -1491,8 +1513,10 @@ namespace BrickBreaker_2015.ViewModel
 
                 #endregion FillLists
             }
-            catch
-            { }
+            catch (Exception e)
+            {
+                errorLogViewModel.LogError(e);
+            }
         }
 
         /// <summary>
@@ -1539,8 +1563,10 @@ namespace BrickBreaker_2015.ViewModel
 
                 #endregion MoveBonuses
             }
-            catch
-            { }
+            catch (Exception e)
+            {
+                errorLogViewModel.LogError(e);
+            }
         }
 
         /// <summary>
@@ -1554,8 +1580,10 @@ namespace BrickBreaker_2015.ViewModel
             {
                 return mapTxtAccess.FileExists(pathString);
             }
-            catch
+            catch (Exception e)
             {
+                errorLogViewModel.LogError(e);
+
                 return false;
             }
         }
@@ -1626,8 +1654,10 @@ namespace BrickBreaker_2015.ViewModel
                     gameObjectList.Remove(bonus);
                 }
             }
-            catch
-            { }
+            catch (Exception e)
+            {
+                errorLogViewModel.LogError(e);
+            }
         }
 
         /// <summary>
@@ -1640,8 +1670,10 @@ namespace BrickBreaker_2015.ViewModel
             {
                 return optionsViewModel.OptionModel;
             }
-            catch
+            catch (Exception e)
             {
+                errorLogViewModel.LogError(e);
+
                 return null;
             }
         }

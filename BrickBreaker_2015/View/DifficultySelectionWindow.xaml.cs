@@ -22,6 +22,9 @@ namespace BrickBreaker_2015.View
     {
         #region Fields
 
+        // The error log viewmodel.
+        private ErrorLogViewModel errorLogViewModel;
+
         // The options viewmodel.
         private OptionsViewModel optionsViewModel;
 
@@ -38,6 +41,7 @@ namespace BrickBreaker_2015.View
             {
                 InitializeComponent();
 
+                errorLogViewModel = new ErrorLogViewModel();
                 optionsViewModel = new OptionsViewModel();
                 this.Height = optionsViewModel.VerticalScaleNumber;
                 this.Width = optionsViewModel.HorizontalScaleNumber;
@@ -66,8 +70,10 @@ namespace BrickBreaker_2015.View
                 this.Close();
                 childWindow.ShowDialog();
             }
-            catch
-            { }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -86,8 +92,10 @@ namespace BrickBreaker_2015.View
                 this.Close();
                 childWindow.ShowDialog();
             }
-            catch
-            { }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -106,8 +114,32 @@ namespace BrickBreaker_2015.View
                 this.Close();
                 childWindow.ShowDialog();
             }
-            catch
-            { }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
+        }
+
+        /// <summary>
+        /// Handles the KeyDown event of the Window control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if (e.Key == Key.Escape)
+                {
+                    NewGameWindow parent = new NewGameWindow();
+                    this.DialogResult = true;
+                    parent.ShowDialog();
+                }
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         #endregion Methods

@@ -23,6 +23,9 @@ namespace BrickBreaker_2015.View
     {
         #region Fields
 
+        // The error log viewmodel.
+        private ErrorLogViewModel errorLogViewModel;
+
         // The game ViewModel.
         private NewGameViewModel newGameViewModel;
 
@@ -45,6 +48,7 @@ namespace BrickBreaker_2015.View
             {
                 InitializeComponent();
 
+                errorLogViewModel = new ErrorLogViewModel();
                 //canvas.Background = new SolidColorBrush(Colors.White);
 
                 newGameViewModel = new NewGameViewModel(canvas.ActualWidth, canvas.ActualHeight);
@@ -76,8 +80,10 @@ namespace BrickBreaker_2015.View
             {
                 newGameViewModel.KeyDown(e, ref timer);
             }
-            catch
-            { }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -91,8 +97,10 @@ namespace BrickBreaker_2015.View
             {
                 newGameViewModel.KeyUp(e);
             }
-            catch
-            { }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -106,8 +114,10 @@ namespace BrickBreaker_2015.View
             {
                 newGameViewModel.MouseMove(canvas, e);
             }
-            catch
-            { }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -121,8 +131,10 @@ namespace BrickBreaker_2015.View
             {
                 newGameViewModel.MouseLeftButtonDown(e, ref timer);
             }
-            catch
-            { }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -139,8 +151,10 @@ namespace BrickBreaker_2015.View
                 newGameViewModel.RacketAtContactWithBonus();
                 newGameViewModel.CheckForGameOver(ref timer);
             }
-            catch
-            { }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -154,8 +168,10 @@ namespace BrickBreaker_2015.View
             {
                 newGameViewModel.WindowLoaded();
             }
-            catch
-            { }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         #endregion Methods

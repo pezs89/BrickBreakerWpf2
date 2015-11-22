@@ -23,6 +23,9 @@ namespace BrickBreaker_2015.View
     {
         #region Fields
 
+        // The error log viewmodel.
+        private ErrorLogViewModel errorLogViewModel;
+
         // The options ViewModel.
         private OptionsViewModel optionsVM;
 
@@ -41,6 +44,8 @@ namespace BrickBreaker_2015.View
             try
             {
                 InitializeComponent();
+
+                errorLogViewModel = new ErrorLogViewModel();
 
                 ResolutionComboBox.Items.Add("580x420");
                 ResolutionComboBox.Items.Add("640x480");
@@ -76,8 +81,10 @@ namespace BrickBreaker_2015.View
                 StatusLabel.Content = "";
                 SettingsUpdatedLabelHide.Stop();
             }
-            catch
-            { }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -102,8 +109,10 @@ namespace BrickBreaker_2015.View
                     parent.ShowDialog();
                 }
             }
-            catch
-            { }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -125,8 +134,10 @@ namespace BrickBreaker_2015.View
                     optionsVM.IsChanged = false;
                 }
             }
-            catch
-            { }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -152,8 +163,10 @@ namespace BrickBreaker_2015.View
                     }
                 }
             }
-            catch
-            { }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -179,8 +192,10 @@ namespace BrickBreaker_2015.View
                     }
                 }
             }
-            catch
-            { }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -206,8 +221,10 @@ namespace BrickBreaker_2015.View
                     }
                 }
             }
-            catch
-            { }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -233,8 +250,10 @@ namespace BrickBreaker_2015.View
                     }
                 }
             }
-            catch
-            { }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         #endregion Methods

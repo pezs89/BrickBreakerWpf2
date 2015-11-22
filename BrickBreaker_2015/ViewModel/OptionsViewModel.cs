@@ -20,6 +20,9 @@ namespace BrickBreaker_2015.ViewModel
     {
         #region Fields
 
+        // The error log viewmodel.
+        private ErrorLogViewModel errorLogViewModel;
+
         // The options.
         private Options optionModel;
 
@@ -98,6 +101,7 @@ namespace BrickBreaker_2015.ViewModel
         {
             try
             {
+                errorLogViewModel = new ErrorLogViewModel();
                 OptionModel = new Options();
                 optionsXmlAccess = new OptionsXmlAccess();
                 OptionModel = optionsXmlAccess.LoadOptions();
@@ -136,8 +140,10 @@ namespace BrickBreaker_2015.ViewModel
                 optionsXmlAccess.SaveOptions(OptionModel);
                 IsChanged = true;
             }
-            catch
-            { }
+            catch (Exception e)
+            {
+                errorLogViewModel.LogError(e);
+            }
         }
 
         /// <summary>
@@ -171,8 +177,10 @@ namespace BrickBreaker_2015.ViewModel
 
                 return true;
             }
-            catch
+            catch (Exception e)
             {
+                errorLogViewModel.LogError(e);
+
                 return true;
             }
         }
@@ -291,8 +299,10 @@ namespace BrickBreaker_2015.ViewModel
 
                 return retVal;
             }
-            catch
+            catch (Exception e)
             {
+                errorLogViewModel.LogError(e);
+
                 return null;
             }
         }

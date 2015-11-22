@@ -24,6 +24,9 @@ namespace BrickBreaker_2015.View
     {
         #region Fields
 
+        // The error log viewmodel.
+        private ErrorLogViewModel errorLogViewModel;
+
         // The options viewmodel.
         private OptionsViewModel optionsViewModel;
 
@@ -43,6 +46,7 @@ namespace BrickBreaker_2015.View
             {
                 InitializeComponent();
 
+                errorLogViewModel = new ErrorLogViewModel();
                 optionsViewModel = new OptionsViewModel();
                 this.Height = optionsViewModel.VerticalScaleNumber;
                 this.Width = optionsViewModel.HorizontalScaleNumber;
@@ -74,8 +78,10 @@ namespace BrickBreaker_2015.View
                     parent.ShowDialog();
                 }
             }
-            catch
-            { }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         #endregion Methods
