@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DataAccess\ErrorLogTxtAccess.cs" />
     <Compile Include="Model\Ball.cs" />
     <Compile Include="Model\Bindable.cs" />
     <Compile Include="Model\Bonus.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Model\Racket.cs" />
     <Compile Include="DataAccess\MapTxtAccess.cs" />
     <Compile Include="ViewModel\CreditsViewModel.cs" />
+    <Compile Include="ViewModel\ErrorLogViewModel.cs" />
     <Compile Include="ViewModel\NewGameViewModel.cs" />
     <Compile Include="ViewModel\OptionsViewModel.cs" />
     <Compile Include="DataAccess\OptionsXmlAccess.cs" />
@@ -192,6 +194,7 @@
     <Resource Include="Resources\Media\Brick\steelbrick.jpg" />
     <Resource Include="Resources\Media\Racket\normalracket.jpg" />
     <Resource Include="Resources\Media\Racket\stickyracket.jpg" />
+    <Resource Include="Resources\ErrorLog.txt" />
     <Content Include="Resources\Media\Sounds\play_this.mp3" />
   </ItemGroup>
   <ItemGroup />
