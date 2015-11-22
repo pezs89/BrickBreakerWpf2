@@ -36,10 +36,15 @@ namespace BrickBreaker_2015.Model
         /// <param name="propertyName">The name of the property.</param>
         public void onPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            if (PropertyChanged != null)
+            try
             {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                }
             }
+            catch
+            { }
         }
 
         #endregion Methods

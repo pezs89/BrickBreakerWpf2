@@ -31,7 +31,12 @@ namespace BrickBreaker_2015.ViewModel
         /// </summary>
         public CreditsViewModel()
         {
-            scoreXmlAccess = new ScoresXmlAccess();
+            try
+            {
+                scoreXmlAccess = new ScoresXmlAccess();
+            }
+            catch
+            { }
         }
 
         #endregion Constructors

@@ -39,14 +39,19 @@ namespace BrickBreaker_2015.View
         /// </summary>
         public CreditsWindow()
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
 
-            optionsViewModel = new OptionsViewModel();
-            this.Height = optionsViewModel.VerticalScaleNumber;
-            this.Width = optionsViewModel.HorizontalScaleNumber;
+                optionsViewModel = new OptionsViewModel();
+                this.Height = optionsViewModel.VerticalScaleNumber;
+                this.Width = optionsViewModel.HorizontalScaleNumber;
 
-            creditsViewModel = new CreditsViewModel();
-            this.DataContext = creditsViewModel.LoadRawScores();
+                creditsViewModel = new CreditsViewModel();
+                this.DataContext = creditsViewModel.LoadRawScores();
+            }
+            catch
+            { }
         }
 
         #endregion Constructors
@@ -60,12 +65,17 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Escape)
+            try
             {
-                MainWindow parent = new MainWindow();
-                this.DialogResult = true;
-                parent.ShowDialog();
+                if (e.Key == Key.Escape)
+                {
+                    MainWindow parent = new MainWindow();
+                    this.DialogResult = true;
+                    parent.ShowDialog();
+                }
             }
+            catch
+            { }
         }
 
         #endregion Methods

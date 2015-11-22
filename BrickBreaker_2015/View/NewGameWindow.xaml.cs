@@ -37,16 +37,21 @@ namespace BrickBreaker_2015.View
         /// </summary>
         public NewGameWindow()
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
 
-            newGameViewModel = new NewGameViewModel();
-            optionsViewModel = new OptionsViewModel();
-            this.Height = optionsViewModel.VerticalScaleNumber;
-            this.Width = optionsViewModel.HorizontalScaleNumber;
+                newGameViewModel = new NewGameViewModel();
+                optionsViewModel = new OptionsViewModel();
+                this.Height = optionsViewModel.VerticalScaleNumber;
+                this.Width = optionsViewModel.HorizontalScaleNumber;
 
-            firstMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.FirstMapPath);
-            secondMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.SecondMapPath);
-            thirdMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.ThirdMapPath);
+                firstMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.FirstMapPath);
+                secondMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.SecondMapPath);
+                thirdMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.ThirdMapPath);
+            }
+            catch
+            { }
         }
 
         #endregion Constructors
@@ -60,12 +65,17 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void firstMap_Diff_Click(object sender, RoutedEventArgs e)
         {
-            optionsViewModel.OptionModel.MapNumber = 1;
-            optionsViewModel.SaveToXml();
+            try
+            {
+                optionsViewModel.OptionModel.MapNumber = 1;
+                optionsViewModel.SaveToXml();
 
-            DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
-            this.Close();
-            childWindow.ShowDialog();
+                DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
+                this.Close();
+                childWindow.ShowDialog();
+            }
+            catch
+            { }
         }
 
         /// <summary>
@@ -75,12 +85,17 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void secondMap_Diff_Click(object sender, RoutedEventArgs e)
         {
-            optionsViewModel.OptionModel.MapNumber = 2;
-            optionsViewModel.SaveToXml();
+            try
+            {
+                optionsViewModel.OptionModel.MapNumber = 2;
+                optionsViewModel.SaveToXml();
 
-            DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
-            this.Close();
-            childWindow.ShowDialog();
+                DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
+                this.Close();
+                childWindow.ShowDialog();
+            }
+            catch
+            { }
         }
 
         /// <summary>
@@ -90,12 +105,17 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void thirdMap_Diff_Click(object sender, RoutedEventArgs e)
         {
-            optionsViewModel.OptionModel.MapNumber = 3;
-            optionsViewModel.SaveToXml();
+            try
+            {
+                optionsViewModel.OptionModel.MapNumber = 3;
+                optionsViewModel.SaveToXml();
 
-            DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
-            this.Close();
-            childWindow.ShowDialog();
+                DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
+                this.Close();
+                childWindow.ShowDialog();
+            }
+            catch
+            { }
         }
 
         /// <summary>
@@ -105,9 +125,14 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void Back_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow parent = new MainWindow();
-            this.DialogResult = true;
-            parent.ShowDialog();
+            try
+            {
+                MainWindow parent = new MainWindow();
+                this.DialogResult = true;
+                parent.ShowDialog();
+            }
+            catch
+            { }
         }
 
         #endregion Methods

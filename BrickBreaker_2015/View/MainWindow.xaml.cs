@@ -36,11 +36,16 @@ namespace BrickBreaker_2015
         /// </summary>
         public MainWindow()
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
 
-            optionsViewModel = new OptionsViewModel();
-            this.Height = optionsViewModel.VerticalScaleNumber;
-            this.Width = optionsViewModel.HorizontalScaleNumber;
+                optionsViewModel = new OptionsViewModel();
+                this.Height = optionsViewModel.VerticalScaleNumber;
+                this.Width = optionsViewModel.HorizontalScaleNumber;
+            }
+            catch
+            { }
         }
 
         #endregion Constructors
@@ -54,9 +59,14 @@ namespace BrickBreaker_2015
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void NewGameButton_Click(object sender, RoutedEventArgs e)
         {
-            NewGameWindow childWindow = new NewGameWindow();
-            this.Close();
-            childWindow.ShowDialog();
+            try
+            {
+                NewGameWindow childWindow = new NewGameWindow();
+                this.Close();
+                childWindow.ShowDialog();
+            }
+            catch
+            { }
         }
 
         /// <summary>
@@ -66,9 +76,14 @@ namespace BrickBreaker_2015
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void OptionsButton_Click(object sender, RoutedEventArgs e)
         {
-            OptionsWindow childWindow = new OptionsWindow();
-            this.Close();
-            childWindow.ShowDialog();
+            try
+            {
+                OptionsWindow childWindow = new OptionsWindow();
+                this.Close();
+                childWindow.ShowDialog();
+            }
+            catch
+            { }
         }
 
         /// <summary>
@@ -78,9 +93,14 @@ namespace BrickBreaker_2015
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void CreditsButton_Click(object sender, RoutedEventArgs e)
         {
-            CreditsWindow childWindow = new CreditsWindow();
-            this.Close();
-            childWindow.ShowDialog();
+            try
+            {
+                CreditsWindow childWindow = new CreditsWindow();
+                this.Close();
+                childWindow.ShowDialog();
+            }
+            catch
+            { }
         }
 
         /// <summary>
@@ -90,9 +110,14 @@ namespace BrickBreaker_2015
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void InfoButton_Click(object sender, RoutedEventArgs e)
         {
-            InformationsWindow childWindow = new InformationsWindow();
-            this.Close();
-            childWindow.ShowDialog();
+            try
+            {
+                InformationsWindow childWindow = new InformationsWindow();
+                this.Close();
+                childWindow.ShowDialog();
+            }
+            catch
+            { }
         }
 
         /// <summary>
@@ -102,7 +127,12 @@ namespace BrickBreaker_2015
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void ExitGameButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            try
+            {
+                this.Close();
+            }
+            catch
+            { }
         }
 
         #endregion Methods
