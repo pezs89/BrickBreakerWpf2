@@ -305,6 +305,22 @@ namespace BrickBreaker_2015.Model
         }
 
         /// <summary>
+        /// Repositions the ball on the racket.
+        /// </summary>
+        /// <param name="racket">The racket.</param>
+        public void RepositionOnRacket(Racket racket)
+        {
+            try
+            {
+                area.Y = racket.Area.Y - Area.Width;
+
+                onPropertyChanged("Area");
+            }
+            catch
+            { }
+        }
+
+        /// <summary>
         /// Changes the ball to large size.
         /// </summary>
         /// <param name="ballMaxRadius">The large size of the ball.</param>
