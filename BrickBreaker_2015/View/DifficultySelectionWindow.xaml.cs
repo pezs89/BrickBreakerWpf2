@@ -22,6 +22,9 @@ namespace BrickBreaker_2015.View
     {
         #region Fields
 
+        // The error log viewmodel.
+        private ErrorLogViewModel errorLogViewModel;
+
         // The options viewmodel.
         private OptionsViewModel optionsViewModel;
 
@@ -34,11 +37,17 @@ namespace BrickBreaker_2015.View
         /// </summary>
         public DifficultySelectionWindow()
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
 
-            optionsViewModel = new OptionsViewModel();
-            this.Height = optionsViewModel.VerticalScaleNumber;
-            this.Width = optionsViewModel.HorizontalScaleNumber;
+                errorLogViewModel = new ErrorLogViewModel();
+                optionsViewModel = new OptionsViewModel();
+                this.Height = optionsViewModel.VerticalScaleNumber;
+                this.Width = optionsViewModel.HorizontalScaleNumber;
+            }
+            catch
+            { }
         }
 
         #endregion Constructors
@@ -52,12 +61,19 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void EasyButton_Click(object sender, RoutedEventArgs e)
         {
-            optionsViewModel.OptionModel.Difficulty = 1;
-            optionsViewModel.SaveToXml();
+            try
+            {
+                optionsViewModel.OptionModel.Difficulty = 1;
+                optionsViewModel.SaveToXml();
 
-            GamePlayWindow childWindow = new GamePlayWindow();
-            this.Close();
-            childWindow.ShowDialog();
+                GamePlayWindow childWindow = new GamePlayWindow();
+                this.Close();
+                childWindow.ShowDialog();
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -67,12 +83,19 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void NormalButton_Click(object sender, RoutedEventArgs e)
         {
-            optionsViewModel.OptionModel.Difficulty = 2;
-            optionsViewModel.SaveToXml();
+            try
+            {
+                optionsViewModel.OptionModel.Difficulty = 2;
+                optionsViewModel.SaveToXml();
 
-            GamePlayWindow childWindow = new GamePlayWindow();
-            this.Close();
-            childWindow.ShowDialog();
+                GamePlayWindow childWindow = new GamePlayWindow();
+                this.Close();
+                childWindow.ShowDialog();
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -82,12 +105,41 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void HardButton_Click(object sender, RoutedEventArgs e)
         {
-            optionsViewModel.OptionModel.Difficulty = 3;
-            optionsViewModel.SaveToXml();
+            try
+            {
+                optionsViewModel.OptionModel.Difficulty = 3;
+                optionsViewModel.SaveToXml();
 
-            GamePlayWindow childWindow = new GamePlayWindow();
-            this.Close();
-            childWindow.ShowDialog();
+                GamePlayWindow childWindow = new GamePlayWindow();
+                this.Close();
+                childWindow.ShowDialog();
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
+        }
+
+        /// <summary>
+        /// Handles the KeyDown event of the Window control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if (e.Key == Key.Escape)
+                {
+                    NewGameWindow parent = new NewGameWindow();
+                    this.DialogResult = true;
+                    parent.ShowDialog();
+                }
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         #endregion Methods

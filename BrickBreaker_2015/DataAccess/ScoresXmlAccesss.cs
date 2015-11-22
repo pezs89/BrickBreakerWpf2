@@ -48,13 +48,7 @@ namespace BrickBreaker_2015.DataAccess
             {
                 if (!File.Exists(PathString))
                 {
-                    XElement nameElement = new XElement("Name", "Test");
-                    XElement scoreElement = new XElement("Score", "0");
-                    XAttribute placeAttribute = new XAttribute("ID", 1);
-                    XElement newElements = new XElement("Data", placeAttribute, nameElement, scoreElement);
-                    XElement newPerson = new XElement("Person", newElements);
-                    XDocument newDocument = new XDocument(newPerson);
-                    newDocument.Save(PathString);
+                    CreateNewFile();
                 }
             }
             catch
@@ -66,6 +60,47 @@ namespace BrickBreaker_2015.DataAccess
         #region Methods
 
         /// <summary>
+        /// Creates a new file.
+        /// </summary>
+        private void CreateNewFile()
+        {
+            try
+            {
+                XElement nameElement = new XElement("Name", "Test");
+                XElement scoreElement = new XElement("Score", "0");
+                XAttribute placeAttribute = new XAttribute("ID", 1);
+                XElement newElements = new XElement("Data", placeAttribute, nameElement, scoreElement);
+                XElement newPerson = new XElement("Person", newElements);
+                XDocument newDocument = new XDocument(newPerson);
+                newDocument.Save(PathString);
+            }
+            catch
+            { }
+        }
+
+        /// <summary>
+        /// Checks if the file exists.
+        /// </summary>
+        /// <param name="pathString">The path to the txt file.</param>
+        /// <returns>True if exists, false if not.</returns>
+        private bool FileExists(string pathString)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(pathString) && File.Exists(pathString))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Loads the items from the highscores xml file.
         /// </summary>
         /// <returns>The list of highscore items or null.</returns>
@@ -73,22 +108,27 @@ namespace BrickBreaker_2015.DataAccess
         {
             try
             {
-                // Open the highscores xml file.
-                XDocument highscoresFromXml = XDocument.Load(PathString);
-                var readDataFromXml = highscoresFromXml.Descendants("Data");
-
-                // Get the items from the highscores xml file.
-                List<HighScoreModel> returnValue = new List<HighScoreModel>();
-                var fromXml = from x in readDataFromXml
-                              select x;
-
-                // Store the items in a Highscore list.
-                foreach (var oneElement in fromXml)
+                if (FileExists(PathString))
                 {
-                    returnValue.Add(new HighScoreModel((string)oneElement.Element("Name"), (string)oneElement.Element("Score")));
+                    // Open the highscores xml file.
+                    XDocument highscoresFromXml = XDocument.Load(PathString);
+                    var readDataFromXml = highscoresFromXml.Descendants("Data");
+
+                    // Get the items from the highscores xml file.
+                    List<HighScoreModel> returnValue = new List<HighScoreModel>();
+                    var fromXml = from x in readDataFromXml
+                                  select x;
+
+                    // Store the items in a Highscore list.
+                    foreach (var oneElement in fromXml)
+                    {
+                        returnValue.Add(new HighScoreModel((string)oneElement.Element("Name"), (string)oneElement.Element("Score")));
+                    }
+
+                    return returnValue;
                 }
 
-                return returnValue;
+                return null;
             }
             catch
             {
@@ -104,10 +144,15 @@ namespace BrickBreaker_2015.DataAccess
         {
             try
             {
-                // Open the highscores xml file.
-                var returnValue = XDocument.Load(PathString).Root;
+                if (FileExists(PathString))
+                {
+                    // Open the highscores xml file.
+                    var returnValue = XDocument.Load(PathString).Root;
 
-                return returnValue;
+                    return returnValue;
+                }
+
+                return null;
             }
             catch
             {
@@ -123,7 +168,7 @@ namespace BrickBreaker_2015.DataAccess
         {
             try
             {
-                if (highscores != null && highscores.Count > 0)
+                if (highscores != null && highscores.Count > 0 && FileExists(PathString))
                 {
                     // Sort to descending order by scores.
                     highscores.Sort((x, y) => int.Parse(y.PlayerScore).CompareTo(int.Parse(x.PlayerScore)));

@@ -15,6 +15,9 @@ namespace BrickBreaker_2015.ViewModel
     {
         #region Fields
 
+        // The error log viewmodel.
+        private ErrorLogViewModel errorLogViewModel;
+
         // The score xml access layer.
         private ScoresXmlAccess scoreXmlAccess;
 
@@ -31,7 +34,13 @@ namespace BrickBreaker_2015.ViewModel
         /// </summary>
         public CreditsViewModel()
         {
-            scoreXmlAccess = new ScoresXmlAccess();
+            try
+            {
+                errorLogViewModel = new ErrorLogViewModel();
+                scoreXmlAccess = new ScoresXmlAccess();
+            }
+            catch
+            { }
         }
 
         #endregion Constructors
@@ -48,8 +57,10 @@ namespace BrickBreaker_2015.ViewModel
             {
                 return scoreXmlAccess.LoadRawScores();
             }
-            catch
+            catch (Exception e)
             {
+                errorLogViewModel.LogError(e);
+
                 return null;
             }
         }

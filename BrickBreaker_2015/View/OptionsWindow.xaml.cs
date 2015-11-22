@@ -23,6 +23,9 @@ namespace BrickBreaker_2015.View
     {
         #region Fields
 
+        // The error log viewmodel.
+        private ErrorLogViewModel errorLogViewModel;
+
         // The options ViewModel.
         private OptionsViewModel optionsVM;
 
@@ -38,21 +41,28 @@ namespace BrickBreaker_2015.View
         /// </summary>
         public OptionsWindow()
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
 
-            ResolutionComboBox.Items.Add("580x420");
-            ResolutionComboBox.Items.Add("640x480");
-            ResolutionComboBox.Items.Add("800x600");
+                errorLogViewModel = new ErrorLogViewModel();
 
-            optionsVM = new OptionsViewModel();
-            this.DataContext = optionsVM;
-            this.Width = optionsVM.HorizontalScaleNumber;
-            this.Height = optionsVM.VerticalScaleNumber;
+                ResolutionComboBox.Items.Add("580x420");
+                ResolutionComboBox.Items.Add("640x480");
+                ResolutionComboBox.Items.Add("800x600");
 
-            ResolutionComboBox.SelectedItem = optionsVM.OptionModel.Resolution;
+                optionsVM = new OptionsViewModel();
+                this.DataContext = optionsVM;
+                this.Width = optionsVM.HorizontalScaleNumber;
+                this.Height = optionsVM.VerticalScaleNumber;
 
-            SettingsUpdatedLabelHide.Interval = TimeSpan.FromSeconds(3);
-            SettingsUpdatedLabelHide.Tick += SettingsUpdatedLabelHide_Tick;
+                ResolutionComboBox.SelectedItem = optionsVM.OptionModel.Resolution;
+
+                SettingsUpdatedLabelHide.Interval = TimeSpan.FromSeconds(3);
+                SettingsUpdatedLabelHide.Tick += SettingsUpdatedLabelHide_Tick;
+            }
+            catch
+            { }
         }
 
         #endregion Constructors
@@ -66,8 +76,15 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void SettingsUpdatedLabelHide_Tick(object sender, EventArgs e)
         {
-            StatusLabel.Content = "";
-            SettingsUpdatedLabelHide.Stop();
+            try
+            {
+                StatusLabel.Content = "";
+                SettingsUpdatedLabelHide.Stop();
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -77,17 +94,24 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void BackToMainButton_Click(object sender, RoutedEventArgs e)
         {
-            if (MouseCheckBox.IsChecked == false && KeyboardCheckBox.IsChecked == false)
+            try
             {
-                e.Handled = false;
-                StatusLabel.Content = "At least one control" + "\n" + "has to be checked in!";
-                SettingsUpdatedLabelHide.Start();
+                if (MouseCheckBox.IsChecked == false && KeyboardCheckBox.IsChecked == false)
+                {
+                    e.Handled = false;
+                    StatusLabel.Content = "At least one control" + "\n" + "has to be checked in!";
+                    SettingsUpdatedLabelHide.Start();
+                }
+                else
+                {
+                    MainWindow parent = new MainWindow();
+                    this.DialogResult = true;
+                    parent.ShowDialog();
+                }
             }
-            else
+            catch (Exception error)
             {
-                MainWindow parent = new MainWindow();
-                this.DialogResult = true;
-                parent.ShowDialog();
+                errorLogViewModel.LogError(error);
             }
         }
 
@@ -98,14 +122,21 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void ApplyButton_Click(object sender, RoutedEventArgs e)
         {
-            optionsVM.SaveToXml();
-            
-            if (optionsVM.IsChanged)
+            try
             {
-                StatusLabel.Content = "Settings has been updated!";
-                SettingsUpdatedLabelHide.Start();
+                optionsVM.SaveToXml();
 
-                optionsVM.IsChanged = false;
+                if (optionsVM.IsChanged)
+                {
+                    StatusLabel.Content = "Settings has been updated!";
+                    SettingsUpdatedLabelHide.Start();
+
+                    optionsVM.IsChanged = false;
+                }
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
             }
         }
 
@@ -116,18 +147,25 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void LeftMoveTextBox_KeyUp(object sender, KeyEventArgs e)
         {
-            if (!optionsVM.Check(optionsVM.SpecKeys(e.Key)))
+            try
             {
-                StatusLabel.Content = "Key has been already assigned!";
-                SettingsUpdatedLabelHide.Start();
-                LeftMoveTextBox.Text = optionsVM.OptionModel.LeftMove;
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
+                if (!optionsVM.Check(optionsVM.SpecKeys(e.Key)))
                 {
-                    LeftMoveTextBox.Text = optionsVM.SpecKeys(e.Key);
+                    StatusLabel.Content = "Key has been already assigned!";
+                    SettingsUpdatedLabelHide.Start();
+                    LeftMoveTextBox.Text = optionsVM.OptionModel.LeftMove;
                 }
+                else
+                {
+                    if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
+                    {
+                        LeftMoveTextBox.Text = optionsVM.SpecKeys(e.Key);
+                    }
+                }
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
             }
         }
 
@@ -138,18 +176,25 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void RightMoveTextBox_KeyUp(object sender, KeyEventArgs e)
         {
-            if (!optionsVM.Check(optionsVM.SpecKeys(e.Key)))
+            try
             {
-                StatusLabel.Content = "Key has been already assigned!";
-                SettingsUpdatedLabelHide.Start();
-                RightMoveTextBox.Text = optionsVM.OptionModel.RightMove;
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
+                if (!optionsVM.Check(optionsVM.SpecKeys(e.Key)))
                 {
-                    RightMoveTextBox.Text = optionsVM.SpecKeys(e.Key);
+                    StatusLabel.Content = "Key has been already assigned!";
+                    SettingsUpdatedLabelHide.Start();
+                    RightMoveTextBox.Text = optionsVM.OptionModel.RightMove;
                 }
+                else
+                {
+                    if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
+                    {
+                        RightMoveTextBox.Text = optionsVM.SpecKeys(e.Key);
+                    }
+                }
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
             }
         }
 
@@ -160,18 +205,25 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void PauseTextBox_KeyUp(object sender, KeyEventArgs e)
         {
-            if (!optionsVM.Check(optionsVM.SpecKeys(e.Key)))
+            try
             {
-                StatusLabel.Content = "Key has been already assigned!";
-                SettingsUpdatedLabelHide.Start();
-                PauseTextBox.Text = optionsVM.OptionModel.PauseButton;
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
+                if (!optionsVM.Check(optionsVM.SpecKeys(e.Key)))
                 {
-                    PauseTextBox.Text = optionsVM.SpecKeys(e.Key);
+                    StatusLabel.Content = "Key has been already assigned!";
+                    SettingsUpdatedLabelHide.Start();
+                    PauseTextBox.Text = optionsVM.OptionModel.PauseButton;
                 }
+                else
+                {
+                    if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
+                    {
+                        PauseTextBox.Text = optionsVM.SpecKeys(e.Key);
+                    }
+                }
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
             }
         }
 
@@ -182,18 +234,25 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void FireTextBox_KeyUp(object sender, KeyEventArgs e)
         {
-            if (!optionsVM.Check(optionsVM.SpecKeys(e.Key)))
+            try
             {
-                StatusLabel.Content = "Key has been already assigned!";
-                SettingsUpdatedLabelHide.Start();
-                FireTextBox.Text = optionsVM.OptionModel.FireButton;
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
+                if (!optionsVM.Check(optionsVM.SpecKeys(e.Key)))
                 {
-                    FireTextBox.Text = optionsVM.SpecKeys(e.Key);
+                    StatusLabel.Content = "Key has been already assigned!";
+                    SettingsUpdatedLabelHide.Start();
+                    FireTextBox.Text = optionsVM.OptionModel.FireButton;
                 }
+                else
+                {
+                    if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
+                    {
+                        FireTextBox.Text = optionsVM.SpecKeys(e.Key);
+                    }
+                }
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
             }
         }
 

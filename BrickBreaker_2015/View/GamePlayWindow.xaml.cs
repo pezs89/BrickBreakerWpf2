@@ -23,6 +23,9 @@ namespace BrickBreaker_2015.View
     {
         #region Fields
 
+        // The error log viewmodel.
+        private ErrorLogViewModel errorLogViewModel;
+
         // The game ViewModel.
         private NewGameViewModel newGameViewModel;
 
@@ -41,19 +44,25 @@ namespace BrickBreaker_2015.View
         /// </summary>
         public GamePlayWindow()
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
 
-            //canvas.Background = new SolidColorBrush(Colors.White);
+                errorLogViewModel = new ErrorLogViewModel();
+                //canvas.Background = new SolidColorBrush(Colors.White);
 
-            newGameViewModel = new NewGameViewModel(canvas.ActualWidth, canvas.ActualHeight);
-            optionsViewModel = new OptionsViewModel();
+                newGameViewModel = new NewGameViewModel(canvas.ActualWidth, canvas.ActualHeight);
+                optionsViewModel = new OptionsViewModel();
 
-            this.DataContext = newGameViewModel;
+                this.DataContext = newGameViewModel;
 
-            timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
-            timer.Tick += Timer_Tick;
-            //timer.Start();
+                timer = new DispatcherTimer();
+                timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
+                timer.Tick += Timer_Tick;
+                //timer.Start();
+            }
+            catch
+            { }
         }
 
         #endregion Constructors
@@ -67,7 +76,14 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            newGameViewModel.KeyDown(e, ref timer);
+            try
+            {
+                newGameViewModel.KeyDown(e, ref timer);
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -77,7 +93,14 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void Window_KeyUp(object sender, KeyEventArgs e)
         {
-            newGameViewModel.KeyUp(e);
+            try
+            {
+                newGameViewModel.KeyUp(e);
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -87,7 +110,14 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
-            newGameViewModel.MouseMove(canvas, e);
+            try
+            {
+                newGameViewModel.MouseMove(canvas, e);
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -97,7 +127,14 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="MouseButtonEventArgs"/> instance containing the event data.</param>
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            newGameViewModel.MouseLeftButtonDown(e, ref timer);
+            try
+            {
+                newGameViewModel.MouseLeftButtonDown(e, ref timer);
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -107,10 +144,17 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void Timer_Tick(object sender, EventArgs e)
         {
-            newGameViewModel.MoveObjects();
-            newGameViewModel.BallAtContact();
-            newGameViewModel.RacketAtContactWithBonus();
-            newGameViewModel.CheckForGameOver(ref timer);
+            try
+            {
+                newGameViewModel.MoveObjects();
+                newGameViewModel.BallAtContact();
+                newGameViewModel.RacketAtContactWithBonus();
+                newGameViewModel.CheckForGameOver(ref timer);
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -120,7 +164,14 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            newGameViewModel.WindowLoaded();
+            try
+            {
+                newGameViewModel.WindowLoaded();
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         #endregion Methods

@@ -22,6 +22,9 @@ namespace BrickBreaker_2015.View
     {
         #region Fields
 
+        // The error log viremodel.
+        private ErrorLogViewModel errorLogViewModel;
+
         // The options viewmodel.
         private OptionsViewModel optionsViewModel;
 
@@ -34,14 +37,20 @@ namespace BrickBreaker_2015.View
         /// </summary>
         public InformationsWindow()
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
 
-            optionsViewModel = new OptionsViewModel();
-            this.Height = optionsViewModel.VerticalScaleNumber;
-            this.Width = optionsViewModel.HorizontalScaleNumber;
+                errorLogViewModel = new ErrorLogViewModel();
+                optionsViewModel = new OptionsViewModel();
+                this.Height = optionsViewModel.VerticalScaleNumber;
+                this.Width = optionsViewModel.HorizontalScaleNumber;
 
-            InfoTxtBlock.Text = "Name: Péter Zsolt" + "\n" + "Neptun: GZOG8N" + "\n" + "App: BrickBreaker";
-            PressKeyTxtBlock.Text = "Press Esc to the Main Menu";
+                InfoTxtBlock.Text = "Name: Péter Zsolt" + "\n" + "Neptun: GZOG8N" + "\n" + "App: BrickBreaker";
+                PressKeyTxtBlock.Text = "Press Esc to the Main Menu";
+            }
+            catch
+            { }
         }
 
         #endregion Constructors
@@ -55,11 +64,18 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Escape)
+            try
             {
-                MainWindow parent = new MainWindow();
-                this.DialogResult = true;
-                parent.ShowDialog();
+                if (e.Key == Key.Escape)
+                {
+                    MainWindow parent = new MainWindow();
+                    this.DialogResult = true;
+                    parent.ShowDialog();
+                }
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
             }
         }
 

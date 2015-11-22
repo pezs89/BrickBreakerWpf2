@@ -20,6 +20,9 @@ namespace BrickBreaker_2015.ViewModel
     {
         #region Fields
 
+        // The error log viewmodel.
+        private ErrorLogViewModel errorLogViewModel;
+
         // The options.
         private Options optionModel;
 
@@ -91,27 +94,36 @@ namespace BrickBreaker_2015.ViewModel
 
         #region Constructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OptionsViewModel"/> class.
+        /// </summary>
         public OptionsViewModel()
         {
-            OptionModel = new Options();
-            optionsXmlAccess = new OptionsXmlAccess();
-            OptionModel = optionsXmlAccess.LoadOptions();
-
-            switch (OptionModel.Resolution)
+            try
             {
-                case "580x420":
-                    HorizontalScaleNumber = 580;
-                    VerticalScaleNumber = 420;
-                    break;
-                case "640x480":
-                    HorizontalScaleNumber = 640;
-                    VerticalScaleNumber = 480;
-                    break;
-                case "800x600":
-                    HorizontalScaleNumber = 800;
-                    VerticalScaleNumber = 600;
-                    break;
+                errorLogViewModel = new ErrorLogViewModel();
+                OptionModel = new Options();
+                optionsXmlAccess = new OptionsXmlAccess();
+                OptionModel = optionsXmlAccess.LoadOptions();
+
+                switch (OptionModel.Resolution)
+                {
+                    case "580x420":
+                        HorizontalScaleNumber = 580;
+                        VerticalScaleNumber = 420;
+                        break;
+                    case "640x480":
+                        HorizontalScaleNumber = 640;
+                        VerticalScaleNumber = 480;
+                        break;
+                    case "800x600":
+                        HorizontalScaleNumber = 800;
+                        VerticalScaleNumber = 600;
+                        break;
+                }
             }
+            catch
+            { }
         }
 
         #endregion Constructors
@@ -123,8 +135,15 @@ namespace BrickBreaker_2015.ViewModel
         /// </summary>
         public void SaveToXml()
         {
-            optionsXmlAccess.SaveOptions(OptionModel);
-            IsChanged = true;
+            try
+            {
+                optionsXmlAccess.SaveOptions(OptionModel);
+                IsChanged = true;
+            }
+            catch (Exception e)
+            {
+                errorLogViewModel.LogError(e);
+            }
         }
 
         /// <summary>
@@ -134,27 +153,36 @@ namespace BrickBreaker_2015.ViewModel
         /// <returns>True if ok, false if not.</returns>
         public bool Check(string inputKey)
         {
-            if (!string.IsNullOrEmpty(inputKey))
+            try
             {
-                if (inputKey == OptionModel.PauseButton || inputKey == OptionModel.RightMove || inputKey == OptionModel.FireButton)
+                if (!string.IsNullOrEmpty(inputKey))
                 {
-                    return false;
+                    if (inputKey == OptionModel.PauseButton || inputKey == OptionModel.RightMove || inputKey == OptionModel.FireButton)
+                    {
+                        return false;
+                    }
+                    else if (inputKey == OptionModel.LeftMove || inputKey == OptionModel.PauseButton || inputKey == OptionModel.FireButton)
+                    {
+                        return false;
+                    }
+                    else if (inputKey == OptionModel.LeftMove || inputKey == OptionModel.FireButton || inputKey == OptionModel.RightMove)
+                    {
+                        return false;
+                    }
+                    else if (inputKey == OptionModel.LeftMove || inputKey == OptionModel.RightMove || inputKey == OptionModel.PauseButton)
+                    {
+                        return false;
+                    }
                 }
-                else if (inputKey == OptionModel.LeftMove || inputKey == OptionModel.PauseButton || inputKey == OptionModel.FireButton)
-                {
-                    return false;
-                }
-                else if (inputKey == OptionModel.LeftMove || inputKey == OptionModel.FireButton || inputKey == OptionModel.RightMove)
-                {
-                    return false;
-                }
-                else if (inputKey == OptionModel.LeftMove || inputKey == OptionModel.RightMove || inputKey == OptionModel.PauseButton)
-                {
-                    return false;
-                }
+
+                return true;
             }
-            
-            return true;
+            catch (Exception e)
+            {
+                errorLogViewModel.LogError(e);
+
+                return true;
+            }
         }
 
         /// <summary>
@@ -164,110 +192,119 @@ namespace BrickBreaker_2015.ViewModel
         /// <returns>The string for the key.</returns>
         public string SpecKeys(Key inputKey)
         {
-            string retVal = "";
-
-            switch (inputKey)
+            try
             {
-                case Key.Left:
-                    retVal = "Left";
-                    break;
-                case Key.Right:
-                    retVal = "Right";
-                    break;
-                case Key.Up:
-                    retVal = "Up";
-                    break;
-                case Key.Down:
-                    retVal = "Down";
-                    break;
-                case Key.Enter:
-                    // Also known as Key.Return.
-                    retVal = "Enter";
-                    break;
-                case Key.Space:
-                    retVal = "Space";
-                    break;
-                case Key.LeftShift:
-                    retVal = "LeftShift";
-                    break;
-                case Key.RightShift:
-                    retVal = "RightShift";
-                    break;
-                case Key.LeftCtrl:
-                    retVal = "LeftCtrl";
-                    break;
-                case Key.RightCtrl:
-                    retVal = "RightCtrl";
-                    break;
-                case Key.LeftAlt:
-                    retVal = "LeftAlt";
-                    break;
-                case Key.RightAlt:
-                    retVal = "RightAlt";
-                    break;
-                case Key.Tab:
-                    retVal = "Tab";
-                    break;
-                case Key.F1:
-                    retVal = "F1";
-                    break;
-                case Key.F2:
-                    retVal = "F2";
-                    break;
-                case Key.F3:
-                    retVal = "F3";
-                    break;
-                case Key.F4:
-                    retVal = "F4";
-                    break;
-                case Key.F5:
-                    retVal = "F5";
-                    break;
-                case Key.F6:
-                    retVal = "F6";
-                    break;
-                case Key.F7:
-                    retVal = "F7";
-                    break;
-                case Key.F8:
-                    retVal = "F8";
-                    break;
-                case Key.F9:
-                    retVal = "F9";
-                    break;
-                case Key.F10:
-                    retVal = "F10";
-                    break;
-                case Key.F11:
-                    retVal = "F11";
-                    break;
-                case Key.F12:
-                    retVal = "F12";
-                    break;
-                case Key.PageUp:
-                    retVal = "PageUp";
-                    break;
-                case Key.PageDown:
-                    retVal = "PageDown";
-                    break;
-                case Key.Home:
-                    retVal = "Home";
-                    break;
-                case Key.Insert:
-                    retVal = "Insert";
-                    break;
-                case Key.End:
-                    retVal = "End";
-                    break;
-                case Key.Delete:
-                    retVal = "Delete";
-                    break;
-                default:
-                    retVal = inputKey.ToString();
-                    break;
-            } 
-            
-            return retVal;
+                string retVal = "";
+
+                switch (inputKey)
+                {
+                    case Key.Left:
+                        retVal = "Left";
+                        break;
+                    case Key.Right:
+                        retVal = "Right";
+                        break;
+                    case Key.Up:
+                        retVal = "Up";
+                        break;
+                    case Key.Down:
+                        retVal = "Down";
+                        break;
+                    case Key.Enter:
+                        // Also known as Key.Return.
+                        retVal = "Enter";
+                        break;
+                    case Key.Space:
+                        retVal = "Space";
+                        break;
+                    case Key.LeftShift:
+                        retVal = "LeftShift";
+                        break;
+                    case Key.RightShift:
+                        retVal = "RightShift";
+                        break;
+                    case Key.LeftCtrl:
+                        retVal = "LeftCtrl";
+                        break;
+                    case Key.RightCtrl:
+                        retVal = "RightCtrl";
+                        break;
+                    case Key.LeftAlt:
+                        retVal = "LeftAlt";
+                        break;
+                    case Key.RightAlt:
+                        retVal = "RightAlt";
+                        break;
+                    case Key.Tab:
+                        retVal = "Tab";
+                        break;
+                    case Key.F1:
+                        retVal = "F1";
+                        break;
+                    case Key.F2:
+                        retVal = "F2";
+                        break;
+                    case Key.F3:
+                        retVal = "F3";
+                        break;
+                    case Key.F4:
+                        retVal = "F4";
+                        break;
+                    case Key.F5:
+                        retVal = "F5";
+                        break;
+                    case Key.F6:
+                        retVal = "F6";
+                        break;
+                    case Key.F7:
+                        retVal = "F7";
+                        break;
+                    case Key.F8:
+                        retVal = "F8";
+                        break;
+                    case Key.F9:
+                        retVal = "F9";
+                        break;
+                    case Key.F10:
+                        retVal = "F10";
+                        break;
+                    case Key.F11:
+                        retVal = "F11";
+                        break;
+                    case Key.F12:
+                        retVal = "F12";
+                        break;
+                    case Key.PageUp:
+                        retVal = "PageUp";
+                        break;
+                    case Key.PageDown:
+                        retVal = "PageDown";
+                        break;
+                    case Key.Home:
+                        retVal = "Home";
+                        break;
+                    case Key.Insert:
+                        retVal = "Insert";
+                        break;
+                    case Key.End:
+                        retVal = "End";
+                        break;
+                    case Key.Delete:
+                        retVal = "Delete";
+                        break;
+                    default:
+                        retVal = inputKey.ToString();
+                        break;
+                }
+
+                return retVal;
+            }
+            catch (Exception e)
+            {
+                errorLogViewModel.LogError(e);
+
+                return null;
+            }
         }
 
         #endregion Methods

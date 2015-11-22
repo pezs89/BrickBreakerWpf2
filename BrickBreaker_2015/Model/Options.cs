@@ -195,16 +195,21 @@ namespace BrickBreaker_2015.Model
         /// <param name="mapNumber">The mapNumber field.</param>
         public Options(string resolution, string leftMove, string rightMove, string pauseButton, string fireButton, bool isMouseEnabled, bool isSoundEnabled, bool isKeyboardEnabled, int difficulty, int mapNumber)
         {
-            Resolution = resolution;
-            LeftMove = leftMove;
-            RightMove = rightMove;
-            PauseButton = pauseButton;
-            FireButton = fireButton;
-            IsMouseEnabled = isMouseEnabled;
-            IsSoundEnabled = isSoundEnabled;
-            IsKeyboardEnabled = isKeyboardEnabled;
-            Difficulty = difficulty;
-            MapNumber = mapNumber;
+            try
+            {
+                Resolution = resolution;
+                LeftMove = leftMove;
+                RightMove = rightMove;
+                PauseButton = pauseButton;
+                FireButton = fireButton;
+                IsMouseEnabled = isMouseEnabled;
+                IsSoundEnabled = isSoundEnabled;
+                IsKeyboardEnabled = isKeyboardEnabled;
+                Difficulty = difficulty;
+                MapNumber = mapNumber;
+            }
+            catch
+            { }
         }
 
         #endregion Constructors

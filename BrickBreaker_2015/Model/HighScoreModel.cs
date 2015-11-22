@@ -66,8 +66,13 @@ namespace BrickBreaker_2015.Model
         /// <param name="playerScore">The player's score field.</param>
         public HighScoreModel(string playerName, string playerScore)
         {
-            PlayerName = playerName;
-            PlayerScore = playerScore;
+            try
+            {
+                PlayerName = playerName;
+                PlayerScore = playerScore;
+            }
+            catch (Exception)
+            { }
         }
 
         #endregion Constructors

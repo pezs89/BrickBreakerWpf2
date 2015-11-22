@@ -22,6 +22,9 @@ namespace BrickBreaker_2015.View
     {
         #region Fields
 
+        // The error log viewmodel.
+        private ErrorLogViewModel errorLogViewModel;
+
         // The options viewmodel.
         private OptionsViewModel optionsViewModel;
 
@@ -37,6 +40,7 @@ namespace BrickBreaker_2015.View
         /// </summary>
         public NewGameWindow()
         {
+<<<<<<< HEAD
             InitializeComponent();
 
             newGameViewModel = new NewGameViewModel();
@@ -49,6 +53,24 @@ namespace BrickBreaker_2015.View
             thirdMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.ThirdMapPath);
             fourthmapMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.ForthMapPath);
             fifthmap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.FifthMapPath);
+=======
+            try
+            {
+                InitializeComponent();
+
+                errorLogViewModel = new ErrorLogViewModel();
+                newGameViewModel = new NewGameViewModel();
+                optionsViewModel = new OptionsViewModel();
+                this.Height = optionsViewModel.VerticalScaleNumber;
+                this.Width = optionsViewModel.HorizontalScaleNumber;
+
+                firstMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.FirstMapPath);
+                secondMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.SecondMapPath);
+                thirdMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.ThirdMapPath);
+            }
+            catch
+            { }
+>>>>>>> origin/master
         }
 
         #endregion Constructors
@@ -62,12 +84,19 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void firstMap_Diff_Click(object sender, RoutedEventArgs e)
         {
-            optionsViewModel.OptionModel.MapNumber = 1;
-            optionsViewModel.SaveToXml();
+            try
+            {
+                optionsViewModel.OptionModel.MapNumber = 1;
+                optionsViewModel.SaveToXml();
 
-            DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
-            this.Close();
-            childWindow.ShowDialog();
+                DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
+                this.Close();
+                childWindow.ShowDialog();
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -77,12 +106,19 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void secondMap_Diff_Click(object sender, RoutedEventArgs e)
         {
-            optionsViewModel.OptionModel.MapNumber = 2;
-            optionsViewModel.SaveToXml();
+            try
+            {
+                optionsViewModel.OptionModel.MapNumber = 2;
+                optionsViewModel.SaveToXml();
 
-            DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
-            this.Close();
-            childWindow.ShowDialog();
+                DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
+                this.Close();
+                childWindow.ShowDialog();
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -92,32 +128,50 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void thirdMap_Diff_Click(object sender, RoutedEventArgs e)
         {
-            optionsViewModel.OptionModel.MapNumber = 3;
-            optionsViewModel.SaveToXml();
+            try
+            {
+                optionsViewModel.OptionModel.MapNumber = 3;
+                optionsViewModel.SaveToXml();
 
-            DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
-            this.Close();
-            childWindow.ShowDialog();
+                DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
+                this.Close();
+                childWindow.ShowDialog();
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         private void fourthmapMap_Diff_Click(object sender, RoutedEventArgs e)
         {
-            optionsViewModel.OptionModel.MapNumber = 4;
-            optionsViewModel.SaveToXml();
+            try
+            {
+                optionsViewModel.OptionModel.MapNumber = 4;
+                optionsViewModel.SaveToXml();
 
-            DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
-            this.Close();
-            childWindow.ShowDialog();
+                DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
+                this.Close();
+                childWindow.ShowDialog();
+            }
+            catch(Exception error) { errorLogViewModel.LogError(error); }
         }
 
         private void fifthmap_Diff_Click(object sender, RoutedEventArgs e)
         {
-            optionsViewModel.OptionModel.MapNumber = 5;
-            optionsViewModel.SaveToXml();
+            try
+            {
+                optionsViewModel.OptionModel.MapNumber = 5;
+                optionsViewModel.SaveToXml();
 
-            DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
-            this.Close();
-            childWindow.ShowDialog();
+                DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
+                this.Close();
+                childWindow.ShowDialog();
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
         /// <summary>
         /// Handles the Click event of the Back control.
@@ -126,9 +180,16 @@ namespace BrickBreaker_2015.View
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void Back_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow parent = new MainWindow();
-            this.DialogResult = true;
-            parent.ShowDialog();
+            try
+            {
+                MainWindow parent = new MainWindow();
+                this.DialogResult = true;
+                parent.ShowDialog();
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         #endregion Methods
