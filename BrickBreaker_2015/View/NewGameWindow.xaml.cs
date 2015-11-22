@@ -47,6 +47,8 @@ namespace BrickBreaker_2015.View
             firstMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.FirstMapPath);
             secondMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.SecondMapPath);
             thirdMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.ThirdMapPath);
+            fourthmapMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.ForthMapPath);
+            fifthmap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.FifthMapPath);
         }
 
         #endregion Constructors
@@ -98,6 +100,25 @@ namespace BrickBreaker_2015.View
             childWindow.ShowDialog();
         }
 
+        private void fourthmapMap_Diff_Click(object sender, RoutedEventArgs e)
+        {
+            optionsViewModel.OptionModel.MapNumber = 4;
+            optionsViewModel.SaveToXml();
+
+            DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
+            this.Close();
+            childWindow.ShowDialog();
+        }
+
+        private void fifthmap_Diff_Click(object sender, RoutedEventArgs e)
+        {
+            optionsViewModel.OptionModel.MapNumber = 5;
+            optionsViewModel.SaveToXml();
+
+            DifficultySelectionWindow childWindow = new DifficultySelectionWindow();
+            this.Close();
+            childWindow.ShowDialog();
+        }
         /// <summary>
         /// Handles the Click event of the Back control.
         /// </summary>
@@ -111,5 +132,7 @@ namespace BrickBreaker_2015.View
         }
 
         #endregion Methods
+
+
     }
 }
