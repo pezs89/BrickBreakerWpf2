@@ -40,18 +40,24 @@ namespace BrickBreaker_2015.View
         /// </summary>
         public NewGameWindow()
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
 
-            newGameViewModel = new NewGameViewModel();
-            optionsViewModel = new OptionsViewModel();
-            this.Height = optionsViewModel.VerticalScaleNumber;
-            this.Width = optionsViewModel.HorizontalScaleNumber;
+                errorLogViewModel = new ErrorLogViewModel();
+                newGameViewModel = new NewGameViewModel();
+                optionsViewModel = new OptionsViewModel();
+                this.Height = optionsViewModel.VerticalScaleNumber;
+                this.Width = optionsViewModel.HorizontalScaleNumber;
 
-            firstMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.FirstMapPath);
-            secondMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.SecondMapPath);
-            thirdMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.ThirdMapPath);
-            fourthmapMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.ForthMapPath);
-            fifthmap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.FifthMapPath);
+                firstMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.FirstMapPath);
+                secondMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.SecondMapPath);
+                thirdMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.ThirdMapPath);
+                fourthmapMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.ForthMapPath);
+                fifthmap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.FifthMapPath);
+            }
+            catch
+            { }
         }
 
         #endregion Constructors
@@ -124,6 +130,11 @@ namespace BrickBreaker_2015.View
             }
         }
 
+        /// <summary>
+        /// Handles the Click event of the fourthmapMap_Diff control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void fourthmapMap_Diff_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -135,9 +146,17 @@ namespace BrickBreaker_2015.View
                 this.Close();
                 childWindow.ShowDialog();
             }
-            catch(Exception error) { errorLogViewModel.LogError(error); }
+            catch(Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
+        /// <summary>
+        /// Handles the Click event of the fifthmap_Diff control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void fifthmap_Diff_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -154,6 +173,7 @@ namespace BrickBreaker_2015.View
                 errorLogViewModel.LogError(error);
             }
         }
+
         /// <summary>
         /// Handles the Click event of the Back control.
         /// </summary>
@@ -174,7 +194,5 @@ namespace BrickBreaker_2015.View
         }
 
         #endregion Methods
-
-
     }
 }
