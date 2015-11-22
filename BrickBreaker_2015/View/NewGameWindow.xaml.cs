@@ -40,7 +40,6 @@ namespace BrickBreaker_2015.View
         /// </summary>
         public NewGameWindow()
         {
-<<<<<<< HEAD
             InitializeComponent();
 
             newGameViewModel = new NewGameViewModel();
@@ -53,24 +52,6 @@ namespace BrickBreaker_2015.View
             thirdMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.ThirdMapPath);
             fourthmapMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.ForthMapPath);
             fifthmap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.FifthMapPath);
-=======
-            try
-            {
-                InitializeComponent();
-
-                errorLogViewModel = new ErrorLogViewModel();
-                newGameViewModel = new NewGameViewModel();
-                optionsViewModel = new OptionsViewModel();
-                this.Height = optionsViewModel.VerticalScaleNumber;
-                this.Width = optionsViewModel.HorizontalScaleNumber;
-
-                firstMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.FirstMapPath);
-                secondMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.SecondMapPath);
-                thirdMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.ThirdMapPath);
-            }
-            catch
-            { }
->>>>>>> origin/master
         }
 
         #endregion Constructors
