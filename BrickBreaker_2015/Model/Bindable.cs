@@ -38,8 +38,10 @@ namespace BrickBreaker_2015.Model
         {
             try
             {
+                // The property changed.
                 if (PropertyChanged != null)
                 {
+                    // Call event handler.
                     PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
                 }
             }

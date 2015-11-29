@@ -155,6 +155,7 @@ namespace BrickBreaker_2015.ViewModel
         {
             try
             {
+                // The input key is valid.
                 if (!string.IsNullOrEmpty(inputKey))
                 {
                     if (inputKey == OptionModel.PauseButton || inputKey == OptionModel.RightMove || inputKey == OptionModel.FireButton)

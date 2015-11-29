@@ -66,6 +66,7 @@ namespace BrickBreaker_2015.View
         {
             try
             {
+                // The escape key was pushed.
                 if (e.Key == Key.Escape)
                 {
                     MainWindow parent = new MainWindow();

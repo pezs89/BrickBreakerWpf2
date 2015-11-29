@@ -255,6 +255,7 @@ namespace BrickBreaker_2015.Model
         {
             try
             {
+                // Set racket to sticky and change image.
                 StickyRacket = true;
                 ImagePath = @"..\..\Resources\Media\Racket\stickyracket.jpg";
 
@@ -273,14 +274,19 @@ namespace BrickBreaker_2015.Model
         {
             try
             {
+                // The racket didn't reach it's maximum size.
                 if (Area.Width < racketMaxSize)
                 {
+                    // The racket can be lengthen by the given difference.
                     if (racketMaxSize - Area.Width > racketDifference)
                     {
+                        // Add given difference.
                         area.Width += racketDifference;
                     }
+                    // The remaining size is smaller than the given difference.
                     else
                     {
+                        // Add remaining size.
                         area.Width += racketMaxSize - Area.Width;
                     }
                 }
@@ -300,14 +306,19 @@ namespace BrickBreaker_2015.Model
         {
             try
             {
+                // The racket didn't reach it's minimum size.
                 if (Area.Width > racketMinSize)
                 {
+                    // The racket can be shorthen by the given difference.
                     if (Area.Width - racketMinSize > racketDifference)
                     {
+                        // Subtract given difference.
                         area.Width -= racketDifference;
                     }
+                    // The remaining size is smaller than the given difference.
                     else
                     {
+                        // Subtract remaining size.
                         area.Width -= Area.Width - racketMinSize;
                     }
                 }

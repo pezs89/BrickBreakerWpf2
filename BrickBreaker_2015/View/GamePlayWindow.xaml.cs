@@ -145,10 +145,13 @@ namespace BrickBreaker_2015.View
         {
             try
             {
+                // The game is not over.
                 if (!newGameViewModel.GameIsOver)
                 {
+                    // The game is in session and the game is not paused.
                     if (newGameViewModel.GameInSession && !newGameViewModel.GameIsPaused)
                     {
+                        // Move the game objects, search for contact, refresh the display and seach for the end of the game.
                         newGameViewModel.MoveObjects();
                         newGameViewModel.BallAtContact();
                         newGameViewModel.RacketAtContactWithBonus();
@@ -157,6 +160,7 @@ namespace BrickBreaker_2015.View
                         newGameViewModel.CheckForGameOver();
                     }
 
+                    // See if any actions are needed to be performed by the view.
                     if (newGameViewModel.ViewAction != NewGameViewModel.ViewActionStatus.DoNothing)
                     {
                         switch (newGameViewModel.ViewAction)

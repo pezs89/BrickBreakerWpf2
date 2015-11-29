@@ -194,6 +194,7 @@ namespace BrickBreaker_2015.DataAccess
                     // Create new items in the xml file if the input list is greater the number of records in the xml file.
                     if (highscores.Count > i)
                     {
+                        // Check each highscore.
                         for (int j = i; j < highscores.Count; j++)
                         {
                             // Create the new highscore item.

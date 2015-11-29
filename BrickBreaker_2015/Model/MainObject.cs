@@ -67,6 +67,14 @@ namespace BrickBreaker_2015.Model
 
         #region Constructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainObject"/> class.
+        /// </summary>
+        /// <param name="posX">The x position of the MainObject.</param>
+        /// <param name="posY">The y position of the MainObject.</param>
+        /// <param name="width">The width of the MainObject.</param>
+        /// <param name="height">The height of the MainObject.</param>
+        /// <param name="imagePath">The image path of the MainObject.</param>
         public MainObject(double posX, double posY, double width, double height, string imagePath)
         {
             try

@@ -47,6 +47,7 @@ namespace BrickBreaker_2015.View
 
                 errorLogViewModel = new ErrorLogViewModel();
 
+                // Set the resolutions.
                 ResolutionComboBox.Items.Add("580x420");
                 ResolutionComboBox.Items.Add("640x480");
                 ResolutionComboBox.Items.Add("800x600");
@@ -55,7 +56,6 @@ namespace BrickBreaker_2015.View
                 this.DataContext = optionsVM;
                 this.Width = optionsVM.HorizontalScaleNumber;
                 this.Height = optionsVM.VerticalScaleNumber;
-
                 ResolutionComboBox.SelectedItem = optionsVM.OptionModel.Resolution;
 
                 SettingsUpdatedLabelHide.Interval = TimeSpan.FromSeconds(3);
@@ -96,6 +96,7 @@ namespace BrickBreaker_2015.View
         {
             try
             {
+                // The mouse or the keyboard must be enabled.
                 if (MouseCheckBox.IsChecked == false && KeyboardCheckBox.IsChecked == false)
                 {
                     e.Handled = false;
@@ -124,8 +125,10 @@ namespace BrickBreaker_2015.View
         {
             try
             {
+                // Save the changes.
                 optionsVM.SaveToXml();
 
+                // Give feedback.
                 if (optionsVM.IsChanged)
                 {
                     StatusLabel.Content = "Settings has been updated!";
@@ -149,14 +152,17 @@ namespace BrickBreaker_2015.View
         {
             try
             {
+                // The given key is already assigned.
                 if (!optionsVM.Check(optionsVM.SpecKeys(e.Key)))
                 {
                     StatusLabel.Content = "Key has been already assigned!";
                     SettingsUpdatedLabelHide.Start();
                     LeftMoveTextBox.Text = optionsVM.OptionModel.LeftMove;
                 }
+                // The given key not yet assigned.
                 else
                 {
+                    // Set the key value.
                     if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
                     {
                         LeftMoveTextBox.Text = optionsVM.SpecKeys(e.Key);
@@ -178,14 +184,17 @@ namespace BrickBreaker_2015.View
         {
             try
             {
+                // The given key is already assigned.
                 if (!optionsVM.Check(optionsVM.SpecKeys(e.Key)))
                 {
                     StatusLabel.Content = "Key has been already assigned!";
                     SettingsUpdatedLabelHide.Start();
                     RightMoveTextBox.Text = optionsVM.OptionModel.RightMove;
                 }
+                // The given key not yet assigned.
                 else
                 {
+                    // Set the key value.
                     if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
                     {
                         RightMoveTextBox.Text = optionsVM.SpecKeys(e.Key);
@@ -207,14 +216,17 @@ namespace BrickBreaker_2015.View
         {
             try
             {
+                // The given key is already assigned.
                 if (!optionsVM.Check(optionsVM.SpecKeys(e.Key)))
                 {
                     StatusLabel.Content = "Key has been already assigned!";
                     SettingsUpdatedLabelHide.Start();
                     PauseTextBox.Text = optionsVM.OptionModel.PauseButton;
                 }
+                // The given key not yet assigned.
                 else
                 {
+                    // Set the key value.
                     if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
                     {
                         PauseTextBox.Text = optionsVM.SpecKeys(e.Key);
@@ -236,14 +248,17 @@ namespace BrickBreaker_2015.View
         {
             try
             {
+                // The given key is already assigned.
                 if (!optionsVM.Check(optionsVM.SpecKeys(e.Key)))
                 {
                     StatusLabel.Content = "Key has been already assigned!";
                     SettingsUpdatedLabelHide.Start();
                     FireTextBox.Text = optionsVM.OptionModel.FireButton;
                 }
+                // The given key not yet assigned.
                 else
                 {
+                    // Set the key value.
                     if (!string.IsNullOrEmpty(optionsVM.SpecKeys(e.Key)))
                     {
                         FireTextBox.Text = optionsVM.SpecKeys(e.Key);

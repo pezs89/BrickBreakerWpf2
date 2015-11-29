@@ -82,8 +82,10 @@ namespace BrickBreaker_2015.View
         {
             try
             {
+                // The player's score can be in the highscores and the player entered a name.
                 if (gameOverViewModel.CheckScore(int.Parse(ScoreLabel.Content.ToString())) && !string.IsNullOrEmpty(NameTextBox.Text))
                 {
+                    // Save the player's scores in the highscores.
                     gameOverViewModel.SaveScore(NameTextBox.Text, int.Parse(ScoreLabel.Content.ToString()));
                 }
 

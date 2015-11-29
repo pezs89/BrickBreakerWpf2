@@ -184,6 +184,7 @@ namespace BrickBreaker_2015.Model
         {
             try
             {
+                // Move the ball with the given speed.
                 area.X += VerticalMovement * ballSpeed;
                 area.Y += HorizontalMovement * ballSpeed;
 
@@ -297,6 +298,7 @@ namespace BrickBreaker_2015.Model
         {
             try
             {
+                // Set the ball to hard ball and change the image.
                 BallType = Ball.BallsType.Hard;
                 ImagePath = @"..\..\Resources\Media\Ball\hardball.jpg";
 
@@ -313,6 +315,7 @@ namespace BrickBreaker_2015.Model
         {
             try
             {
+                // Set the ball to steel ball and change the image.
                 BallType = Ball.BallsType.Steel;
                 ImagePath = @"..\..\Resources\Media\Ball\steelball.jpg";
 
@@ -330,6 +333,7 @@ namespace BrickBreaker_2015.Model
         {
             try
             {
+                // Set the dimensions to the given size.
                 area.Width = ballMinRadius * 2;
                 area.Height = ballMinRadius * 2;
 
@@ -347,6 +351,7 @@ namespace BrickBreaker_2015.Model
         {
             try
             {
+                // The ball is falling of the racket, move it back on it.
                 if (Area.X < racket.Area.X - Area.Width / 2)
                 {
                     area.X = racket.Area.X - Area.Width / 2;
@@ -361,43 +366,6 @@ namespace BrickBreaker_2015.Model
         }
 
         /// <summary>
-        /// Repositions the ball if it's inside the brick.
-        /// </summary>
-        /// <param name="brick">The brick.</param>
-        public void RepositionBallAtBrick(Brick brick)
-        {
-            try
-            {
-                if (Area.X < brick.Area.X + brick.Area.Width)
-                {
-                    area.X = brick.Area.X + brick.Area.Width;
-
-                    onPropertyChanged("Area");
-                }
-                else if (Area.X > brick.Area.X + Area.Width)
-                {
-                    area.X = brick.Area.X + Area.Width;
-
-                    onPropertyChanged("Area");
-                }
-                else if (Area.Y < brick.Area.Y + brick.Area.Height)
-                {
-                    area.Y = brick.Area.Y + brick.Area.Height;
-
-                    onPropertyChanged("Area");
-                }
-                else if (Area.Y > brick.Area.Y + Area.Height)
-                {
-                    area.Y = brick.Area.Y + Area.Height;
-
-                    onPropertyChanged("Area");
-                }
-            }
-            catch
-            { }
-        }
-
-        /// <summary>
         /// Repositions the ball if it's not right on the racket.
         /// </summary>
         /// <param name="racket">The racket.</param>
@@ -405,8 +373,10 @@ namespace BrickBreaker_2015.Model
         {
             try
             {
+                // The ball's inside the racket.
                 if (Area.Y > racket.Area.Y - Area.Height)
                 {
+                    // Move the ball higher.
                     area.Y = racket.Area.Y - Area.Height;
 
                     onPropertyChanged("Area");
@@ -424,6 +394,7 @@ namespace BrickBreaker_2015.Model
         {
             try
             {
+                // The ball is outside of the canvas, move it back in.
                 if (Area.X < 0)
                 {
                     area.X = 0;
@@ -469,6 +440,7 @@ namespace BrickBreaker_2015.Model
                     area.Y -= ((ballMaxRadius - ballRadius) * 2);
                 }
 
+                // Set the dimensions to the given size.
                 area.Width = ballMaxRadius * 2;
                 area.Height = ballMaxRadius * 2;
 

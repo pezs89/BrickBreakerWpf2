@@ -145,14 +145,16 @@ namespace BrickBreaker_2015.Model
         {
             try
             {
+                // If the bouns top reaches the bottom of the canvas.
                 if (Area.Y >= canvasHeight)
                 {
-                    // If the bouns top reaches the bottom of the canvas, then it can be removed.
+                    // It can be removed.
                     return true;
                 }
+                // If the bouns top didn't reaches the bottom of the canvas.
                 else
                 {
-                    // If the bouns top didn't reaches the bottom of the canvas, then move it down.
+                    // Move it down.
                     area.Y += bonusSpeed;
 
                     onPropertyChanged("Area");

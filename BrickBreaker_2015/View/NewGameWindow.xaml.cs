@@ -50,6 +50,7 @@ namespace BrickBreaker_2015.View
                 this.Height = optionsViewModel.VerticalScaleNumber;
                 this.Width = optionsViewModel.HorizontalScaleNumber;
 
+                // Set the buttons enable state true if the map can be found.
                 firstMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.FirstMapPath);
                 secondMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.SecondMapPath);
                 thirdMap_Diff.IsEnabled = newGameViewModel.FindMap(newGameViewModel.ThirdMapPath);
@@ -73,6 +74,7 @@ namespace BrickBreaker_2015.View
         {
             try
             {
+                // Set the map's number.
                 optionsViewModel.OptionModel.MapNumber = 1;
                 optionsViewModel.SaveToXml();
 
@@ -95,6 +97,7 @@ namespace BrickBreaker_2015.View
         {
             try
             {
+                // Set the map's number.
                 optionsViewModel.OptionModel.MapNumber = 2;
                 optionsViewModel.SaveToXml();
 
@@ -117,6 +120,7 @@ namespace BrickBreaker_2015.View
         {
             try
             {
+                // Set the map's number.
                 optionsViewModel.OptionModel.MapNumber = 3;
                 optionsViewModel.SaveToXml();
 
@@ -139,6 +143,7 @@ namespace BrickBreaker_2015.View
         {
             try
             {
+                // Set the map's number.
                 optionsViewModel.OptionModel.MapNumber = 4;
                 optionsViewModel.SaveToXml();
 
@@ -161,6 +166,7 @@ namespace BrickBreaker_2015.View
         {
             try
             {
+                // Set the map's number.
                 optionsViewModel.OptionModel.MapNumber = 5;
                 optionsViewModel.SaveToXml();
 

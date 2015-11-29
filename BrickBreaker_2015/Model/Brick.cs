@@ -150,10 +150,13 @@ namespace BrickBreaker_2015.Model
         {
             try
             {
+                // The brick's break number didn't reach 0.
                 if (BreakNumber > 0)
                 {
+                    // Desrement the break number.
                     BreakNumber--;
 
+                    // Change the image to broken.
                     switch (BrickType)
                     {
                         case BricksType.Medium:
@@ -189,14 +192,14 @@ namespace BrickBreaker_2015.Model
             {
                 bool retVal = false;
 
+                // Bonus is only available with medium and hard bricks.
                 if (BrickType == BricksType.Medium || BrickType == BricksType.Hard)
                 {
-                    // Bonus is only available with medium and hard bricks.
                     Random rnd = new Random();
 
+                    // 25% chance of bonus in medium and hard bricks.
                     if (rnd.Next(1, 101) <= 25)
                     {
-                        // 25% chance of bonus in medium and hard bricks.
                         retVal = true;
                     }
                 }

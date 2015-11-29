@@ -59,6 +59,7 @@ namespace BrickBreaker_2015.ViewModel
         {
             try
             {
+                // Sort the scores in descending order.
                 highscoreList.Sort((x, y) => int.Parse(y.PlayerScore).CompareTo(int.Parse(x.PlayerScore)));
                 bool returnValue = false;
 
@@ -95,7 +96,7 @@ namespace BrickBreaker_2015.ViewModel
         {
             try
             {
-                // Add the player's score and sort the scores in descanding order.
+                // Add the player's score and sort the scores in descending order.
                 highscoreList.Add(new HighScoreModel(playerName, playerScore.ToString()));
                 highscoreList.Sort((x, y) => int.Parse(y.PlayerScore).CompareTo(int.Parse(x.PlayerScore)));
 
@@ -111,7 +112,7 @@ namespace BrickBreaker_2015.ViewModel
                     }
                 }
 
-                // Save.
+                // Save the scores.
                 scoresXmlAccess.SaveScore(highscoreList);
             }
             catch (Exception e)

@@ -449,6 +449,7 @@ namespace BrickBreaker_2015.ViewModel
                         // The bonus is deleted.
                         if (bonusList[i].IsDeleted)
                         {
+                            // Remove the item and decrement the iterator.
                             bonusList.Remove(bonusList[i]);
                             i--;
                         }
@@ -468,6 +469,7 @@ namespace BrickBreaker_2015.ViewModel
                         // The brick is deleted.
                         if (brickList[i].IsDeleted)
                         {
+                            // Remove the item and decrement the iterator.
                             brickList.Remove(brickList[i]);
                             i--;
                         }
@@ -487,6 +489,7 @@ namespace BrickBreaker_2015.ViewModel
                         // The ball is deleted.
                         if (ballList[i].IsDeleted)
                         {
+                            // Remove the item and decrement the iterator.
                             ballList.Remove(ballList[i]);
                             i--;
                         }
@@ -506,6 +509,7 @@ namespace BrickBreaker_2015.ViewModel
                         // The racket is deleted.
                         if (racketList[i].IsDeleted)
                         {
+                            // Remove the item and decrement the iterator.
                             racketList.Remove(racketList[i]);
                             i--;
                         }
@@ -525,15 +529,18 @@ namespace BrickBreaker_2015.ViewModel
         /// </summary>
         public void NewMap()
         {
+            // Clear the previous game objects.
             canvas.Children.Clear();
             ballList.Clear();
             racketList.Clear();
             brickList.Clear();
             bonusList.Clear();
 
+            // Set some fields.
             gameInSession = false;
             gameIsPaused = false;
 
+            // Load the current game objects.
             WindowLoaded();
         }
 
@@ -643,11 +650,13 @@ namespace BrickBreaker_2015.ViewModel
                                     // The ball is at the left or right side of the canvas.
                                     if (ballList[j].Area.X <= 0 || ballList[j].Area.X + ballList[j].Area.Width >= canvasWidth)
                                     {
+                                        // Vertical direction change.
                                         ballList[j].VerticalMovement *= -1;
                                     }
                                     // The ball is at the top side of the canvas.
                                     else if (ballList[j].Area.Y <= 0)
                                     {
+                                        // Horizontal direction change.
                                         ballList[j].HorizontalMovement *= -1;
                                     }
                                     // The ball is at the bottom side of the canvas.
@@ -656,16 +665,17 @@ namespace BrickBreaker_2015.ViewModel
                                         // There is only one ball.
                                         if (ballList.Count == 1)
                                         {
+                                            // Decrement the player's life points.
                                             playerLife -= 1;
-                                            //LifeLabel.Content = "Life: " + playerLife;
 
+                                            // Clear the racket, ball and bonus game objects from the field.
                                             DisposeOfBall();
                                         }
-                                        // There are more than one balls.
+                                        // There is more than one ball.
                                         else
                                         {
-                                            canvas.Children.Remove(ballList[j].GetEllipse());
-                                            ballList.RemoveAt(j);
+                                            // Set the ball as deleted.
+                                            ballList[j].IsDeleted = true;
                                         }
 
                                         // The life points reached 0.
@@ -702,11 +712,11 @@ namespace BrickBreaker_2015.ViewModel
                                         // Check each racket.
                                         foreach (var oneRacket in racketList)
                                         {
-                                            #region BallAndRacketContact
-
                                             // The racket is not deleted.
                                             if (!oneRacket.IsDeleted)
                                             {
+                                                #region BallAndRacketContact
+
                                                 // The ball is at contact with the racket.
                                                 if (ballList[j].Area.X + ballList[j].Area.Width >= oneRacket.Area.X &&                           /* racket left side */
                                                     ballList[j].Area.X + ballList[j].Area.Width <= oneRacket.Area.X + oneRacket.Area.Width &&    /* racket right side */
@@ -725,6 +735,7 @@ namespace BrickBreaker_2015.ViewModel
                                                         // Set the horizontal movement of the ball to negative if not done already.
                                                         if (ballList[j].HorizontalMovement > 0)
                                                         {
+                                                            // Horizontal direction change.
                                                             ballList[j].HorizontalMovement *= -1;
                                                         }
                                                     }
@@ -733,13 +744,13 @@ namespace BrickBreaker_2015.ViewModel
 
                                                     PlaySound();
                                                 }
-                                            }
 
-                                            #endregion BallAndRacketContact
+                                                #endregion BallAndRacketContact
+                                            }
                                         }
                                     }
 
-                                    // There is at least one racket.
+                                    // There is at least one brick.
                                     if (brickList.Count > 0)
                                     {
                                         // Check each brick.
@@ -750,217 +761,53 @@ namespace BrickBreaker_2015.ViewModel
                                             {
                                                 #region BallAndBrickContact
 
-                                                #region OldVersion
-
-                                                //// The ball is at side of the brick.
-                                                //if (!(ballList[j].Area.X + ballList[j].Area.Width / 2 < brickList[i].Area.X ||                           /* right */
-                                                //    ballList[j].Area.X - ballList[j].Area.Width / 2 > brickList[i].Area.X + brickList[i].Area.Width ||   /* left */
-                                                //    ballList[j].Area.Y + ballList[j].Area.Height / 2 < brickList[i].Area.Y ||                            /* bottom */
-                                                //    ballList[j].Area.Y - ballList[j].Area.Height / 2 > brickList[i].Area.Y + brickList[i].Area.Height))  /* top */
-                                                //{
-                                                //    // If the ball is in contact with the brick
-                                                //    if (ballList[j].BallType != Ball.BallsType.Steel)
-                                                //    {
-                                                //        // 
-                                                //        if (ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X) // r
-                                                //        {
-                                                //            // 
-                                                //            if (ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y) // rb
-                                                //            {
-                                                //                ballList[j].HorizontalMovement *= -1; // horizontal?
-                                                //            }
-                                                //            // 
-                                                //            else if (ballList[j].Area.Y - ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) // rt
-                                                //            {
-                                                //                ballList[j].HorizontalMovement *= -1;
-                                                //            }
-                                                //            // 
-                                                //            else
-                                                //            {
-                                                //                ballList[j].VerticalMovement *= -1;
-                                                //            }
-                                                //        }
-                                                //        // 
-                                                //        else if (ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + ballHorizontalMovement) // l
-                                                //        {
-                                                //            // 
-                                                //            if (ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y) // lb
-                                                //            {
-                                                //                ballList[j].HorizontalMovement *= -1;
-                                                //            }
-                                                //            // 
-                                                //            else if (ballList[j].Area.Y - ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) // lt
-                                                //            {
-                                                //                ballList[j].HorizontalMovement *= -1;
-                                                //            }
-                                                //            // 
-                                                //            else
-                                                //            {
-                                                //                ballList[j].VerticalMovement *= -1;
-                                                //            }
-                                                //        }
-                                                //        // 
-                                                //        else if (ballList[j].Area.Y + ballList[j].Area.Width / 2 >= brickList[i].Area.Y) // r
-                                                //        {
-                                                //            ballList[j].HorizontalMovement *= -1;
-                                                //        }
-                                                //        // 
-                                                //        else if (ballList[j].Area.Y - ballList[j].Area.Width / 2 <= brickList[i].Area.Y + brickList[i].Area.Width) // l
-                                                //        {
-                                                //            ballList[j].HorizontalMovement *= -1;
-                                                //        }
-                                                //        // 
-                                                //        else if (ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y) // b
-                                                //        {
-                                                //            ballList[j].VerticalMovement *= -1;
-                                                //        }
-                                                //        // 
-                                                //        else if (ballList[j].Area.Y - ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) // t
-                                                //        {
-                                                //            ballList[j].VerticalMovement *= -1;
-                                                //        }
-                                                //    }
-
-                                                //    BrickContact(ballList[j], brickList[i]);
-                                                //}
-
-                                                #endregion OldVersion
-
-                                                #region TestVersion
-
-                                                //// The ball is at side of the brick.
-                                                //if (!(ballList[j].Area.X + ballList[j].Area.Width / 2 < brickList[i].Area.X ||                          /* brick left side */
-                                                //    ballList[j].Area.X + ballList[j].Area.Width / 2 > brickList[i].Area.X + brickList[i].Area.Width ||  /* brick right side */
-                                                //    ballList[j].Area.Y + ballList[j].Area.Height / 2 < brickList[i].Area.Y ||                            /* brick top */
-                                                //    ballList[j].Area.Y + ballList[j].Area.Height / 2 > brickList[i].Area.Y + brickList[i].Area.Height))  /* brick bottom */
-                                                //{
-                                                //    // If the ball is in contact with the brick and the examination proximity
-                                                //    if (ballList[j].BallType != Ball.BallsType.Steel)
-                                                //    {
-                                                //        // 
-                                                //        if (ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X &&
-                                                //            ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width &&
-                                                //            ((ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y &&
-                                                //            ballList[j].Area.Y + ballList[j].Area.Height / 2 - ballHorizontalMovement < brickList[i].Area.Y) ||
-                                                //            (ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height &&
-                                                //            ballList[j].Area.Y + ballList[j].Area.Height / 2 - ballHorizontalMovement > brickList[i].Area.Y + brickList[i].Area.Height)))
-                                                //        {
-                                                //            // Horizontal direction change.
-                                                //            ballList[j].HorizontalMovement *= -1;
-                                                //        }
-                                                //        // 
-                                                //        else if (ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y &&
-                                                //                 ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height &&
-                                                //                 ((ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X &&
-                                                //                 ballList[j].Area.X + ballList[j].Area.Width / 2 - ballVerticalMovement < brickList[i].Area.X) ||
-                                                //                 (ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width &&
-                                                //                 ballList[j].Area.X + ballList[j].Area.Width / 2 - ballVerticalMovement > brickList[i].Area.X + brickList[i].Area.Width)))
-                                                //        {
-                                                //            // Vertical direction change.
-                                                //            ballList[j].VerticalMovement *= -1;
-                                                //        }
-                                                //        // 
-                                                //        else if (ballList[j].Area.X + ballExaminationProximity > brickList[i].Area.X) // r
-                                                //        {
-                                                //            // 
-                                                //            if (ballList[j].Area.Y + ballExaminationProximity > brickList[i].Area.Y) // rb
-                                                //            {
-                                                //                // Horizontal direction change.
-                                                //                ballList[j].HorizontalMovement *= -1;
-                                                //            }
-                                                //            // 
-                                                //            else if (ballList[j].Area.Y - ballExaminationProximity < brickList[i].Area.Y + brickList[i].Area.Height) // rt
-                                                //            {
-                                                //                // Horizontal direction change.
-                                                //                ballList[j].HorizontalMovement *= -1;
-                                                //            }
-                                                //            // 
-                                                //            else
-                                                //            {
-                                                //                // Vertical direction change.
-                                                //                ballList[j].VerticalMovement *= -1;
-                                                //            }
-                                                //        }
-                                                //        // 
-                                                //        else if (ballList[j].Area.X + ballExaminationProximity < brickList[i].Area.X + ballHorizontalMovement) // l
-                                                //        {
-                                                //            // 
-                                                //            if (ballList[j].Area.Y + ballExaminationProximity > brickList[i].Area.Y) // lb
-                                                //            {
-                                                //                // Horizontal direction change.
-                                                //                ballList[j].HorizontalMovement *= -1;
-                                                //            }
-                                                //            // 
-                                                //            else if (ballList[j].Area.Y - ballExaminationProximity < brickList[i].Area.Y + brickList[i].Area.Height) // lt
-                                                //            {
-                                                //                // Horizontal direction change.
-                                                //                ballList[j].HorizontalMovement *= -1;
-                                                //            }
-                                                //            // 
-                                                //            else
-                                                //            {
-                                                //                // Vertical direction change.
-                                                //                ballList[j].VerticalMovement *= -1;
-                                                //            }
-                                                //        }
-                                                //    }
-
-                                                //    BrickContact(ballList[j], brickList[i]);
-                                                //}
-                                                //// The ball is at the corner of the brick.
-                                                //else
-                                                //{
-                                                //    // No corner detection implemented.
-                                                //}
-
-                                                #endregion TestVersion
-
-                                                #region NewVersion
-
-                                                // 
+                                                // The ball is in contact with a brick.
                                                 if (((ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X ||
                                                     ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width) &&
-                                                    ballList[j].Area.Y + ballList[j].Area.Height >= brickList[i].Area.Y) && /* bottom of the ball */
+                                                    ballList[j].Area.Y + ballList[j].Area.Height >= brickList[i].Area.Y) &&                                 /* bottom of the ball */
                                                     ((ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X ||
                                                     ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width) &&
-                                                    ballList[j].Area.Y <= brickList[i].Area.Y + brickList[i].Area.Height) && /* top of the ball */
+                                                    ballList[j].Area.Y <= brickList[i].Area.Y + brickList[i].Area.Height) &&                                /* top of the ball */
                                                     ((ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y ||
                                                     ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) &&
-                                                    ballList[j].Area.X <= brickList[i].Area.X + brickList[i].Area.Width) && /* left of the ball */
+                                                    ballList[j].Area.X <= brickList[i].Area.X + brickList[i].Area.Width) &&                                 /* left of the ball */
                                                     ((ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y ||
                                                     ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) &&
-                                                    ballList[j].Area.X + ballList[j].Area.Width >= brickList[i].Area.X)) /* right of the ball */
+                                                    ballList[j].Area.X + ballList[j].Area.Width >= brickList[i].Area.X))                                    /* right of the ball */
                                                 {
+                                                    // Horizontal side contact.
                                                     if (((ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X ||
                                                         ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width) &&
-                                                        ballList[j].Area.Y + ballList[j].Area.Height >= brickList[i].Area.Y) || /* bottom of the ball */
+                                                        ballList[j].Area.Y + ballList[j].Area.Height >= brickList[i].Area.Y) ||                             /* bottom of the ball */
                                                         ((ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X ||
                                                         ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width) &&
-                                                        ballList[j].Area.Y <= brickList[i].Area.Y + brickList[i].Area.Height)) /* top of the ball */
+                                                        ballList[j].Area.Y <= brickList[i].Area.Y + brickList[i].Area.Height))                              /* top of the ball */
                                                     {
+                                                        // The ball is not a steel ball.
                                                         if (ballList[j].BallType != Ball.BallsType.Steel)
                                                         {
-                                                            ballList[j].HorizontalMovement = -ballList[j].HorizontalMovement;
+                                                            // Horizontal direction change.
+                                                            ballList[j].HorizontalMovement *= -1;
                                                         }
                                                     }
+                                                    // Vertical side contact.
                                                     else if (((ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y ||
                                                         ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) &&
-                                                        ballList[j].Area.X <= brickList[i].Area.X + brickList[i].Area.Width) || /* left of the ball */
+                                                        ballList[j].Area.X <= brickList[i].Area.X + brickList[i].Area.Width) ||                             /* left of the ball */
                                                         ((ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y ||
                                                         ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) &&
-                                                        ballList[j].Area.X + ballList[j].Area.Width >= brickList[i].Area.X)) /* right of the ball */
+                                                        ballList[j].Area.X + ballList[j].Area.Width >= brickList[i].Area.X))                                /* right of the ball */
                                                     {
+                                                        // The ball is not a steel ball.
                                                         if (ballList[j].BallType != Ball.BallsType.Steel)
                                                         {
-                                                            ballList[j].VerticalMovement = -ballList[j].VerticalMovement;
+                                                            // Vertical direction change.
+                                                            ballList[j].VerticalMovement *= -1;
                                                         }
                                                     }
 
-                                                    //ballList[j].RepositionBallAtBrick(brickList[i]);
                                                     BrickContact(ballList[j], brickList[i]);
                                                 }
-
-                                                #endregion NewVersion
 
                                                 #endregion BallAndBrickContact
                                             }
@@ -1005,6 +852,7 @@ namespace BrickBreaker_2015.ViewModel
                                     AddBonus(oneBrick);
                                 }
 
+                                // Add the brick's points to the player's points and make it deleted.
                                 playerScorePoint += oneBrick.ScorePoint;
                                 oneBrick.IsDeleted = true;
                             }
@@ -1024,6 +872,7 @@ namespace BrickBreaker_2015.ViewModel
                                 AddBonus(oneBrick);
                             }
 
+                            // Add the brick's points to the player's points and make it deleted.
                             playerScorePoint += oneBrick.ScorePoint;
                             oneBrick.IsDeleted = true;
                         }
@@ -1038,6 +887,7 @@ namespace BrickBreaker_2015.ViewModel
                         AddBonus(oneBrick);
                     }
 
+                    // Add the brick's points to the player's points and make it deleted.
                     playerScorePoint += oneBrick.ScorePoint;
                     oneBrick.IsDeleted = true;
                 }
@@ -1072,22 +922,24 @@ namespace BrickBreaker_2015.ViewModel
         }
 
         /// <summary>
-        /// 
+        /// Sets the values for the map.
         /// </summary>
         public void WindowLoaded()
         {
             try
             {
+                // Set the values for the current map.
                 PresetValues2();
 
-                // If no map or no options file was found then close the window.
-                if (!String.IsNullOrEmpty(currentMapPath) && currentMapPath == "notfound")
+                // If the map wasn't found then close the window.
+                if (!string.IsNullOrEmpty(currentMapPath) && currentMapPath == "notfound")
                 {
                     MessageBox.Show("Couldn't find the map file.", "Error");
 
                     viewAction = ViewActionStatus.OpenMenu;
                 }
-                else if (String.IsNullOrEmpty(currentMapPath))
+                // The current map path is empty, this should be impossible.
+                else if (string.IsNullOrEmpty(currentMapPath))
                 {
                     MessageBox.Show("Couldn't find the options xml file.", "Error");
 
@@ -1111,38 +963,38 @@ namespace BrickBreaker_2015.ViewModel
                 // There is at least one ball.
                 if (ballList.Count > 0)
                 {
-                        // There are still bricks left.
-                        if (brickList.Count > 0)
+                    // There are still bricks left.
+                    if (brickList.Count > 0)
+                    {
+                        int notSteelBrickCount = 0;
+
+                        // Check each brick.
+                        foreach (Brick oneBrick in brickList)
                         {
-                            int notSteelBrickCount = 0;
-
-                            // Check each brick.
-                            foreach (Brick oneBrick in brickList)
+                            // See how many not steel bricks are there.
+                            if (oneBrick.BrickType != Brick.BricksType.Steel)
                             {
-                                // See how many not steel bricks are there.
-                                if (oneBrick.BrickType != Brick.BricksType.Steel)
-                                {
-                                    notSteelBrickCount++;
-                                }
-                            }
-
-                            // No steel bricks left.
-                            if (notSteelBrickCount == 0)
-                            {
-                                gameIsOver = true;
-                                gameOverStatus = "success";
+                                notSteelBrickCount++;
                             }
                         }
-                        // No bricks left.
-                        else
+
+                        // No non steel bricks left.
+                        if (notSteelBrickCount == 0)
                         {
-                            // No bonuses left.
-                            if (bonusList.Count == 0)
-                            {
-                                gameIsOver = true;
-                                gameOverStatus = "success";
-                            }
+                            gameIsOver = true;
+                            gameOverStatus = "success";
                         }
+                    }
+                    // No bricks left.
+                    else
+                    {
+                        // No bonuses left.
+                        if (bonusList.Count == 0)
+                        {
+                            gameIsOver = true;
+                            gameOverStatus = "success";
+                        }
+                    }
                 }
 
                 // The game is over, the status is given and the game is still is session.
@@ -1167,6 +1019,7 @@ namespace BrickBreaker_2015.ViewModel
             {
                 #region Fail
 
+                // The game ended in failure.
                 if (status == "fail")
                 {
                     MessageBox.Show("You've failed.", "Game Over");
@@ -1181,6 +1034,7 @@ namespace BrickBreaker_2015.ViewModel
 
                 #region Success
 
+                // The game ended in success.
                 else if (status == "success")
                 {
                     gameIsOver = false;
@@ -1192,8 +1046,10 @@ namespace BrickBreaker_2015.ViewModel
                     {
                         #region Continue
 
+                        // The map has been cleared and the player chose to continue.
                         if (MessageBox.Show("You've succeeded. \n Would you like to continue.", "Game Over", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                         {
+                            // Increment the map's number.
                             optionsViewModel.OptionModel.MapNumber += 1;
                             optionsViewModel.SaveToXml();
                             viewAction = ViewActionStatus.NewMap;
@@ -1203,6 +1059,7 @@ namespace BrickBreaker_2015.ViewModel
 
                         #region Exit
 
+                        // The map has been cleared and the player chose to exit.
                         else
                         {
                             viewAction = ViewActionStatus.OpenHighscores;
@@ -1215,6 +1072,7 @@ namespace BrickBreaker_2015.ViewModel
 
                     #region LastMap
 
+                    // This was the last map.
                     else
                     {
                         MessageBox.Show("You've succeeded.", "Game Over");
@@ -1244,7 +1102,7 @@ namespace BrickBreaker_2015.ViewModel
                 ballList.Clear();
                 bonusList.Clear();
 
-                // Add new racket.
+                // Add a new racket.
                 Racket racket = new Racket(canvasWidth / 2 - racketWidth / 2, canvasHeight - racketHeight, racketWidth, racketHeight, 
                     @"..\..\Resources\Media\Racket\normalracket.jpg");
                 racket.Direction = Racket.Directions.Stay;
@@ -1253,7 +1111,7 @@ namespace BrickBreaker_2015.ViewModel
                 canvas.Children.Add(racket.GetRectangle());
                 racketList.Add(racket);
 
-                // Add new ball.
+                // Add a new ball.
                 Ball ball = new Ball((canvasWidth / 2) - ballRadius, canvasHeight - racketHeight - (ballRadius * 2), ballRadius * 2, ballRadius * 2,
                     @"..\..\Resources\Media\Ball\normalball.jpg", ballHorizontalMovement, ballVerticalMovement, Ball.BallsType.Normal);
                 ball.VerticalMovement = ballVerticalMovement > 0 ? ballVerticalMovement : -ballVerticalMovement;
@@ -1300,6 +1158,7 @@ namespace BrickBreaker_2015.ViewModel
                                             oneRacket.Area.X + oneRacket.Area.Width > bonusList[i].Area.X &&       /* bonus left side */
                                             oneRacket.Area.Y < bonusList[i].Area.Y + bonusList[i].Area.Height)     /* bonus bottom */
                                         {
+                                            // Add the score of the bonus to the player's bonus.
                                             playerScorePoint += bonusList[i].ScorePoint;
 
                                             #region AddBonusEffect
@@ -1314,6 +1173,7 @@ namespace BrickBreaker_2015.ViewModel
                                                     playerLife--;
                                                     break;
                                                 case Bonus.BonusesType.NewBall:
+                                                    // Create ball and set the needed properties.
                                                     Ball ball = new Ball(oneRacket.Area.X + (oneRacket.Area.Width / 2) - ballRadius, oneRacket.Area.Y - (ballRadius * 2),
                                                         ballRadius * 2, ballRadius * 2, @"..\..\Resources\Media\Ball\normalball.jpg", 0, 0, Ball.BallsType.Normal);
                                                     ball.VerticalMovement = ballVerticalMovement > 0 ? ballVerticalMovement : -ballVerticalMovement;
@@ -1392,6 +1252,7 @@ namespace BrickBreaker_2015.ViewModel
 
                                             #endregion AddBonusEffect
 
+                                            // Set bonus to deleted.
                                             bonusList[i].IsDeleted = true;
                                         }
                                     }
@@ -1416,6 +1277,7 @@ namespace BrickBreaker_2015.ViewModel
             {
                 #region PresetValues
 
+                // Set the values for the functionality fileds.
                 viewAction = ViewActionStatus.DoNothing;
                 playerLife = 3;
                 playerScorePoint = 0;
@@ -1459,6 +1321,7 @@ namespace BrickBreaker_2015.ViewModel
                 
                 #region SetScaling
 
+                // Set the dimensions scaling based on the resolution.
                 switch (GetOption().Resolution)
                 {
                     case "580x420":
@@ -1475,16 +1338,17 @@ namespace BrickBreaker_2015.ViewModel
                         break;
                 }
 
+                // Set the speed scaling based on the difficulty.
                 switch (GetOption().Difficulty)
                 {
                     case 1:
-                        speedScale = 1;
+                        speedScale = 0.9;
                         break;
                     case 2:
-                        speedScale = 1.2;
+                        speedScale = 1;
                         break;
                     case 3:
-                        speedScale = 1.4;
+                        speedScale = 1.2;
                         break;
                 }
 
@@ -1517,7 +1381,7 @@ namespace BrickBreaker_2015.ViewModel
         }
 
         /// <summary>
-        /// Presets the values.
+        /// Presets the values that are needed for the map.
         /// </summary>
         private void PresetValues2()
         {
@@ -1527,8 +1391,10 @@ namespace BrickBreaker_2015.ViewModel
 
                 try
                 {
+                    // The map number is valid.
                     if (GetOption().MapNumber > 0 && GetOption().MapNumber < 6)
                     {
+                        // Set the current map path.
                         switch (GetOption().MapNumber)
                         {
                             case 1:
@@ -1561,6 +1427,7 @@ namespace BrickBreaker_2015.ViewModel
                     canvasHeight = canvas.ActualHeight;
                     canvasWidth = canvas.ActualWidth;
 
+                    // The current map path is valid.
                     if (!string.IsNullOrEmpty(currentMapPath) && currentMapPath != "notfound")
                     {
                         // Add a racket.
@@ -1581,8 +1448,10 @@ namespace BrickBreaker_2015.ViewModel
 
                         // Add the bricks.
                         brickList = mapTxtAccess.LoadMap(currentMapPath, brickWidth, brickHeight);
+                        // There is at least one brick.
                         if (brickList.Count > 0)
                         {
+                            // Check each brick.
                             for (int i = 0; i < brickList.Count; i++)
                             {
                                 canvas.Children.Add(brickList[i].GetRectangle());
@@ -1590,6 +1459,7 @@ namespace BrickBreaker_2015.ViewModel
                         }
                     }
 
+                    // Set the sound for the media player to play.
                     mediaPlayer.Open(new Uri(@"..\..\Resources\Media\Sounds\play_this.mp3", UriKind.Relative));
                 }
                 catch
@@ -1621,6 +1491,7 @@ namespace BrickBreaker_2015.ViewModel
                         // The ball is not on the racket.
                         if (oneBall.BallInMove)
                         {
+                            // Move the ball.
                             oneBall.Move(ballSpeed);
                         }
                     }
@@ -1639,6 +1510,7 @@ namespace BrickBreaker_2015.ViewModel
                         // Descend the bonus and remove it if it's out of the canvas.
                         if (bonusList[i].Descend(bonusSpeed, canvasWidth, canvasHeight))
                         {
+                            // Delete the bonus if the top of it reached the bottom of the canvas.
                             bonusList[i].IsDeleted = true;
                         }
                     }
@@ -1682,6 +1554,7 @@ namespace BrickBreaker_2015.ViewModel
                 string bonusImage = "";
                 Bonus.BonusesType type = Bonus.BonusesType.BallBigger;
 
+                // Random generate an effect for the bonus.
                 switch (rnd.Next(1, 11))
                 {
                     case 1:
@@ -1726,14 +1599,18 @@ namespace BrickBreaker_2015.ViewModel
                         break;
                 }
 
-                Bonus bonus = new Bonus(oneBrick.Area.X + (oneBrick.Area.Width / 2) - (bonusWidth / 2), oneBrick.Area.Y + oneBrick.Area.Height, bonusHeight, bonusWidth, bonusImage, type);
+                // Create the bonus and set the needed properties.
+                Bonus bonus = new Bonus(oneBrick.Area.X + (oneBrick.Area.Width / 2) - (bonusWidth / 2), oneBrick.Area.Y + oneBrick.Area.Height, 
+                    bonusHeight, bonusWidth, bonusImage, type);
                 bonus.ScorePoint = 50;
                 bonus.IsDeleted = false;
                 canvas.Children.Add(bonus.GetRectangle());
                 bonusList.Add(bonus);
 
+                // Move the bonus down.
                 if (bonus.Descend(bonusSpeed, canvasWidth, canvasHeight))
                 {
+                    // Delete the bonus if the top of it reached the bottom of the canvas.
                     bonus.IsDeleted = true;
                 }
             }
@@ -1956,6 +1833,7 @@ namespace BrickBreaker_2015.ViewModel
                                     // The racket is not deleted.
                                     if (!oneRacket.IsDeleted)
                                     {
+                                        // Move the racket left.
                                         oneRacket.Direction = Racket.Directions.Left;
                                         oneRacket.KeyMove(racketSpeed, canvasWidth);
 
@@ -1998,6 +1876,7 @@ namespace BrickBreaker_2015.ViewModel
                                     // The racket is not deleted.
                                     if (!oneRacket.IsDeleted)
                                     {
+                                        // Move the racket right.
                                         oneRacket.Direction = Racket.Directions.Right;
                                         oneRacket.KeyMove(racketSpeed, canvasWidth);
 
@@ -2034,10 +1913,10 @@ namespace BrickBreaker_2015.ViewModel
                     // The pressed key is the fire key.
                     else if (SpecKeys(e.Key) == GetOption().FireButton)
                     {
-                        // The keyboard is a controller item, the game is not paused and the game didn't begin yet.
+                        // The keyboard is a controller item and the game didn't begin yet.
                         if (GetOption().IsKeyboardEnabled && !gameInSession)
                         {
-                            // The timer didn't start yet.
+                            // The game didn't start yet.
                             if (!gameInSession)
                             {
                                 // Start the game.
@@ -2073,13 +1952,13 @@ namespace BrickBreaker_2015.ViewModel
                     // The pressed key is the pause key.
                     else if (SpecKeys(e.Key) == GetOption().PauseButton)
                     {
-                        // The game is not paused.
+                        // The game is not paused and the game has started.
                         if (!gameIsPaused && gameInSession)
                         {
                             // Pause the game.
                             gameIsPaused = true;
                         }
-                        // The game is paused.
+                        // The game is paused and the game has started.
                         else if (gameIsPaused && gameInSession)
                         {
                             // Continue the game.

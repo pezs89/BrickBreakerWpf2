@@ -63,6 +63,7 @@ namespace BrickBreaker_2015.View
         {
             try
             {
+                // Set the difficulty.
                 optionsViewModel.OptionModel.Difficulty = 1;
                 optionsViewModel.SaveToXml();
 
@@ -85,6 +86,7 @@ namespace BrickBreaker_2015.View
         {
             try
             {
+                // Set the difficulty.
                 optionsViewModel.OptionModel.Difficulty = 2;
                 optionsViewModel.SaveToXml();
 
@@ -107,6 +109,7 @@ namespace BrickBreaker_2015.View
         {
             try
             {
+                // Set the difficulty.
                 optionsViewModel.OptionModel.Difficulty = 3;
                 optionsViewModel.SaveToXml();
 
@@ -129,6 +132,7 @@ namespace BrickBreaker_2015.View
         {
             try
             {
+                // The escape key was pushed.
                 if (e.Key == Key.Escape)
                 {
                     NewGameWindow parent = new NewGameWindow();
