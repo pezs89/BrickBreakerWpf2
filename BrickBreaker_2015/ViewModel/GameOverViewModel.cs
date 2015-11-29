@@ -24,12 +24,15 @@ namespace BrickBreaker_2015.ViewModel
         // The list of scores.
         private List<HighScoreModel> highscoreList;
 
+        // The limit of the saved highscores.
+        private int highscoreLimit = 10;
+
         #endregion Fields
 
         #region Constructors
 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="GameOverViewModel"/> class.
         /// </summary>
         public GameOverViewModel()
         {
@@ -59,13 +62,17 @@ namespace BrickBreaker_2015.ViewModel
                 highscoreList.Sort((x, y) => int.Parse(y.PlayerScore).CompareTo(int.Parse(x.PlayerScore)));
                 bool returnValue = false;
 
+                // Check each highscore.
                 for (int i = 0; i < highscoreList.Count; i++)
                 {
+                    // The player's score is bigger then any of the highscores.
                     if (int.Parse(highscoreList[i].PlayerScore) < playerScore)
                     {
+                        // No mach found previously. 
                         if (!returnValue)
                         {
                             returnValue = true;
+                            break;
                         }
                     }
                 }
@@ -88,10 +95,23 @@ namespace BrickBreaker_2015.ViewModel
         {
             try
             {
+                // Add the player's score and sort the scores in descanding order.
                 highscoreList.Add(new HighScoreModel(playerName, playerScore.ToString()));
                 highscoreList.Sort((x, y) => int.Parse(y.PlayerScore).CompareTo(int.Parse(x.PlayerScore)));
-                highscoreList.RemoveAt(10);
 
+                // Remove the extra ones.
+                if (highscoreList.Count >= highscoreLimit)
+                {
+                    int i = highscoreList.Count - 1;
+
+                    while (i >= highscoreLimit)
+                    {
+                        highscoreList.RemoveAt(i);
+                        i--;
+                    }
+                }
+
+                // Save.
                 scoresXmlAccess.SaveScore(highscoreList);
             }
             catch (Exception e)

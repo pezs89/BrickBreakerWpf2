@@ -38,7 +38,7 @@ namespace BrickBreaker_2015.View
         /// <summary>
         /// Initializes a new instance of the <see cref="GameOverWindow"/> class.
         /// </summary>
-        public GameOverWindow()
+        public GameOverWindow(int playerScore)
         {
             InitializeComponent();
 
@@ -47,6 +47,7 @@ namespace BrickBreaker_2015.View
             optionsViewModel = new OptionsViewModel();
             this.Width = optionsViewModel.HorizontalScaleNumber;
             this.Height = optionsViewModel.VerticalScaleNumber;
+            ScoreLabel.Content = playerScore;
         }
 
         #endregion Constructors
@@ -63,8 +64,8 @@ namespace BrickBreaker_2015.View
             try
             {
                 MainWindow parent = new MainWindow();
-                this.DialogResult = true;
-                parent.ShowDialog();
+                parent.Show();
+                this.Close();
             }
             catch (Exception error)
             {
@@ -87,8 +88,8 @@ namespace BrickBreaker_2015.View
                 }
 
                 MainWindow parent = new MainWindow();
-                this.DialogResult = true;
-                parent.ShowDialog();
+                parent.Show();
+                this.Close();
             }
             catch (Exception error)
             {

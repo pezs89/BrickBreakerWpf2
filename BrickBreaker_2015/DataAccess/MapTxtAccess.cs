@@ -52,15 +52,15 @@ namespace BrickBreaker_2015.DataAccess
                     ObservableCollection<Brick> returnValue = new ObservableCollection<Brick>();
 
                     // Open a connection to the txt file.
-                    FileStream fs = new FileStream(pathString, FileMode.Open, FileAccess.Read, FileShare.None);
+                    FileStream fileStream = new FileStream(pathString, FileMode.Open, FileAccess.Read, FileShare.None);
 
                     // Open a reader to read the txt file.
-                    BinaryReader rd = new BinaryReader(fs);
+                    BinaryReader binaryReader = new BinaryReader(fileStream);
 
-                    while (rd.BaseStream.Position != rd.BaseStream.Length)
+                    while (binaryReader.BaseStream.Position != binaryReader.BaseStream.Length)
                     {
                         // The string row needs to be checked by characters.
-                        char[] oneLine = rd.ReadChars(24);
+                        char[] oneLine = binaryReader.ReadChars(24);
 
                         for (int i = 0; i < oneLine.Length; i++)
                         {
@@ -72,24 +72,28 @@ namespace BrickBreaker_2015.DataAccess
                                     Brick brick1 = new Brick(X, Y, brickWidth, brickHeight, @"..\..\Resources\Media\Brick\easybrick.jpg", Brick.BricksType.Easy);
                                     brick1.ScorePoint = 10;
                                     brick1.BreakNumber = 1;
+                                    brick1.IsDeleted = false;
                                     returnValue.Add(brick1);
                                     break;
                                 case '2':
                                     Brick brick2 = new Brick(X, Y, brickWidth, brickHeight, @"..\..\Resources\Media\Brick\mediumbrick.jpg", Brick.BricksType.Medium);
                                     brick2.ScorePoint = 20;
                                     brick2.BreakNumber = 2;
+                                    brick2.IsDeleted = false;
                                     returnValue.Add(brick2);
                                     break;
                                 case '3':
                                     Brick brick3 = new Brick(X, Y, brickWidth, brickHeight, @"..\..\Resources\Media\Brick\hardbrick.jpg", Brick.BricksType.Hard);
                                     brick3.ScorePoint = 30;
                                     brick3.BreakNumber = 5;
+                                    brick3.IsDeleted = false;
                                     returnValue.Add(brick3);
                                     break;
                                 case '4':
                                     Brick brick4 = new Brick(X, Y, brickWidth, brickHeight, @"..\..\Resources\Media\Brick\steelbrick.jpg", Brick.BricksType.Steel);
                                     brick4.ScorePoint = 40;
                                     brick4.BreakNumber = 1;
+                                    brick4.IsDeleted = false;
                                     returnValue.Add(brick4);
                                     break;
                             }
@@ -104,8 +108,8 @@ namespace BrickBreaker_2015.DataAccess
                     }
 
                     // Close the BinaryReader and the FileStream.
-                    rd.Close();
-                    fs.Close();
+                    binaryReader.Close();
+                    fileStream.Close();
 
                     return returnValue;
                 }

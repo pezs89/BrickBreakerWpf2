@@ -68,18 +68,17 @@ namespace BrickBreaker_2015.DataAccess
                 File.Create(PathString);
 
                 // Open a connection to the txt file.
-                FileStream fs = new FileStream(PathString, FileMode.Open, FileAccess.Write, FileShare.None);
+                FileStream fileStream = new FileStream(PathString, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
 
                 // Open a writer to read the txt file.
-                BinaryWriter wr = new BinaryWriter(fs);
+                StreamWriter streamWriter = new StreamWriter(fileStream);
 
                 // Add a new log to the file.
-                wr.Write(DateTime.Now.ToString() + ", File not found.");
-                wr.Write("");
+                streamWriter.WriteLine(DateTime.Now.ToString() + ", File not found.");
 
-                // Close the BinaryWriter and the FileStream.
-                wr.Close();
-                fs.Close();
+                // Close the StreamWriter and the FileStream.
+                streamWriter.Close();
+                fileStream.Close();
             }
             catch
             { }
@@ -119,18 +118,17 @@ namespace BrickBreaker_2015.DataAccess
                 if (e != null && FileExists(PathString))
                 {
                     // Open a connection to the txt file.
-                    FileStream fs = new FileStream(PathString, FileMode.Open, FileAccess.Write, FileShare.None);
+                    FileStream fileStream = new FileStream(PathString, FileMode.Append, FileAccess.Write, FileShare.None);
 
                     // Open a writer to read the txt file.
-                    BinaryWriter wr = new BinaryWriter(fs);
+                    StreamWriter streamWriter = new StreamWriter(fileStream);
 
                     // Add a new log to the file.
-                    wr.Write(DateTime.Now.ToString() + ", " + e.Message);
-                    wr.Write("");
+                    streamWriter.WriteLine(DateTime.Now.ToString() + ", " + e.Message);
 
-                    // Close the BinaryWriter and the FileStream.
-                    wr.Close();
-                    fs.Close();
+                    // Close the StreamWriter and the FileStream.
+                    streamWriter.Close();
+                    fileStream.Close();
                 }
             }
             catch

@@ -23,7 +23,7 @@ namespace BrickBreaker_2015.Model
 
         // The direction of the racket.
         private Directions direction;
-        
+
         // The direction of the rackets.
         public enum Directions
         {
@@ -130,7 +130,7 @@ namespace BrickBreaker_2015.Model
             try
             {
                 // The mouse is left to the racket.
-                if (mousePositionX < Area.X + Area.Width / 2)
+                if (mousePositionX < Area.X + Area.Width / 2 + 3)
                 {
                     // The racket is at the edge of the canvas.
                     if (Area.X <= 0)
@@ -155,7 +155,7 @@ namespace BrickBreaker_2015.Model
                     onPropertyChanged("Area");
                 }
                 // The mouse is right to the racket.
-                else if (mousePositionX > Area.X + Area.Width / 2)
+                else if (mousePositionX > Area.X + Area.Width / 2 + 3)
                 {
                     // The racket is at the edge of the canvas.
                     if (Area.X + Area.Width >= canvasWidth)
@@ -273,7 +273,17 @@ namespace BrickBreaker_2015.Model
         {
             try
             {
-                area.Width += (Area.Width < racketMaxSize ? racketDifference : 0);
+                if (Area.Width < racketMaxSize)
+                {
+                    if (racketMaxSize - Area.Width > racketDifference)
+                    {
+                        area.Width += racketDifference;
+                    }
+                    else
+                    {
+                        area.Width += racketMaxSize - Area.Width;
+                    }
+                }
 
                 onPropertyChanged("Area");
             }
@@ -290,7 +300,17 @@ namespace BrickBreaker_2015.Model
         {
             try
             {
-                area.Width -= (Area.Width > racketMinSize ? racketDifference : 0);
+                if (Area.Width > racketMinSize)
+                {
+                    if (Area.Width - racketMinSize > racketDifference)
+                    {
+                        area.Width -= racketDifference;
+                    }
+                    else
+                    {
+                        area.Width -= Area.Width - racketMinSize;
+                    }
+                }
 
                 onPropertyChanged("Area");
             }

@@ -145,9 +145,6 @@ namespace BrickBreaker_2015.ViewModel
 
         #region GameMechanicsValues
 
-        // The limit of the number of highscores to save.
-        private int highscoreLimit;
-
         // The maximum number of maps.
         private int mapMaxNumber;
 
@@ -216,6 +213,42 @@ namespace BrickBreaker_2015.ViewModel
         #endregion Fields
 
         #region Properties
+
+        /// <summary>
+        /// Gets or sets the gameIsOver.
+        /// </summary>
+        /// <value>
+        /// The gameIsOver.
+        /// </value>
+        public bool GameIsOver
+        {
+            get { return gameIsOver; }
+            set { gameIsOver = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the gameInSession.
+        /// </summary>
+        /// <value>
+        /// The gameInSession.
+        /// </value>
+        public bool GameInSession
+        {
+            get { return gameInSession; }
+            set { gameInSession = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the gameIsPaused.
+        /// </summary>
+        /// <value>
+        /// The gameIsPaused.
+        /// </value>
+        public bool GameIsPaused
+        {
+            get { return gameIsPaused; }
+            set { gameIsPaused = value; }
+        }
 
         /// <summary>
         /// Gets or sets the viewAction.
@@ -399,10 +432,98 @@ namespace BrickBreaker_2015.ViewModel
         #region Methods
 
         /// <summary>
+        /// Cleans the lists from the deleted game objects.
+        /// </summary>
+        public void CleanListsFromDeleted()
+        {
+            try
+            {
+                #region Bonus
+
+                // There is at least one bonus.
+                if (bonusList.Count > 0)
+                {
+                    // Check each bonus.
+                    for (int i = 0; i < bonusList.Count; i++)
+                    {
+                        // The bonus is deleted.
+                        if (bonusList[i].IsDeleted)
+                        {
+                            bonusList.Remove(bonusList[i]);
+                            i--;
+                        }
+                    }
+                }
+
+                #endregion Bonus
+
+                #region Brick
+
+                // There is at least one brick.
+                if (brickList.Count > 0)
+                {
+                    // Check each brick.
+                    for (int i = 0; i < brickList.Count; i++)
+                    {
+                        // The brick is deleted.
+                        if (brickList[i].IsDeleted)
+                        {
+                            brickList.Remove(brickList[i]);
+                            i--;
+                        }
+                    }
+                }
+
+                #endregion Brick
+
+                #region Ball
+
+                // There is at least one ball.
+                if (ballList.Count > 0)
+                {
+                    // Check each ball.
+                    for (int i = 0; i < ballList.Count; i++)
+                    {
+                        // The ball is deleted.
+                        if (ballList[i].IsDeleted)
+                        {
+                            ballList.Remove(ballList[i]);
+                            i--;
+                        }
+                    }
+                }
+
+                #endregion Ball
+
+                #region Racket
+
+                // There is at least one racket.
+                if (racketList.Count > 0)
+                {
+                    // Check each racket.
+                    for (int i = 0; i < racketList.Count; i++)
+                    {
+                        // The racket is deleted.
+                        if (racketList[i].IsDeleted)
+                        {
+                            racketList.Remove(racketList[i]);
+                            i--;
+                        }
+                    }
+                }
+
+                #endregion Racket
+            }
+            catch (Exception e)
+            {
+                errorLogViewModel.LogError(e);
+            }
+        }
+
+        /// <summary>
         /// Sets the needed fields for a new map and gameplay.
         /// </summary>
-        /// <param name="timer">The timer.</param>
-        public void NewMap(ref DispatcherTimer timer)
+        public void NewMap()
         {
             canvas.Children.Clear();
             ballList.Clear();
@@ -410,7 +531,6 @@ namespace BrickBreaker_2015.ViewModel
             brickList.Clear();
             bonusList.Clear();
 
-            timer.Stop();
             gameInSession = false;
             gameIsPaused = false;
 
@@ -432,7 +552,11 @@ namespace BrickBreaker_2015.ViewModel
                 // Check each ball.
                 for (int i = 0; i < ballList.Count; i++)
                 {
-                    canvas.Children.Add(ballList[i].GetEllipse());
+                    // The ball is not deleted.
+                    if (!ballList[i].IsDeleted)
+                    {
+                        canvas.Children.Add(ballList[i].GetEllipse());
+                    }
                 }
             }
 
@@ -460,7 +584,11 @@ namespace BrickBreaker_2015.ViewModel
                 // Check each brick.
                 for (int i = 0; i < brickList.Count; i++)
                 {
-                    canvas.Children.Add(brickList[i].GetRectangle());
+                    // The brick is not deleted.
+                    if (!brickList[i].IsDeleted)
+                    {
+                        canvas.Children.Add(brickList[i].GetRectangle());
+                    }
                 }
             }
 
@@ -474,7 +602,11 @@ namespace BrickBreaker_2015.ViewModel
                 // Check each bonus.
                 for (int i = 0; i < bonusList.Count; i++)
                 {
-                    canvas.Children.Add(bonusList[i].GetRectangle());
+                    // The bonus is not deleted.
+                    if (!bonusList[i].IsDeleted)
+                    {
+                        canvas.Children.Add(bonusList[i].GetRectangle());
+                    }
                 }
             }
 
@@ -494,359 +626,346 @@ namespace BrickBreaker_2015.ViewModel
                     // Check each ball.
                     for (int j = 0; j < ballList.Count; j++)
                     {
-                        #region BallAndWallContact
-
-                        // The ball is at the side of canvas.
-                        if (ballList[j].Area.X <= 0 ||                                       /* Left wall */
-                            ballList[j].Area.X + ballList[j].Area.Width >= canvasWidth ||    /* Right wall */
-                            ballList[j].Area.Y <= 0 ||                                       /* Top wall */
-                            ballList[j].Area.Y + ballList[j].Area.Width >= canvasHeight)     /* Bottom wall */
+                        // The ball is not deleted.
+                        if (!ballList[j].IsDeleted)
                         {
-                            // The ball is at the left or right side of the canvas.
-                            if (ballList[j].Area.X <= 0 || ballList[j].Area.X + ballList[j].Area.Width >= canvasWidth)
+                            // The ball is in move.
+                            if (ballList[j].BallInMove)
                             {
-                                ballList[j].VerticalMovement *= -1;
-                            }
-                            // The ball is at the top side of the canvas.
-                            else if (ballList[j].Area.Y <= 0)
-                            {
-                                ballList[j].HorizontalMovement *= -1;
-                            }
-                            // The ball is at the bottom side of the canvas.
-                            else if (ballList[j].Area.Y + ballList[j].Area.Width >= canvasHeight)
-                            {
-                                // There is only one ball.
-                                if (ballList.Count == 1)
+                                #region BallAndWallContact
+
+                                // The ball is at the side of canvas.
+                                if (ballList[j].Area.X <= 0 ||                                       /* Left wall */
+                                    ballList[j].Area.X + ballList[j].Area.Width >= canvasWidth ||    /* Right wall */
+                                    ballList[j].Area.Y <= 0 ||                                       /* Top wall */
+                                    ballList[j].Area.Y + ballList[j].Area.Width >= canvasHeight)     /* Bottom wall */
                                 {
-                                    playerLife -= 1;
-                                    //LifeLabel.Content = "Life: " + playerLife;
+                                    // The ball is at the left or right side of the canvas.
+                                    if (ballList[j].Area.X <= 0 || ballList[j].Area.X + ballList[j].Area.Width >= canvasWidth)
+                                    {
+                                        ballList[j].VerticalMovement *= -1;
+                                    }
+                                    // The ball is at the top side of the canvas.
+                                    else if (ballList[j].Area.Y <= 0)
+                                    {
+                                        ballList[j].HorizontalMovement *= -1;
+                                    }
+                                    // The ball is at the bottom side of the canvas.
+                                    else if (ballList[j].Area.Y + ballList[j].Area.Width >= canvasHeight)
+                                    {
+                                        // There is only one ball.
+                                        if (ballList.Count == 1)
+                                        {
+                                            playerLife -= 1;
+                                            //LifeLabel.Content = "Life: " + playerLife;
 
-                                    DisposeOfBall();
-                                }
-                                // There are more than one balls.
-                                else
-                                {
-                                    canvas.Children.Remove(ballList[j].GetEllipse());
-                                    ballList.RemoveAt(j);
-                                }
+                                            DisposeOfBall();
+                                        }
+                                        // There are more than one balls.
+                                        else
+                                        {
+                                            canvas.Children.Remove(ballList[j].GetEllipse());
+                                            ballList.RemoveAt(j);
+                                        }
 
-                                // The life points reached 0.
-                                if (playerLife <= 0)
-                                {
-                                    gameIsOver = true;
-                                    gameOverStatus = "fail";
-                                }
+                                        // The life points reached 0.
+                                        if (playerLife <= 0)
+                                        {
+                                            gameIsOver = true;
+                                            gameOverStatus = "fail";
+                                        }
 
-                                break;
-                            }
-                            // The ball is at the corners of the canvas.
-                            else
-                            {
-                                // Horizontal direction change.
-                                ballList[j].HorizontalMovement *= -1;
-                                // Vertical direction change.
-                                ballList[j].VerticalMovement *= -1;
-                            }
-
-                            ballList[j].RepositionBallAtCanvas(canvasWidth);
-
-                            PlaySound();
-                        }
-
-                        #endregion BallAndWallContact
-
-                        // The ball is not at the side walls of the canvas.
-                        else
-                        {
-                            // There is at least one racket.
-                            if (racketList.Count > 0)
-                            {
-                                // Check each racket.
-                                foreach (var oneRacket in racketList)
-                                {
-                                    #region BallAndRacketContact
-
-                                    // The ball is at contact with the racket.
-                                    if (ballList[j].Area.X + ballList[j].Area.Width >= oneRacket.Area.X &&                           /* racket left side */
-                                        ballList[j].Area.X + ballList[j].Area.Width <= oneRacket.Area.X + oneRacket.Area.Width &&    /* racket right side */
-                                        ballList[j].Area.Y + ballList[j].Area.Width >= canvasHeight - racketHeight)                  /* racket top */
+                                        break;
+                                    }
+                                    // The ball is at the corners of the canvas.
+                                    else
                                     {
                                         // Horizontal direction change.
                                         ballList[j].HorizontalMovement *= -1;
-
-                                        #region InDevelopment
-
-                                        //// The left of the racket.
-                                        //if (ballList[j].Area.X + ballList[j].Area.Width / 2 < oneRacket.Area.X + (oneRacket.Area.Width / 2) - ballExaminationProximity)
-                                        //{
-                                        //    ballVerticalMovement *= ballVerticalMovement < 0 ? 1 : -1;
-                                        //    double diff = (0) / ((oneRacket.Area.Width / 2) - ballExaminationProximity);
-                                        //}
-                                        //// The middle of the racket.
-                                        //else if (ballList[j].Area.X + ballList[j].Area.Width / 2 >= oneRacket.Area.X + (oneRacket.Area.Width / 2) - ballExaminationProximity &&
-                                        //         ballList[j].Area.X + ballList[j].Area.Width / 2 <= oneRacket.Area.X + (oneRacket.Area.Width / 2) + ballExaminationProximity)
-                                        //{
-                                        //    ballVerticalMovement = 0;
-                                        //}
-                                        //// The right of the racket.
-                                        //else if (ballList[j].Area.X + ballList[j].Area.Width / 2 > oneRacket.Area.X + (oneRacket.Area.Width / 2) + ballExaminationProximity)
-                                        //{
-                                        //    ballVerticalMovement *= ballVerticalMovement > 0 ? 1 : -1;
-                                        //}
-
-                                        #endregion InDevelopment
-
-                                        // The racket is sticky.
-                                        if (oneRacket.StickyRacket)
-                                        {
-                                            // Stop the movement of the ball.
-                                            ballList[j].BallInMove = false;
-
-                                            // Set the horizontal movement of the ball to negative if not done already.
-                                            if (ballList[j].HorizontalMovement > 0)
-                                            {
-                                                ballList[j].HorizontalMovement *= -1;
-                                            }
-                                        }
-
-                                        ballList[j].RepositionBallAtRacket(oneRacket);
-
-                                        PlaySound();
+                                        // Vertical direction change.
+                                        ballList[j].VerticalMovement *= -1;
                                     }
 
-                                    #endregion BallAndRacketContact
+                                    ballList[j].RepositionBallAtCanvas(canvasWidth);
+
+                                    PlaySound();
                                 }
-                            }
 
-                            // There is at least one racket.
-                            if (brickList.Count > 0)
-                            {
-                                // Check each brick.
-                                for (int i = 0; i < brickList.Count; i++)
+                                #endregion BallAndWallContact
+
+                                // The ball is not at the side walls of the canvas.
+                                else
                                 {
-                                    #region BallAndBrickContact
-
-                                    #region OldVersion
-
-                                    //// The ball is at side of the brick.
-                                    //if (!(ballList[j].Area.X + ballList[j].Area.Width / 2 < brickList[i].Area.X ||                           /* right */
-                                    //    ballList[j].Area.X - ballList[j].Area.Width / 2 > brickList[i].Area.X + brickList[i].Area.Width ||   /* left */
-                                    //    ballList[j].Area.Y + ballList[j].Area.Height / 2 < brickList[i].Area.Y ||                            /* bottom */
-                                    //    ballList[j].Area.Y - ballList[j].Area.Height / 2 > brickList[i].Area.Y + brickList[i].Area.Height))  /* top */
-                                    //{
-                                    //    // If the ball is in contact with the brick
-                                    //    if (ballList[j].BallType != Ball.BallsType.Steel)
-                                    //    {
-                                    //        // 
-                                    //        if (ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X) // r
-                                    //        {
-                                    //            // 
-                                    //            if (ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y) // rb
-                                    //            {
-                                    //                ballList[j].HorizontalMovement *= -1; // horizontal?
-                                    //            }
-                                    //            // 
-                                    //            else if (ballList[j].Area.Y - ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) // rt
-                                    //            {
-                                    //                ballList[j].HorizontalMovement *= -1;
-                                    //            }
-                                    //            // 
-                                    //            else
-                                    //            {
-                                    //                ballList[j].VerticalMovement *= -1;
-                                    //            }
-                                    //        }
-                                    //        // 
-                                    //        else if (ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + ballHorizontalMovement) // l
-                                    //        {
-                                    //            // 
-                                    //            if (ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y) // lb
-                                    //            {
-                                    //                ballList[j].HorizontalMovement *= -1;
-                                    //            }
-                                    //            // 
-                                    //            else if (ballList[j].Area.Y - ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) // lt
-                                    //            {
-                                    //                ballList[j].HorizontalMovement *= -1;
-                                    //            }
-                                    //            // 
-                                    //            else
-                                    //            {
-                                    //                ballList[j].VerticalMovement *= -1;
-                                    //            }
-                                    //        }
-                                    //        // 
-                                    //        else if (ballList[j].Area.Y + ballList[j].Area.Width / 2 >= brickList[i].Area.Y) // r
-                                    //        {
-                                    //            ballList[j].HorizontalMovement *= -1;
-                                    //        }
-                                    //        // 
-                                    //        else if (ballList[j].Area.Y - ballList[j].Area.Width / 2 <= brickList[i].Area.Y + brickList[i].Area.Width) // l
-                                    //        {
-                                    //            ballList[j].HorizontalMovement *= -1;
-                                    //        }
-                                    //        // 
-                                    //        else if (ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y) // b
-                                    //        {
-                                    //            ballList[j].VerticalMovement *= -1;
-                                    //        }
-                                    //        // 
-                                    //        else if (ballList[j].Area.Y - ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) // t
-                                    //        {
-                                    //            ballList[j].VerticalMovement *= -1;
-                                    //        }
-                                    //    }
-
-                                    //    BrickContact(ballList[j], brickList[i]);
-                                    //}
-
-                                    #endregion OldVersion
-
-                                    #region TestVersion
-
-                                    //// The ball is at side of the brick.
-                                    //if (!(ballList[j].Area.X + ballList[j].Area.Width / 2 < brickList[i].Area.X ||                          /* brick left side */
-                                    //    ballList[j].Area.X + ballList[j].Area.Width / 2 > brickList[i].Area.X + brickList[i].Area.Width ||  /* brick right side */
-                                    //    ballList[j].Area.Y + ballList[j].Area.Height / 2 < brickList[i].Area.Y ||                            /* brick top */
-                                    //    ballList[j].Area.Y + ballList[j].Area.Height / 2 > brickList[i].Area.Y + brickList[i].Area.Height))  /* brick bottom */
-                                    //{
-                                    //    // If the ball is in contact with the brick and the examination proximity
-                                    //    if (ballList[j].BallType != Ball.BallsType.Steel)
-                                    //    {
-                                    //        // 
-                                    //        if (ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X &&
-                                    //            ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width &&
-                                    //            ((ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y &&
-                                    //            ballList[j].Area.Y + ballList[j].Area.Height / 2 - ballHorizontalMovement < brickList[i].Area.Y) ||
-                                    //            (ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height &&
-                                    //            ballList[j].Area.Y + ballList[j].Area.Height / 2 - ballHorizontalMovement > brickList[i].Area.Y + brickList[i].Area.Height)))
-                                    //        {
-                                    //            // Horizontal direction change.
-                                    //            ballList[j].HorizontalMovement *= -1;
-                                    //        }
-                                    //        // 
-                                    //        else if (ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y &&
-                                    //                 ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height &&
-                                    //                 ((ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X &&
-                                    //                 ballList[j].Area.X + ballList[j].Area.Width / 2 - ballVerticalMovement < brickList[i].Area.X) ||
-                                    //                 (ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width &&
-                                    //                 ballList[j].Area.X + ballList[j].Area.Width / 2 - ballVerticalMovement > brickList[i].Area.X + brickList[i].Area.Width)))
-                                    //        {
-                                    //            // Vertical direction change.
-                                    //            ballList[j].VerticalMovement *= -1;
-                                    //        }
-                                    //        // 
-                                    //        else if (ballList[j].Area.X + ballExaminationProximity > brickList[i].Area.X) // r
-                                    //        {
-                                    //            // 
-                                    //            if (ballList[j].Area.Y + ballExaminationProximity > brickList[i].Area.Y) // rb
-                                    //            {
-                                    //                // Horizontal direction change.
-                                    //                ballList[j].HorizontalMovement *= -1;
-                                    //            }
-                                    //            // 
-                                    //            else if (ballList[j].Area.Y - ballExaminationProximity < brickList[i].Area.Y + brickList[i].Area.Height) // rt
-                                    //            {
-                                    //                // Horizontal direction change.
-                                    //                ballList[j].HorizontalMovement *= -1;
-                                    //            }
-                                    //            // 
-                                    //            else
-                                    //            {
-                                    //                // Vertical direction change.
-                                    //                ballList[j].VerticalMovement *= -1;
-                                    //            }
-                                    //        }
-                                    //        // 
-                                    //        else if (ballList[j].Area.X + ballExaminationProximity < brickList[i].Area.X + ballHorizontalMovement) // l
-                                    //        {
-                                    //            // 
-                                    //            if (ballList[j].Area.Y + ballExaminationProximity > brickList[i].Area.Y) // lb
-                                    //            {
-                                    //                // Horizontal direction change.
-                                    //                ballList[j].HorizontalMovement *= -1;
-                                    //            }
-                                    //            // 
-                                    //            else if (ballList[j].Area.Y - ballExaminationProximity < brickList[i].Area.Y + brickList[i].Area.Height) // lt
-                                    //            {
-                                    //                // Horizontal direction change.
-                                    //                ballList[j].HorizontalMovement *= -1;
-                                    //            }
-                                    //            // 
-                                    //            else
-                                    //            {
-                                    //                // Vertical direction change.
-                                    //                ballList[j].VerticalMovement *= -1;
-                                    //            }
-                                    //        }
-                                    //    }
-
-                                    //    BrickContact(ballList[j], brickList[i]);
-                                    //}
-                                    //// The ball is at the corner of the brick.
-                                    //else
-                                    //{
-                                    //    // No corner detection implemented.
-                                    //}
-
-                                    #endregion TestVersion
-
-                                    #region NewVersion
-
-                                    // 
-                                    if (((ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X ||
-                                        ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width) &&
-                                        ballList[j].Area.Y + ballList[j].Area.Height >= brickList[i].Area.Y) && /* bottom of the ball */
-                                        ((ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X ||
-                                        ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width) &&
-                                        ballList[j].Area.Y <= brickList[i].Area.Y + brickList[i].Area.Height) && /* top of the ball */
-                                        ((ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y ||
-                                        ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) &&
-                                        ballList[j].Area.X <= brickList[i].Area.X + brickList[i].Area.Width) && /* left of the ball */
-                                        ((ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y ||
-                                        ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) &&
-                                        ballList[j].Area.X + ballList[j].Area.Width >= brickList[i].Area.X)) /* right of the ball */
+                                    // There is at least one racket.
+                                    if (racketList.Count > 0)
                                     {
-                                        if (((ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X ||
-                                            ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width) &&
-                                            ballList[j].Area.Y + ballList[j].Area.Height >= brickList[i].Area.Y) || /* bottom of the ball */
-                                            ((ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X ||
-                                            ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width) &&
-                                            ballList[j].Area.Y <= brickList[i].Area.Y + brickList[i].Area.Height)) /* top of the ball */
+                                        // Check each racket.
+                                        foreach (var oneRacket in racketList)
                                         {
-                                            if (ballList[j].BallType != Ball.BallsType.Steel)
-                                            {
-                                                ballList[j].HorizontalMovement = -ballList[j].HorizontalMovement;
-                                            }
-                                        }
-                                        else if (((ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y ||
-                                            ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) &&
-                                            ballList[j].Area.X <= brickList[i].Area.X + brickList[i].Area.Width) || /* left of the ball */
-                                            ((ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y ||
-                                            ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) &&
-                                            ballList[j].Area.X + ballList[j].Area.Width >= brickList[i].Area.X)) /* right of the ball */
-                                        {
-                                            if (ballList[j].BallType != Ball.BallsType.Steel)
-                                            {
-                                                ballList[j].VerticalMovement = -ballList[j].VerticalMovement;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (ballList[j].BallType != Ball.BallsType.Steel)
-                                            {
-                                                ballList[j].HorizontalMovement = -ballList[j].HorizontalMovement;
-                                                ballList[j].VerticalMovement = -ballList[j].VerticalMovement;
-                                            }
-                                        }
+                                            #region BallAndRacketContact
 
-                                        //ballList[j].RepositionBallAtBrick(brickList[i]);
-                                        BrickContact(ballList[j], brickList[i]);
+                                            // The racket is not deleted.
+                                            if (!oneRacket.IsDeleted)
+                                            {
+                                                // The ball is at contact with the racket.
+                                                if (ballList[j].Area.X + ballList[j].Area.Width >= oneRacket.Area.X &&                           /* racket left side */
+                                                    ballList[j].Area.X + ballList[j].Area.Width <= oneRacket.Area.X + oneRacket.Area.Width &&    /* racket right side */
+                                                    ballList[j].Area.Y + ballList[j].Area.Width >= canvasHeight - racketHeight)                  /* racket top */
+                                                {
+                                                    // Horizontal direction change.
+                                                    ballList[j].HorizontalMovement *= -1;
+
+                                                    // The racket is sticky.
+                                                    if (oneRacket.StickyRacket)
+                                                    {
+                                                        // Stop the movement of the ball.
+                                                        ballList[j].BallInMove = false;
+                                                        ballList[j].RelativePosition = ballList[j].Area.X + ballList[j].Area.Width / 2 - racketList[0].Area.X;
+
+                                                        // Set the horizontal movement of the ball to negative if not done already.
+                                                        if (ballList[j].HorizontalMovement > 0)
+                                                        {
+                                                            ballList[j].HorizontalMovement *= -1;
+                                                        }
+                                                    }
+
+                                                    ballList[j].RepositionBallAtRacket(oneRacket);
+
+                                                    PlaySound();
+                                                }
+                                            }
+
+                                            #endregion BallAndRacketContact
+                                        }
                                     }
 
-                                    #endregion NewVersion
+                                    // There is at least one racket.
+                                    if (brickList.Count > 0)
+                                    {
+                                        // Check each brick.
+                                        for (int i = 0; i < brickList.Count; i++)
+                                        {
+                                            // The brick is not deleted.
+                                            if (!brickList[i].IsDeleted)
+                                            {
+                                                #region BallAndBrickContact
 
-                                    #endregion BallAndBrickContact
+                                                #region OldVersion
+
+                                                //// The ball is at side of the brick.
+                                                //if (!(ballList[j].Area.X + ballList[j].Area.Width / 2 < brickList[i].Area.X ||                           /* right */
+                                                //    ballList[j].Area.X - ballList[j].Area.Width / 2 > brickList[i].Area.X + brickList[i].Area.Width ||   /* left */
+                                                //    ballList[j].Area.Y + ballList[j].Area.Height / 2 < brickList[i].Area.Y ||                            /* bottom */
+                                                //    ballList[j].Area.Y - ballList[j].Area.Height / 2 > brickList[i].Area.Y + brickList[i].Area.Height))  /* top */
+                                                //{
+                                                //    // If the ball is in contact with the brick
+                                                //    if (ballList[j].BallType != Ball.BallsType.Steel)
+                                                //    {
+                                                //        // 
+                                                //        if (ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X) // r
+                                                //        {
+                                                //            // 
+                                                //            if (ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y) // rb
+                                                //            {
+                                                //                ballList[j].HorizontalMovement *= -1; // horizontal?
+                                                //            }
+                                                //            // 
+                                                //            else if (ballList[j].Area.Y - ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) // rt
+                                                //            {
+                                                //                ballList[j].HorizontalMovement *= -1;
+                                                //            }
+                                                //            // 
+                                                //            else
+                                                //            {
+                                                //                ballList[j].VerticalMovement *= -1;
+                                                //            }
+                                                //        }
+                                                //        // 
+                                                //        else if (ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + ballHorizontalMovement) // l
+                                                //        {
+                                                //            // 
+                                                //            if (ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y) // lb
+                                                //            {
+                                                //                ballList[j].HorizontalMovement *= -1;
+                                                //            }
+                                                //            // 
+                                                //            else if (ballList[j].Area.Y - ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) // lt
+                                                //            {
+                                                //                ballList[j].HorizontalMovement *= -1;
+                                                //            }
+                                                //            // 
+                                                //            else
+                                                //            {
+                                                //                ballList[j].VerticalMovement *= -1;
+                                                //            }
+                                                //        }
+                                                //        // 
+                                                //        else if (ballList[j].Area.Y + ballList[j].Area.Width / 2 >= brickList[i].Area.Y) // r
+                                                //        {
+                                                //            ballList[j].HorizontalMovement *= -1;
+                                                //        }
+                                                //        // 
+                                                //        else if (ballList[j].Area.Y - ballList[j].Area.Width / 2 <= brickList[i].Area.Y + brickList[i].Area.Width) // l
+                                                //        {
+                                                //            ballList[j].HorizontalMovement *= -1;
+                                                //        }
+                                                //        // 
+                                                //        else if (ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y) // b
+                                                //        {
+                                                //            ballList[j].VerticalMovement *= -1;
+                                                //        }
+                                                //        // 
+                                                //        else if (ballList[j].Area.Y - ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) // t
+                                                //        {
+                                                //            ballList[j].VerticalMovement *= -1;
+                                                //        }
+                                                //    }
+
+                                                //    BrickContact(ballList[j], brickList[i]);
+                                                //}
+
+                                                #endregion OldVersion
+
+                                                #region TestVersion
+
+                                                //// The ball is at side of the brick.
+                                                //if (!(ballList[j].Area.X + ballList[j].Area.Width / 2 < brickList[i].Area.X ||                          /* brick left side */
+                                                //    ballList[j].Area.X + ballList[j].Area.Width / 2 > brickList[i].Area.X + brickList[i].Area.Width ||  /* brick right side */
+                                                //    ballList[j].Area.Y + ballList[j].Area.Height / 2 < brickList[i].Area.Y ||                            /* brick top */
+                                                //    ballList[j].Area.Y + ballList[j].Area.Height / 2 > brickList[i].Area.Y + brickList[i].Area.Height))  /* brick bottom */
+                                                //{
+                                                //    // If the ball is in contact with the brick and the examination proximity
+                                                //    if (ballList[j].BallType != Ball.BallsType.Steel)
+                                                //    {
+                                                //        // 
+                                                //        if (ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X &&
+                                                //            ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width &&
+                                                //            ((ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y &&
+                                                //            ballList[j].Area.Y + ballList[j].Area.Height / 2 - ballHorizontalMovement < brickList[i].Area.Y) ||
+                                                //            (ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height &&
+                                                //            ballList[j].Area.Y + ballList[j].Area.Height / 2 - ballHorizontalMovement > brickList[i].Area.Y + brickList[i].Area.Height)))
+                                                //        {
+                                                //            // Horizontal direction change.
+                                                //            ballList[j].HorizontalMovement *= -1;
+                                                //        }
+                                                //        // 
+                                                //        else if (ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y &&
+                                                //                 ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height &&
+                                                //                 ((ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X &&
+                                                //                 ballList[j].Area.X + ballList[j].Area.Width / 2 - ballVerticalMovement < brickList[i].Area.X) ||
+                                                //                 (ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width &&
+                                                //                 ballList[j].Area.X + ballList[j].Area.Width / 2 - ballVerticalMovement > brickList[i].Area.X + brickList[i].Area.Width)))
+                                                //        {
+                                                //            // Vertical direction change.
+                                                //            ballList[j].VerticalMovement *= -1;
+                                                //        }
+                                                //        // 
+                                                //        else if (ballList[j].Area.X + ballExaminationProximity > brickList[i].Area.X) // r
+                                                //        {
+                                                //            // 
+                                                //            if (ballList[j].Area.Y + ballExaminationProximity > brickList[i].Area.Y) // rb
+                                                //            {
+                                                //                // Horizontal direction change.
+                                                //                ballList[j].HorizontalMovement *= -1;
+                                                //            }
+                                                //            // 
+                                                //            else if (ballList[j].Area.Y - ballExaminationProximity < brickList[i].Area.Y + brickList[i].Area.Height) // rt
+                                                //            {
+                                                //                // Horizontal direction change.
+                                                //                ballList[j].HorizontalMovement *= -1;
+                                                //            }
+                                                //            // 
+                                                //            else
+                                                //            {
+                                                //                // Vertical direction change.
+                                                //                ballList[j].VerticalMovement *= -1;
+                                                //            }
+                                                //        }
+                                                //        // 
+                                                //        else if (ballList[j].Area.X + ballExaminationProximity < brickList[i].Area.X + ballHorizontalMovement) // l
+                                                //        {
+                                                //            // 
+                                                //            if (ballList[j].Area.Y + ballExaminationProximity > brickList[i].Area.Y) // lb
+                                                //            {
+                                                //                // Horizontal direction change.
+                                                //                ballList[j].HorizontalMovement *= -1;
+                                                //            }
+                                                //            // 
+                                                //            else if (ballList[j].Area.Y - ballExaminationProximity < brickList[i].Area.Y + brickList[i].Area.Height) // lt
+                                                //            {
+                                                //                // Horizontal direction change.
+                                                //                ballList[j].HorizontalMovement *= -1;
+                                                //            }
+                                                //            // 
+                                                //            else
+                                                //            {
+                                                //                // Vertical direction change.
+                                                //                ballList[j].VerticalMovement *= -1;
+                                                //            }
+                                                //        }
+                                                //    }
+
+                                                //    BrickContact(ballList[j], brickList[i]);
+                                                //}
+                                                //// The ball is at the corner of the brick.
+                                                //else
+                                                //{
+                                                //    // No corner detection implemented.
+                                                //}
+
+                                                #endregion TestVersion
+
+                                                #region NewVersion
+
+                                                // 
+                                                if (((ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X ||
+                                                    ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width) &&
+                                                    ballList[j].Area.Y + ballList[j].Area.Height >= brickList[i].Area.Y) && /* bottom of the ball */
+                                                    ((ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X ||
+                                                    ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width) &&
+                                                    ballList[j].Area.Y <= brickList[i].Area.Y + brickList[i].Area.Height) && /* top of the ball */
+                                                    ((ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y ||
+                                                    ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) &&
+                                                    ballList[j].Area.X <= brickList[i].Area.X + brickList[i].Area.Width) && /* left of the ball */
+                                                    ((ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y ||
+                                                    ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) &&
+                                                    ballList[j].Area.X + ballList[j].Area.Width >= brickList[i].Area.X)) /* right of the ball */
+                                                {
+                                                    if (((ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X ||
+                                                        ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width) &&
+                                                        ballList[j].Area.Y + ballList[j].Area.Height >= brickList[i].Area.Y) || /* bottom of the ball */
+                                                        ((ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X ||
+                                                        ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width) &&
+                                                        ballList[j].Area.Y <= brickList[i].Area.Y + brickList[i].Area.Height)) /* top of the ball */
+                                                    {
+                                                        if (ballList[j].BallType != Ball.BallsType.Steel)
+                                                        {
+                                                            ballList[j].HorizontalMovement = -ballList[j].HorizontalMovement;
+                                                        }
+                                                    }
+                                                    else if (((ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y ||
+                                                        ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) &&
+                                                        ballList[j].Area.X <= brickList[i].Area.X + brickList[i].Area.Width) || /* left of the ball */
+                                                        ((ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y ||
+                                                        ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) &&
+                                                        ballList[j].Area.X + ballList[j].Area.Width >= brickList[i].Area.X)) /* right of the ball */
+                                                    {
+                                                        if (ballList[j].BallType != Ball.BallsType.Steel)
+                                                        {
+                                                            ballList[j].VerticalMovement = -ballList[j].VerticalMovement;
+                                                        }
+                                                    }
+
+                                                    //ballList[j].RepositionBallAtBrick(brickList[i]);
+                                                    BrickContact(ballList[j], brickList[i]);
+                                                }
+
+                                                #endregion NewVersion
+
+                                                #endregion BallAndBrickContact
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -886,8 +1005,8 @@ namespace BrickBreaker_2015.ViewModel
                                     AddBonus(oneBrick);
                                 }
 
-                                canvas.Children.Remove(oneBrick.GetRectangle());
-                                brickList.Remove(oneBrick);
+                                playerScorePoint += oneBrick.ScorePoint;
+                                oneBrick.IsDeleted = true;
                             }
                             // The brick is not at breaking point.
                             else
@@ -905,8 +1024,8 @@ namespace BrickBreaker_2015.ViewModel
                                 AddBonus(oneBrick);
                             }
 
-                            canvas.Children.Remove(oneBrick.GetRectangle());
-                            brickList.Remove(oneBrick);
+                            playerScorePoint += oneBrick.ScorePoint;
+                            oneBrick.IsDeleted = true;
                         }
                     }
                 }
@@ -919,8 +1038,8 @@ namespace BrickBreaker_2015.ViewModel
                         AddBonus(oneBrick);
                     }
 
-                    canvas.Children.Remove(oneBrick.GetRectangle());
-                    brickList.Remove(oneBrick);
+                    playerScorePoint += oneBrick.ScorePoint;
+                    oneBrick.IsDeleted = true;
                 }
 
                 PlaySound();
@@ -974,9 +1093,6 @@ namespace BrickBreaker_2015.ViewModel
 
                     viewAction = ViewActionStatus.OpenMenu;
                 }
-
-                //playerLife = gamePresets != null && gamePresets.LifePoint != 0 ? gamePresets.LifePoint : 3;
-                //playerScorePoint = gamePresets != null && gamePresets.ScorePoint != 0 ? gamePresets.ScorePoint : 0;
             }
             catch (Exception e)
             {
@@ -988,42 +1104,13 @@ namespace BrickBreaker_2015.ViewModel
         /// Checks for game ending consequences.
         /// </summary>
         /// <param name="timer">The timer.</param>
-        public void CheckForGameOver(ref DispatcherTimer timer)
+        public void CheckForGameOver()
         {
             try
             {
                 // There is at least one ball.
                 if (ballList.Count > 0)
                 {
-                    int steelBallCount = 0;
-
-                    // Check each ball.
-                    foreach (Ball oneBall in ballList)
-                    {
-                        // See if there is any steel ball.
-                        if (oneBall.BallType == Ball.BallsType.Steel)
-                        {
-                            steelBallCount++;
-                        }
-                    }
-
-                    // There is at least one steal ball.
-                    if (steelBallCount > 0)
-                    {
-                        // No bricks left.
-                        if (brickList.Count == 0)
-                        {
-                            // No bonuses left.
-                            if (bonusList.Count == 0)
-                            {
-                                gameIsOver = true;
-                                gameOverStatus = "success";
-                            }
-                        }
-                    }
-                    // There are no steal balls.
-                    else
-                    {
                         // There are still bricks left.
                         if (brickList.Count > 0)
                         {
@@ -1056,13 +1143,12 @@ namespace BrickBreaker_2015.ViewModel
                                 gameOverStatus = "success";
                             }
                         }
-                    }
                 }
 
                 // The game is over, the status is given and the game is still is session.
                 if (gameIsOver && !string.IsNullOrEmpty(gameOverStatus) && gameInSession)
                 {
-                    GameOver(gameOverStatus, ref timer);
+                    GameOver(gameOverStatus);
                 }
             }
             catch (Exception e)
@@ -1075,7 +1161,7 @@ namespace BrickBreaker_2015.ViewModel
         /// Handles the end of the game.
         /// </summary>
         /// <param name="status">The status.</param>
-        private void GameOver(string status, ref DispatcherTimer dispatcherTimer)
+        private void GameOver(string status)
         {
             try
             {
@@ -1083,8 +1169,6 @@ namespace BrickBreaker_2015.ViewModel
 
                 if (status == "fail")
                 {
-                    dispatcherTimer.Stop();
-
                     MessageBox.Show("You've failed.", "Game Over");
 
                     gameIsOver = false;
@@ -1099,10 +1183,6 @@ namespace BrickBreaker_2015.ViewModel
 
                 else if (status == "success")
                 {
-                    dispatcherTimer.Stop();
-
-                    MessageBox.Show("You've succeeded.", "Game Over");
-
                     gameIsOver = false;
                     gameOverStatus = null;
 
@@ -1137,6 +1217,7 @@ namespace BrickBreaker_2015.ViewModel
 
                     else
                     {
+                        MessageBox.Show("You've succeeded.", "Game Over");
                         viewAction = ViewActionStatus.OpenHighscores;
                     }
 
@@ -1168,6 +1249,7 @@ namespace BrickBreaker_2015.ViewModel
                     @"..\..\Resources\Media\Racket\normalracket.jpg");
                 racket.Direction = Racket.Directions.Stay;
                 racket.StickyRacket = false;
+                racket.IsDeleted = false;
                 canvas.Children.Add(racket.GetRectangle());
                 racketList.Add(racket);
 
@@ -1177,6 +1259,8 @@ namespace BrickBreaker_2015.ViewModel
                 ball.VerticalMovement = ballVerticalMovement > 0 ? ballVerticalMovement : -ballVerticalMovement;
                 ball.HorizontalMovement = ballHorizontalMovement < 0 ? ballHorizontalMovement : -ballHorizontalMovement;
                 ball.BallInMove = false;
+                ball.RelativePosition = ball.Area.X + ball.Area.Width / 2 - racketList[0].Area.X;
+                ball.IsDeleted = false;
                 canvas.Children.Add(ball.GetEllipse());
                 ballList.Add(ball);
             }
@@ -1199,109 +1283,118 @@ namespace BrickBreaker_2015.ViewModel
                     // Check each racket.
                     foreach (Racket oneRacket in racketList)
                     {
-                        // There is at least one bonus.
-                        if (bonusList.Count > 0)
+                        // The racket is not deleted.
+                        if (!oneRacket.IsDeleted)
                         {
-                            // Check each bonus.
-                            for (int i = 0; i < bonusList.Count; i++)
+                            // There is at least one bonus.
+                            if (bonusList.Count > 0)
                             {
-                                // The racket and the bonus overleap somewhere.
-                                if (oneRacket.Area.X < bonusList[i].Area.X + bonusList[i].Area.Width &&    /* bonus rigth side */
-                                    oneRacket.Area.X + oneRacket.Area.Width > bonusList[i].Area.X &&       /* bonus left side */
-                                    oneRacket.Area.Y < bonusList[i].Area.Y + bonusList[i].Area.Height)     /* bonus bottom */
+                                // Check each bonus.
+                                for (int i = 0; i < bonusList.Count; i++)
                                 {
-                                    playerScorePoint += bonusList[i].ScorePoint;
-
-                                    #region AddBonusEffect
-
-                                    // Add the bonus effect.
-                                    switch (bonusList[i].BonusType)
+                                    // The bonus is not deleted.
+                                    if (!bonusList[i].IsDeleted)
                                     {
-                                        case Bonus.BonusesType.LifeUp:
-                                            playerLife++;
-                                            break;
-                                        case Bonus.BonusesType.LifeDown:
-                                            playerLife--;
-                                            break;
-                                        case Bonus.BonusesType.NewBall:
-                                            Ball ball = new Ball(oneRacket.Area.X + (oneRacket.Area.Width / 2) - ballRadius, oneRacket.Area.Y - (ballRadius * 2),
-                                                ballRadius * 2, ballRadius * 2, @"..\..\Resources\Media\Ball\normalball.jpg", 0, 0, Ball.BallsType.Normal);
-                                            ball.VerticalMovement = ballVerticalMovement > 0 ? ballVerticalMovement : -ballVerticalMovement;
-                                            ball.HorizontalMovement = ballHorizontalMovement < 0 ? ballHorizontalMovement : -ballHorizontalMovement;
-                                            ball.BallInMove = false;
-                                            canvas.Children.Add(ball.GetEllipse());
-                                            ballList.Add(ball);
-                                            break;
-                                        case Bonus.BonusesType.RacketLengthen:
-                                            oneRacket.Lengthen(racketMaxSize, racketDifference);
-                                            break;
-                                        case Bonus.BonusesType.RacketShorten:
-                                            oneRacket.Shorthen(racketMinSize, racketDifference);
-                                            break;
-                                        case Bonus.BonusesType.BallBigger:
-                                            // There are at least one ball.
-                                            if (ballList.Count > 0)
+                                        // The racket and the bonus overleap somewhere.
+                                        if (oneRacket.Area.X < bonusList[i].Area.X + bonusList[i].Area.Width &&    /* bonus rigth side */
+                                            oneRacket.Area.X + oneRacket.Area.Width > bonusList[i].Area.X &&       /* bonus left side */
+                                            oneRacket.Area.Y < bonusList[i].Area.Y + bonusList[i].Area.Height)     /* bonus bottom */
+                                        {
+                                            playerScorePoint += bonusList[i].ScorePoint;
+
+                                            #region AddBonusEffect
+
+                                            // Add the bonus effect.
+                                            switch (bonusList[i].BonusType)
                                             {
-                                                // Check each ball.
-                                                foreach (var oneBall in ballList)
-                                                {
-                                                    oneBall.ChangeBallToLarge(ballMaxRadius, ballRadius, canvasWidth, canvasHeight, racketHeight);
-                                                }
+                                                case Bonus.BonusesType.LifeUp:
+                                                    playerLife++;
+                                                    break;
+                                                case Bonus.BonusesType.LifeDown:
+                                                    playerLife--;
+                                                    break;
+                                                case Bonus.BonusesType.NewBall:
+                                                    Ball ball = new Ball(oneRacket.Area.X + (oneRacket.Area.Width / 2) - ballRadius, oneRacket.Area.Y - (ballRadius * 2),
+                                                        ballRadius * 2, ballRadius * 2, @"..\..\Resources\Media\Ball\normalball.jpg", 0, 0, Ball.BallsType.Normal);
+                                                    ball.VerticalMovement = ballVerticalMovement > 0 ? ballVerticalMovement : -ballVerticalMovement;
+                                                    ball.HorizontalMovement = ballHorizontalMovement < 0 ? ballHorizontalMovement : -ballHorizontalMovement;
+                                                    ball.BallInMove = false;
+                                                    ball.RelativePosition = ball.Area.X + ball.Area.Width / 2 - racketList[0].Area.X;
+                                                    ball.IsDeleted = false;
+                                                    canvas.Children.Add(ball.GetEllipse());
+                                                    ballList.Add(ball);
+                                                    break;
+                                                case Bonus.BonusesType.RacketLengthen:
+                                                    oneRacket.Lengthen(racketMaxSize, racketDifference);
+                                                    break;
+                                                case Bonus.BonusesType.RacketShorten:
+                                                    oneRacket.Shorthen(racketMinSize, racketDifference);
+                                                    break;
+                                                case Bonus.BonusesType.BallBigger:
+                                                    // There are at least one ball.
+                                                    if (ballList.Count > 0)
+                                                    {
+                                                        // Check each ball.
+                                                        foreach (var oneBall in ballList)
+                                                        {
+                                                            oneBall.ChangeBallToLarge(ballMaxRadius, ballRadius, canvasWidth, canvasHeight, racketHeight);
+                                                        }
+                                                    }
+                                                    break;
+                                                case Bonus.BonusesType.BallSmaller:
+                                                    // There is at least one ball.
+                                                    if (ballList.Count > 0)
+                                                    {
+                                                        // Check each ball.
+                                                        foreach (var oneBall in ballList)
+                                                        {
+                                                            oneBall.ChangeBallToSmall(ballMinRadius);
+                                                        }
+                                                    }
+                                                    break;
+                                                case Bonus.BonusesType.StickyRacket:
+                                                    // The racket is not sticky.
+                                                    if (!oneRacket.StickyRacket)
+                                                    {
+                                                        oneRacket.ChangeToSticky();
+                                                    }
+                                                    break;
+                                                case Bonus.BonusesType.HardBall:
+                                                    // There is at least one ball.
+                                                    if (ballList.Count > 0)
+                                                    {
+                                                        // Check each ball.
+                                                        foreach (var oneBall in ballList)
+                                                        {
+                                                            oneBall.ChangeToHard();
+                                                        }
+                                                    }
+                                                    break;
+                                                case Bonus.BonusesType.SteelBall:
+                                                    // There is at least one ball.
+                                                    if (ballList.Count > 0)
+                                                    {
+                                                        // Check each ball.
+                                                        foreach (var oneBall in ballList)
+                                                        {
+                                                            oneBall.ChangeToSteel();
+                                                        }
+                                                    }
+                                                    break;
                                             }
-                                            break;
-                                        case Bonus.BonusesType.BallSmaller:
-                                            // There is at least one ball.
-                                            if (ballList.Count > 0)
+
+                                            // The player's life points reached 0, game over.
+                                            if (playerLife <= 0)
                                             {
-                                                // Check each ball.
-                                                foreach (var oneBall in ballList)
-                                                {
-                                                    oneBall.ChangeBallToSmall(ballMinRadius);
-                                                }
+                                                gameOverStatus = "fail";
+                                                gameIsOver = true;
                                             }
-                                            break;
-                                        case Bonus.BonusesType.StickyRacket:
-                                            // The racket is not sticky.
-                                            if (!oneRacket.StickyRacket)
-                                            {
-                                                oneRacket.ChangeToSticky();
-                                            }
-                                            break;
-                                        case Bonus.BonusesType.HardBall:
-                                            // There is at least one ball.
-                                            if (ballList.Count > 0)
-                                            {
-                                                // Check each ball.
-                                                foreach (var oneBall in ballList)
-                                                {
-                                                    oneBall.ChangeToHard();
-                                                }
-                                            }
-                                            break;
-                                        case Bonus.BonusesType.SteelBall:
-                                            // There is at least one ball.
-                                            if (ballList.Count > 0)
-                                            {
-                                                // Check each ball.
-                                                foreach (var oneBall in ballList)
-                                                {
-                                                    oneBall.ChangeToSteel();
-                                                }
-                                            }
-                                            break;
+
+                                            #endregion AddBonusEffect
+
+                                            bonusList[i].IsDeleted = true;
+                                        }
                                     }
-
-                                    // The player's life points reached 0, game over.
-                                    if (playerLife <= 0)
-                                    {
-                                        gameOverStatus = "fail";
-                                        gameIsOver = true;
-                                    }
-
-                                    #endregion AddBonusEffect
-
-                                    canvas.Children.Remove(ballList[i].GetEllipse());
-                                    bonusList.Remove(bonusList[i]);
                                 }
                             }
                         }
@@ -1324,7 +1417,6 @@ namespace BrickBreaker_2015.ViewModel
                 #region PresetValues
 
                 viewAction = ViewActionStatus.DoNothing;
-                highscoreLimit = 10;
                 playerLife = 3;
                 playerScorePoint = 0;
                 gameInSession = false;
@@ -1336,7 +1428,7 @@ namespace BrickBreaker_2015.ViewModel
                 mapMaxNumber = 5;
                 ballHorizontalMovement = 5;
                 ballVerticalMovement = 5;
-                racketSpeed = 10;
+                racketSpeed = 20;
                 ballSpeed = 1;
                 speedScale = 1;
                 brickWidth = 27.7;
@@ -1476,12 +1568,15 @@ namespace BrickBreaker_2015.ViewModel
                             @"..\..\Resources\Media\Racket\normalracket.jpg"));
                         racketList[0].Direction = Racket.Directions.Stay;
                         racketList[0].StickyRacket = false;
+                        racketList[0].IsDeleted = false;
                         canvas.Children.Add(racketList[0].GetRectangle());
 
                         // Add a ball.
                         ballList.Add(new Ball(canvasWidth / 2 - ballRadius, canvasHeight - racketHeight - ballRadius * 2, ballRadius * 2, ballRadius * 2,
                             @"..\..\Resources\Media\Ball\normalball.jpg", -ballHorizontalMovement, -ballVerticalMovement, Ball.BallsType.Normal));
                         ballList[0].BallInMove = false;
+                        ballList[0].IsDeleted = false;
+                        ballList[0].RelativePosition = ballList[0].Area.X + ballList[0].Area.Width / 2 - racketList[0].Area.X;
                         canvas.Children.Add(ballList[0].GetEllipse());
 
                         // Add the bricks.
@@ -1544,8 +1639,7 @@ namespace BrickBreaker_2015.ViewModel
                         // Descend the bonus and remove it if it's out of the canvas.
                         if (bonusList[i].Descend(bonusSpeed, canvasWidth, canvasHeight))
                         {
-                            canvas.Children.Remove(bonusList[i].GetRectangle());
-                            bonusList.Remove(bonusList[i]);
+                            bonusList[i].IsDeleted = true;
                         }
                     }
                 }
@@ -1633,14 +1727,14 @@ namespace BrickBreaker_2015.ViewModel
                 }
 
                 Bonus bonus = new Bonus(oneBrick.Area.X + (oneBrick.Area.Width / 2) - (bonusWidth / 2), oneBrick.Area.Y + oneBrick.Area.Height, bonusHeight, bonusWidth, bonusImage, type);
-                bonus.ScorePoint = 5;
+                bonus.ScorePoint = 50;
+                bonus.IsDeleted = false;
                 canvas.Children.Add(bonus.GetRectangle());
                 bonusList.Add(bonus);
 
                 if (bonus.Descend(bonusSpeed, canvasWidth, canvasHeight))
                 {
-                    canvas.Children.Remove(bonus.GetRectangle());
-                    bonusList.Remove(bonus);
+                    bonus.IsDeleted = true;
                 }
             }
             catch (Exception e)
@@ -1689,20 +1783,28 @@ namespace BrickBreaker_2015.ViewModel
                         // Check each racket.
                         foreach (Racket oneRacket in racketList)
                         {
-                            // Move the racket.
-                            oneRacket.MouseMove(racketSpeed, canvasWidth, e.GetPosition(sender).X);
-
-                            // There is at least one ball.
-                            if (ballList.Count > 0)
+                            // The racket is not deleted.
+                            if (!oneRacket.IsDeleted)
                             {
-                                // Check each ball.
-                                foreach (Ball oneBall in ballList)
+                                // Move the racket.
+                                oneRacket.MouseMove(racketSpeed, canvasWidth, e.GetPosition(sender).X);
+
+                                // There is at least one ball.
+                                if (ballList.Count > 0)
                                 {
-                                    // The ball is on the racket.
-                                    if (!oneBall.BallInMove)
+                                    // Check each ball.
+                                    foreach (Ball oneBall in ballList)
                                     {
-                                        // Move the ball.
-                                        oneBall.MouseMove(racketSpeed, canvasWidth, e.GetPosition(sender).X, oneRacket);
+                                        // The ball is not deleted.
+                                        if (!oneBall.IsDeleted)
+                                        {
+                                            // The ball is on the racket.
+                                            if (!oneBall.BallInMove)
+                                            {
+                                                // Move the ball.
+                                                oneBall.MouseMove(oneRacket, canvasWidth, e.GetPosition(sender).X);
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -1721,7 +1823,7 @@ namespace BrickBreaker_2015.ViewModel
         /// </summary>
         /// <param name="e">The mouse button event.</param>
         /// <param name="dispatcherTimer">The timer.</param>
-        public void MouseLeftButtonDown(MouseButtonEventArgs e, ref DispatcherTimer dispatcherTimer)
+        public void MouseLeftButtonDown(MouseButtonEventArgs e)
         {
             try
             {
@@ -1729,10 +1831,9 @@ namespace BrickBreaker_2015.ViewModel
                 if (GetOption().IsMouseEnabled && !gameIsPaused)
                 {
                     // The timer is not going and the game has not been started.
-                    if (!dispatcherTimer.IsEnabled && !gameInSession)
+                    if (!gameInSession)
                     {
                         // Start the game.
-                        dispatcherTimer.Start();
                         gameInSession = true;
                     }
 
@@ -1809,7 +1910,7 @@ namespace BrickBreaker_2015.ViewModel
         /// </summary>
         /// <param name="e">The key event.</param>
         /// <param name="dispatcherTimer">The timer.</param>
-        public void KeyDown(KeyEventArgs e, ref DispatcherTimer dispatcherTimer)
+        public void KeyDown(KeyEventArgs e)
         {
             try
             {
@@ -1819,11 +1920,11 @@ namespace BrickBreaker_2015.ViewModel
                 if (e.Key == Key.Escape)
                 {
                     // Pause the game and send message.
-                    dispatcherTimer.Stop();
                     gameIsPaused = true;
 
                     if (MessageBox.Show("Do you want to quit?", "Warning", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
+                        gameInSession = false;
                         viewAction = ViewActionStatus.OpenMenu;
                     }
                 }
@@ -1852,20 +1953,28 @@ namespace BrickBreaker_2015.ViewModel
                                 // Check each racket.
                                 foreach (var oneRacket in racketList)
                                 {
-                                    oneRacket.Direction = Racket.Directions.Left;
-                                    oneRacket.KeyMove(racketSpeed, canvasWidth);
-
-                                    // There is at least one ball.
-                                    if (ballList.Count > 0)
+                                    // The racket is not deleted.
+                                    if (!oneRacket.IsDeleted)
                                     {
-                                        // Check each ball.
-                                        foreach (var oneBall in ballList)
+                                        oneRacket.Direction = Racket.Directions.Left;
+                                        oneRacket.KeyMove(racketSpeed, canvasWidth);
+
+                                        // There is at least one ball.
+                                        if (ballList.Count > 0)
                                         {
-                                            // The ball is on the racket.
-                                            if (!oneBall.BallInMove)
+                                            // Check each ball.
+                                            foreach (var oneBall in ballList)
                                             {
-                                                // Move the ball with the racket left if ball is not moving.
-                                                oneBall.KeyMove(racketSpeed, canvasWidth, oneRacket);
+                                                // The ball is not deleted.
+                                                if (!oneBall.IsDeleted)
+                                                {
+                                                    // The ball is on the racket.
+                                                    if (!oneBall.BallInMove)
+                                                    {
+                                                        // Move the ball with the racket left if ball is not moving.
+                                                        oneBall.KeyMove(canvasWidth, oneRacket);
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -1886,20 +1995,28 @@ namespace BrickBreaker_2015.ViewModel
                                 // Check each racket.
                                 foreach (var oneRacket in racketList)
                                 {
-                                    oneRacket.Direction = Racket.Directions.Right;
-                                    oneRacket.KeyMove(racketSpeed, canvasWidth);
-
-                                    // There is at least one ball.
-                                    if (ballList.Count > 0)
+                                    // The racket is not deleted.
+                                    if (!oneRacket.IsDeleted)
                                     {
-                                        // Check each ball.
-                                        foreach (var oneBall in ballList)
+                                        oneRacket.Direction = Racket.Directions.Right;
+                                        oneRacket.KeyMove(racketSpeed, canvasWidth);
+
+                                        // There is at least one ball.
+                                        if (ballList.Count > 0)
                                         {
-                                            // The ball is on the racket.
-                                            if (!oneBall.BallInMove)
+                                            // Check each ball.
+                                            foreach (var oneBall in ballList)
                                             {
-                                                // Move the ball with the racket right if ball is not moving.
-                                                oneBall.KeyMove(racketSpeed, canvasWidth, oneRacket);
+                                                // The ball is not deleted.
+                                                if (!oneBall.IsDeleted)
+                                                {
+                                                    // The ball is on the racket.
+                                                    if (!oneBall.BallInMove)
+                                                    {
+                                                        // Move the ball with the racket right if ball is not moving.
+                                                        oneBall.KeyMove(canvasWidth, oneRacket);
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -1918,13 +2035,12 @@ namespace BrickBreaker_2015.ViewModel
                     else if (SpecKeys(e.Key) == GetOption().FireButton)
                     {
                         // The keyboard is a controller item, the game is not paused and the game didn't begin yet.
-                        if (GetOption().IsKeyboardEnabled && !gameIsPaused && !gameInSession)
+                        if (GetOption().IsKeyboardEnabled && !gameInSession)
                         {
                             // The timer didn't start yet.
-                            if (!dispatcherTimer.IsEnabled)
+                            if (!gameInSession)
                             {
                                 // Start the game.
-                                dispatcherTimer.Start();
                                 gameInSession = true;
                             }
 
@@ -1958,17 +2074,15 @@ namespace BrickBreaker_2015.ViewModel
                     else if (SpecKeys(e.Key) == GetOption().PauseButton)
                     {
                         // The game is not paused.
-                        if (!gameIsPaused)
+                        if (!gameIsPaused && gameInSession)
                         {
                             // Pause the game.
-                            dispatcherTimer.Stop();
                             gameIsPaused = true;
                         }
                         // The game is paused.
-                        else
+                        else if (gameIsPaused && gameInSession)
                         {
                             // Continue the game.
-                            dispatcherTimer.Start();
                             gameIsPaused = false;
                         }
                     }

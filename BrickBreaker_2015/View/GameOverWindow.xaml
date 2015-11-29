@@ -85,9 +85,9 @@
         </Grid.ColumnDefinitions>
         <Label Content="The game has ended!" Grid.ColumnSpan="2" Style="{StaticResource LabelTemplate}" HorizontalContentAlignment="Center"></Label>
         <Label Grid.Row="1" Grid.Column="0" Content="Name:" Style="{StaticResource LabelTemplate}"></Label>
-        <TextBox x:Name="NameTextBox"  Grid.Row="1" Grid.Column="1" Style="{StaticResource TextBoxTemplate}"></TextBox>
+        <TextBox x:Name="NameTextBox"  Grid.Row="1" Grid.Column="1" Style="{StaticResource TextBoxTemplate}" FontSize="40" Foreground="White"></TextBox>
         <Label Grid.Row="2" Grid.Column="0" Content="Score:" Style="{StaticResource LabelTemplate}"></Label>
-        <Label x:Name="ScoreLabel" Grid.Row="2" Grid.Column="1" Content="{Binding PlayerScore}"></Label>
+        <Label x:Name="ScoreLabel" Grid.Row="2" Grid.Column="1" Content="" FontSize="40" Foreground="White"></Label>
         <Button x:Name="OkButton" Click="OkButton_Click" Grid.Row="3" Grid.Column="0" Style="{StaticResource CustomButtonStyle}" Content="Ok"></Button>
         <Button x:Name="CancelButton" Click="CancelButton_Click" Grid.Row="3" Grid.Column="1" Style="{StaticResource CustomButtonStyle}" Content="Cancel"></Button>
     </Grid>

@@ -20,6 +20,9 @@ namespace BrickBreaker_2015.Model
         // The image path.
         private string imagePath;
 
+        // The bonus is deleted.
+        private bool isDeleted;
+
         #endregion Fields
 
         #region Properties
@@ -46,6 +49,18 @@ namespace BrickBreaker_2015.Model
         {
             get { return imagePath; }
             set { imagePath = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the isDeleted.
+        /// </summary>
+        /// <value>
+        /// The isDeleted.
+        /// </value>
+        public bool IsDeleted
+        {
+            get { return isDeleted; }
+            set { isDeleted = value; }
         }
 
         #endregion Properties

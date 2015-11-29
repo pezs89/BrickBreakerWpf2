@@ -30,6 +30,9 @@ namespace BrickBreaker_2015.Model
         // Shows if the ball is in move.
         private bool ballInMove;
 
+        // The relative position on the racket.
+        private double relativePosition;
+
         // The types of the balls.
         public enum BallsType
         {
@@ -41,6 +44,18 @@ namespace BrickBreaker_2015.Model
         #endregion Fields
 
         #region Properties
+
+        /// <summary>
+        /// Gets or sets the relativePosition.
+        /// </summary>
+        /// <value>
+        /// The relativePosition.
+        /// </value>
+        public double RelativePosition
+        {
+            get { return relativePosition; }
+            set { relativePosition = value; }
+        }
 
         /// <summary>
         /// Gets or sets the ballType.
@@ -181,70 +196,45 @@ namespace BrickBreaker_2015.Model
         /// <summary>
         /// Move the ball by mouse if it's on the racket.
         /// </summary>
-        /// <param name="racketSpeed">The racketSpeed.</param>
+        /// <param name="racket">The racket.</param>
         /// <param name="canvasWidth">The canvasWidth.</param>
         /// <param name="mousePositionX">The mousePositionX.</param>
-        /// <param name="racket">The racket.</param>
-        public void MouseMove(double racketSpeed, double canvasWidth, double mousePositionX, Racket racket)
+        public void MouseMove(Racket racket, double canvasWidth, double mousePositionX)
         {
             try
             {
                 // The mouse is left to the racket.
-                if (mousePositionX < racket.Area.X + racket.Area.Width / 2)
+                if (mousePositionX < racket.Area.X + racket.Area.Width / 2 + 3)
                 {
-                    // The racket is at the edge of the canvas.
-                    if (racket.Area.X <= 0)
+                    // The ball is at the edge of the canvas.
+                    if (Area.X <= 0)
                     {
-                        // The ball sticks out to the left side.
-                        if (Area.X <= racket.Area.X)
-                        {
-                            area.X = 0;
-                        }
+                        area.X = 0;
                     }
                     // There is space to move.
                     else
                     {
-                        // The differance is greater than the length the racket can move in a tick.
-                        if (racket.Area.X + racket.Area.Width / 2 - mousePositionX >= racketSpeed)
-                        {
-                            area.X += racketSpeed;
-                        }
-                        // The differance is smaller than the length the racket can move in a tick.
-                        else
-                        {
-                            area.X += racket.Area.X + racket.Area.Width / 2 - mousePositionX;
-                        }
+                        area.X = racket.Area.X + RelativePosition - Area.Width / 2;
                     }
 
+                    RepositionBallOnRacket(racket);
                     onPropertyChanged("Area");
                 }
                 // The mouse is right to the racket.
-                else if (mousePositionX > racket.Area.X + racket.Area.Width / 2)
+                else if (mousePositionX > racket.Area.X + racket.Area.Width / 2 + 3)
                 {
-                    // The racket is at the edge of the canvas.
-                    if (racket.Area.X + racket.Area.Width >= canvasWidth)
+                    // The ball is at the edge of the canvas.
+                    if (Area.X + Area.Width >= canvasWidth)
                     {
-                        // The ball sticks out to the right side.
-                        if (Area.X >= racket.Area.X + racket.Area.Width - Area.Width)
-                        {
-                            area.X = canvasWidth - Area.Width;
-                        }
+                        area.X = canvasWidth - Area.Width;
                     }
                     // There is space to move.
                     else
                     {
-                        // The differance is greater than the length the racket can move in a tick.
-                        if (mousePositionX - racket.Area.X + racket.Area.Width / 2 >= racketSpeed)
-                        {
-                            area.X -= racketSpeed;
-                        }
-                        // The differance is smaller than the length the racket can move in a tick.
-                        else
-                        {
-                            area.X -= mousePositionX - racket.Area.X + racket.Area.Width / 2;
-                        }
+                        area.X = racket.Area.X + RelativePosition - Area.Width / 2;
                     }
 
+                    RepositionBallOnRacket(racket);
                     onPropertyChanged("Area");
                 }
             }
@@ -255,69 +245,44 @@ namespace BrickBreaker_2015.Model
         /// <summary>
         /// Move the ball by key if it's on the racket.
         /// </summary>
-        /// <param name="racketSpeed">The racketSpeed.</param>
         /// <param name="canvasWidth">The canvasWidth.</param>
         /// <param name="racket">The racket.</param>
-        public void KeyMove(double racketSpeed, double canvasWidth, Racket racket)
+        public void KeyMove(double canvasWidth, Racket racket)
         {
             try
             {
                 // Move the racket left.
                 if (racket.Direction == Racket.Directions.Left)
                 {
-                    // The racket is at the edge of the canvas.
-                    if (racket.Area.X <= 0)
+                    // The ball is at the edge of the canvas.
+                    if (Area.X <= 0)
 	                {
-		                // The ball sticks out to the left side.
-                        if (Area.X <= racket.Area.X)
-                        {
-                            area.X = 0;
-                        }
+                        area.X = 0;
 	                }
                     // There is space to move.
                     else
                     {
-                        // The racket's speed is greater then the distance left.
-                        if (racket.Area.X - 0 < racketSpeed)
-                        {
-                            area.X -= racket.Area.X - 0;
-                        }
-                        // The racket can move by the racket's speed.
-                        else
-                        {
-                            area.X -= racketSpeed;
-                        }
+                        area.X = racket.Area.X + RelativePosition - Area.Width / 2;
                     }
 
+                    RepositionBallOnRacket(racket);
                     onPropertyChanged("Area");
                 }
                 // Move the racket right.
                 else if (racket.Direction == Racket.Directions.Right)
                 {
-                    // The racket is at the edge of the canvas.
-                    if (racket.Area.X + racket.Area.Width >= canvasWidth)
+                    // The ball is at the edge of the canvas.
+                    if (Area.X + Area.Width >= canvasWidth)
 	                {
-		                // The ball sticks out to the right side.
-                        if (Area.X >= racket.Area.X + racket.Area.Width - Area.Width)
-                        {
-                            area.X = canvasWidth - Area.Width;
-                        }
+                        area.X = canvasWidth - Area.Width;
 	                }
                     // There is space to move.
                     else
                     {
-                        // The racket's speed is greater then the distance left.
-                        if (canvasWidth - racket.Area.X + racket.Area.Width < racketSpeed)
-                        {
-                            area.X -= canvasWidth - racket.Area.X + racket.Area.Width;
-                        }
-                        // The racket can move by the racket's speed.
-                        else
-                        {
-                            area.X += racketSpeed;
-                        }
+                        area.X = racket.Area.X + RelativePosition - Area.Width / 2;
                     }
 
+                    RepositionBallOnRacket(racket);
                     onPropertyChanged("Area");
                 }
             }
@@ -375,6 +340,27 @@ namespace BrickBreaker_2015.Model
         }
 
         /// <summary>
+        /// Repositions the ball if it's not right on the racket.
+        /// </summary>
+        /// <param name="racket">The racket.</param>
+        public void RepositionBallOnRacket(Racket racket)
+        {
+            try
+            {
+                if (Area.X < racket.Area.X - Area.Width / 2)
+                {
+                    area.X = racket.Area.X - Area.Width / 2;
+                }
+                else if (Area.X > racket.Area.X + racket.Area.Width - Area.Width / 2)
+                {
+                    area.X = racket.Area.X + racket.Area.Width - Area.Width / 2;
+                }
+            }
+            catch
+            { }
+        }
+
+        /// <summary>
         /// Repositions the ball if it's inside the brick.
         /// </summary>
         /// <param name="brick">The brick.</param>
@@ -388,22 +374,19 @@ namespace BrickBreaker_2015.Model
 
                     onPropertyChanged("Area");
                 }
-
-                if (Area.X > brick.Area.X + Area.Width)
+                else if (Area.X > brick.Area.X + Area.Width)
                 {
                     area.X = brick.Area.X + Area.Width;
 
                     onPropertyChanged("Area");
                 }
-
-                if (Area.Y < brick.Area.Y + brick.Area.Height)
+                else if (Area.Y < brick.Area.Y + brick.Area.Height)
                 {
                     area.Y = brick.Area.Y + brick.Area.Height;
 
                     onPropertyChanged("Area");
                 }
-
-                if (Area.Y > brick.Area.Y + Area.Height)
+                else if (Area.Y > brick.Area.Y + Area.Height)
                 {
                     area.Y = brick.Area.Y + Area.Height;
 
@@ -447,15 +430,13 @@ namespace BrickBreaker_2015.Model
 
                     onPropertyChanged("Area");
                 }
-
-                if (Area.X > canvasWidth - Area.Width)
+                else if (Area.X > canvasWidth - Area.Width)
                 {
                     area.X = canvasWidth - Area.Width;
 
                     onPropertyChanged("Area");
                 }
-
-                if (Area.Y < 0)
+                else if (Area.Y < 0)
                 {
                     area.Y = 0;
 

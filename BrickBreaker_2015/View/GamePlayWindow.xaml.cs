@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using BrickBreaker_2015.ViewModel;
 using System.Windows.Threading;
+using System.Threading;
 
 namespace BrickBreaker_2015.View
 {
@@ -76,7 +77,7 @@ namespace BrickBreaker_2015.View
         {
             try
             {
-                newGameViewModel.KeyDown(e, ref timer);
+                newGameViewModel.KeyDown(e);
             }
             catch (Exception error)
             {
@@ -127,7 +128,7 @@ namespace BrickBreaker_2015.View
         {
             try
             {
-                newGameViewModel.MouseLeftButtonDown(e, ref timer);
+                newGameViewModel.MouseLeftButtonDown(e);
             }
             catch (Exception error)
             {
@@ -144,33 +145,35 @@ namespace BrickBreaker_2015.View
         {
             try
             {
-                newGameViewModel.MoveObjects();
-                newGameViewModel.BallAtContact();
-                newGameViewModel.RacketAtContactWithBonus();
-                newGameViewModel.CheckForGameOver(ref timer);
-                newGameViewModel.RefreshDisplay();
-
-                if (newGameViewModel.ViewAction != NewGameViewModel.ViewActionStatus.DoNothing)
+                if (!newGameViewModel.GameIsOver)
                 {
-                    switch (newGameViewModel.ViewAction)
+                    if (newGameViewModel.GameInSession && !newGameViewModel.GameIsPaused)
                     {
-                        case NewGameViewModel.ViewActionStatus.OpenMenu:
-                            newGameViewModel.ViewAction = NewGameViewModel.ViewActionStatus.DoNothing;
-                            MainWindow mainWindow = new MainWindow();
-                            mainWindow.ShowDialog();
-                            this.Close();
-                            break;
-                        case NewGameViewModel.ViewActionStatus.OpenHighscores:
-                            newGameViewModel.ViewAction = NewGameViewModel.ViewActionStatus.DoNothing;
-                            GameOverWindow gameOverWindow = new GameOverWindow();
-                            gameOverWindow.DataContext = newGameViewModel;
-                            gameOverWindow.ShowDialog();
-                            this.Close();
-                            break;
-                        case NewGameViewModel.ViewActionStatus.NewMap:
-                            newGameViewModel.ViewAction = NewGameViewModel.ViewActionStatus.DoNothing;
-                            newGameViewModel.NewMap(ref timer);
-                            break;
+                        newGameViewModel.MoveObjects();
+                        newGameViewModel.BallAtContact();
+                        newGameViewModel.RacketAtContactWithBonus();
+                        newGameViewModel.CleanListsFromDeleted();
+                        newGameViewModel.RefreshDisplay();
+                        newGameViewModel.CheckForGameOver();
+                    }
+
+                    if (newGameViewModel.ViewAction != NewGameViewModel.ViewActionStatus.DoNothing)
+                    {
+                        switch (newGameViewModel.ViewAction)
+                        {
+                            case NewGameViewModel.ViewActionStatus.OpenMenu:
+                                newGameViewModel.ViewAction = NewGameViewModel.ViewActionStatus.DoNothing;
+                                OpenMenu();
+                                break;
+                            case NewGameViewModel.ViewActionStatus.OpenHighscores:
+                                newGameViewModel.ViewAction = NewGameViewModel.ViewActionStatus.DoNothing;
+                                OpenHighscores();
+                                break;
+                            case NewGameViewModel.ViewActionStatus.NewMap:
+                                newGameViewModel.ViewAction = NewGameViewModel.ViewActionStatus.DoNothing;
+                                newGameViewModel.NewMap();
+                                break;
+                        }
                     }
                 }
             }
@@ -190,38 +193,44 @@ namespace BrickBreaker_2015.View
             try
             {
                 newGameViewModel.WindowLoaded();
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
+        }
 
-                /*if (newGameViewModel.BallList.Count > 0)
-                {
-                    foreach (var item in newGameViewModel.BallList)
-                    {
-                        canvas.Children.Add(item.GetEllipse());
-                    }
-                }
+        /// <summary>
+        /// Opens the main view.
+        /// </summary>
+        private void OpenMenu()
+        {
+            try
+            {
+                timer.Stop();
 
-                if (newGameViewModel.RacketList.Count > 0)
-                {
-                    foreach (var item in newGameViewModel.RacketList)
-                    {
-                        canvas.Children.Add(item.GetRectangle());
-                    }
-                }
+                MainWindow mainWindow = new MainWindow();
+                mainWindow.Show();
+                this.Close();
+            }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
+        }
 
-                if (newGameViewModel.BrickList.Count > 0)
-                {
-                    foreach (var item in newGameViewModel.BrickList)
-                    {
-                        canvas.Children.Add(item.GetRectangle());
-                    }
-                }
+        /// <summary>
+        /// Opens the highscores view.
+        /// </summary>
+        private void OpenHighscores()
+        {
+            try
+            {
+                timer.Stop();
 
-                if (newGameViewModel.BonusList.Count > 0)
-                {
-                    foreach (var item in newGameViewModel.BonusList)
-                    {
-                        canvas.Children.Add(item.GetRectangle());
-                    }
-                }*/
+                GameOverWindow gameOverWindow = new GameOverWindow(newGameViewModel.PlayerScorePoint);
+                gameOverWindow.Show();
+                this.Close();
             }
             catch (Exception error)
             {
