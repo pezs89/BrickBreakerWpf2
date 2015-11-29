@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace BrickBreaker_2015.Model
 {
@@ -116,6 +121,45 @@ namespace BrickBreaker_2015.Model
         #endregion Constructors
 
         #region Methods
+
+        /// <summary>
+        /// Shape of the ball.
+        /// </summary>
+        /// <returns>The ball's ellipse.</returns>
+        public Ellipse GetEllipse()
+        {
+            // Set the ball's image as the set image.
+            ImageBrush imgBrush = new ImageBrush();
+            imgBrush.ImageSource = new BitmapImage(new Uri(ImagePath, UriKind.Relative));
+
+            // Create the ellipse.
+            Ellipse ballEllipse = new Ellipse();
+            ballEllipse.Fill = imgBrush;
+            ballEllipse.Width = Area.Width;
+            ballEllipse.Height = Area.Height;
+
+            // Bind the X position of the ball ellipse to the canvas.
+            Binding ellipseXBinding = new Binding("Area.X");
+            ellipseXBinding.Source = this;
+            ballEllipse.SetBinding(Canvas.LeftProperty, ellipseXBinding);
+
+            // Bind the Y position of the ball ellipse to the canvas.
+            Binding ellipseYBinding = new Binding("Area.Y");
+            ellipseYBinding.Source = this;
+            ballEllipse.SetBinding(Canvas.TopProperty, ellipseYBinding);
+
+            // Bind the width of the ball ellipse to the canvas.
+            Binding ellipseWidthBinding = new Binding("Area.Width");
+            ellipseWidthBinding.Source = this;
+            ballEllipse.SetBinding(Canvas.WidthProperty, ellipseWidthBinding);
+
+            // Bind the height of the ball ellipse to the canvas.
+            Binding ellipseHeightBinding = new Binding("Area.Height");
+            ellipseHeightBinding.Source = this;
+            ballEllipse.SetBinding(Canvas.HeightProperty, ellipseHeightBinding);
+
+            return ballEllipse;
+        }
         
         /// <summary>
         /// Moves the ball.
@@ -163,14 +207,16 @@ namespace BrickBreaker_2015.Model
                         // The differance is greater than the length the racket can move in a tick.
                         if (racket.Area.X + racket.Area.Width / 2 - mousePositionX >= racketSpeed)
                         {
-                            area.X -= racketSpeed;
+                            area.X += racketSpeed;
                         }
                         // The differance is smaller than the length the racket can move in a tick.
                         else
                         {
-                            area.X -= racket.Area.X + racket.Area.Width / 2 - mousePositionX;
+                            area.X += racket.Area.X + racket.Area.Width / 2 - mousePositionX;
                         }
                     }
+
+                    onPropertyChanged("Area");
                 }
                 // The mouse is right to the racket.
                 else if (mousePositionX > racket.Area.X + racket.Area.Width / 2)
@@ -190,17 +236,17 @@ namespace BrickBreaker_2015.Model
                         // The differance is greater than the length the racket can move in a tick.
                         if (mousePositionX - racket.Area.X + racket.Area.Width / 2 >= racketSpeed)
                         {
-                            area.X += racketSpeed;
+                            area.X -= racketSpeed;
                         }
                         // The differance is smaller than the length the racket can move in a tick.
                         else
                         {
-                            area.X += mousePositionX - racket.Area.X + racket.Area.Width / 2;
+                            area.X -= mousePositionX - racket.Area.X + racket.Area.Width / 2;
                         }
                     }
-                }
 
-                onPropertyChanged("Area");
+                    onPropertyChanged("Area");
+                }
             }
             catch
             { }
@@ -216,40 +262,64 @@ namespace BrickBreaker_2015.Model
         {
             try
             {
-                // The racket is at the edge of the canvas.
-                if (racket.Area.X <= 0)
+                // Move the racket left.
+                if (racket.Direction == Racket.Directions.Left)
                 {
-                    // The ball sticks out to the left side.
-                    if (Area.X <= racket.Area.X)
+                    // The racket is at the edge of the canvas.
+                    if (racket.Area.X <= 0)
+	                {
+		                // The ball sticks out to the left side.
+                        if (Area.X <= racket.Area.X)
+                        {
+                            area.X = 0;
+                        }
+	                }
+                    // There is space to move.
+                    else
                     {
-                        area.X = 0;
+                        // The racket's speed is greater then the distance left.
+                        if (racket.Area.X - 0 < racketSpeed)
+                        {
+                            area.X -= racket.Area.X - 0;
+                        }
+                        // The racket can move by the racket's speed.
+                        else
+                        {
+                            area.X -= racketSpeed;
+                        }
                     }
-                }
-                // The racket is at the edge of the canvas.
-                else if (racket.Area.X + racket.Area.Width >= canvasWidth)
-                {
-                    // The ball sticks out to the right side.
-                    if (Area.X >= racket.Area.X + racket.Area.Width - Area.Width)
-                    {
-                        area.X = canvasWidth - Area.Width;
-                    }
-                }
-                // There is space to move.
-                else
-                {
-                    // The left key is pushed.
-                    if (racket.Direction == Racket.Directions.Left)
-                    {
-                        area.X -= racketSpeed;
-                    }
-                    // The right key is pushed.
-                    else if (racket.Direction == Racket.Directions.Right)
-                    {
-                        area.X += racketSpeed;
-                    }
-                }
 
-                onPropertyChanged("Area");
+                    onPropertyChanged("Area");
+                }
+                // Move the racket right.
+                else if (racket.Direction == Racket.Directions.Right)
+                {
+                    // The racket is at the edge of the canvas.
+                    if (racket.Area.X + racket.Area.Width >= canvasWidth)
+	                {
+		                // The ball sticks out to the right side.
+                        if (Area.X >= racket.Area.X + racket.Area.Width - Area.Width)
+                        {
+                            area.X = canvasWidth - Area.Width;
+                        }
+	                }
+                    // There is space to move.
+                    else
+                    {
+                        // The racket's speed is greater then the distance left.
+                        if (canvasWidth - racket.Area.X + racket.Area.Width < racketSpeed)
+                        {
+                            area.X -= canvasWidth - racket.Area.X + racket.Area.Width;
+                        }
+                        // The racket can move by the racket's speed.
+                        else
+                        {
+                            area.X += racketSpeed;
+                        }
+                    }
+
+                    onPropertyChanged("Area");
+                }
             }
             catch
             { }
@@ -305,16 +375,92 @@ namespace BrickBreaker_2015.Model
         }
 
         /// <summary>
-        /// Repositions the ball on the racket.
+        /// Repositions the ball if it's inside the brick.
         /// </summary>
-        /// <param name="racket">The racket.</param>
-        public void RepositionOnRacket(Racket racket)
+        /// <param name="brick">The brick.</param>
+        public void RepositionBallAtBrick(Brick brick)
         {
             try
             {
-                area.Y = racket.Area.Y - Area.Width;
+                if (Area.X < brick.Area.X + brick.Area.Width)
+                {
+                    area.X = brick.Area.X + brick.Area.Width;
 
-                onPropertyChanged("Area");
+                    onPropertyChanged("Area");
+                }
+
+                if (Area.X > brick.Area.X + Area.Width)
+                {
+                    area.X = brick.Area.X + Area.Width;
+
+                    onPropertyChanged("Area");
+                }
+
+                if (Area.Y < brick.Area.Y + brick.Area.Height)
+                {
+                    area.Y = brick.Area.Y + brick.Area.Height;
+
+                    onPropertyChanged("Area");
+                }
+
+                if (Area.Y > brick.Area.Y + Area.Height)
+                {
+                    area.Y = brick.Area.Y + Area.Height;
+
+                    onPropertyChanged("Area");
+                }
+            }
+            catch
+            { }
+        }
+
+        /// <summary>
+        /// Repositions the ball if it's not right on the racket.
+        /// </summary>
+        /// <param name="racket">The racket.</param>
+        public void RepositionBallAtRacket(Racket racket)
+        {
+            try
+            {
+                if (Area.Y > racket.Area.Y - Area.Height)
+                {
+                    area.Y = racket.Area.Y - Area.Height;
+
+                    onPropertyChanged("Area");
+                }
+            }
+            catch
+            { }
+        }
+
+        /// <summary>
+        /// Repositions the ball if it's out of the canvas walls.
+        /// </summary>
+        /// <param name="canvasWidth">The width of the canvas.</param>
+        public void RepositionBallAtCanvas(double canvasWidth)
+        {
+            try
+            {
+                if (Area.X < 0)
+                {
+                    area.X = 0;
+
+                    onPropertyChanged("Area");
+                }
+
+                if (Area.X > canvasWidth - Area.Width)
+                {
+                    area.X = canvasWidth - Area.Width;
+
+                    onPropertyChanged("Area");
+                }
+
+                if (Area.Y < 0)
+                {
+                    area.Y = 0;
+
+                    onPropertyChanged("Area");
+                }
             }
             catch
             { }

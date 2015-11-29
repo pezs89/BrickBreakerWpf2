@@ -75,6 +75,7 @@ namespace BrickBreaker_2015.DataAccess
 
                 // Add a new log to the file.
                 wr.Write(DateTime.Now.ToString() + ", File not found.");
+                wr.Write("");
 
                 // Close the BinaryWriter and the FileStream.
                 wr.Close();
@@ -125,6 +126,7 @@ namespace BrickBreaker_2015.DataAccess
 
                     // Add a new log to the file.
                     wr.Write(DateTime.Now.ToString() + ", " + e.Message);
+                    wr.Write("");
 
                     // Close the BinaryWriter and the FileStream.
                     wr.Close();

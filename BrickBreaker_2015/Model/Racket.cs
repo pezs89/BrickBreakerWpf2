@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace BrickBreaker_2015.Model
 {
@@ -76,6 +81,45 @@ namespace BrickBreaker_2015.Model
         #region Methods
 
         /// <summary>
+        /// Shape of the racket.
+        /// </summary>
+        /// <returns>The racket's rectangle.</returns>
+        public Rectangle GetRectangle()
+        {
+            // Set the racket's image as the set image.
+            ImageBrush imgBrush = new ImageBrush();
+            imgBrush.ImageSource = new BitmapImage(new Uri(ImagePath, UriKind.Relative));
+
+            // Create the rectangle.
+            Rectangle racketRectangle = new Rectangle();
+            racketRectangle.Fill = imgBrush;
+            racketRectangle.Width = Area.Width;
+            racketRectangle.Height = Area.Height;
+
+            // Bind the X position of the racket rectangle to the canvas.
+            Binding rectangleXBinding = new Binding("Area.X");
+            rectangleXBinding.Source = this;
+            racketRectangle.SetBinding(Canvas.LeftProperty, rectangleXBinding);
+
+            // Bind the Y position of the racket rectangle to the canvas.
+            Binding rectangleYBinding = new Binding("Area.Y");
+            rectangleYBinding.Source = this;
+            racketRectangle.SetBinding(Canvas.TopProperty, rectangleYBinding);
+
+            // Bind the width of the racket rectangle to the canvas.
+            Binding rectangleWidthBinding = new Binding("Area.Width");
+            rectangleWidthBinding.Source = this;
+            racketRectangle.SetBinding(Canvas.WidthProperty, rectangleWidthBinding);
+
+            // Bind the height of the racket rectangle to the canvas.
+            Binding rectangleHeightBinding = new Binding("Area.Height");
+            rectangleHeightBinding.Source = this;
+            racketRectangle.SetBinding(Canvas.HeightProperty, rectangleHeightBinding);
+
+            return racketRectangle;
+        }
+
+        /// <summary>
         /// Move the racket by mouse.
         /// </summary>
         /// <param name="racketSpeed">The racketSpeed.</param>
@@ -107,6 +151,8 @@ namespace BrickBreaker_2015.Model
                             area.X -= Area.X + Area.Width / 2 - mousePositionX;
                         }
                     }
+
+                    onPropertyChanged("Area");
                 }
                 // The mouse is right to the racket.
                 else if (mousePositionX > Area.X + Area.Width / 2)
@@ -130,9 +176,9 @@ namespace BrickBreaker_2015.Model
                             area.X += mousePositionX - Area.X + Area.Width / 2;
                         }
                     }
-                }
 
-                onPropertyChanged("Area");
+                    onPropertyChanged("Area");
+                }
             }
             catch
             { }
@@ -147,32 +193,56 @@ namespace BrickBreaker_2015.Model
         {
             try
             {
-                // The racket is at the edge of the canvas.
-                if (Area.X <= 0)
+                // Move the racket left.
+                if (Direction == Directions.Left)
                 {
-                    area.X = 0;
-                }
-                // The racket is at the edge of the canvas.
-                else if (Area.X + Area.Width >= canvasWidth)
-                {
-                    area.X = canvasWidth - Area.Width;
-                }
-                // There is space to move.
-                else
-                {
-                    // The left key is pushed.
-                    if (Direction == Directions.Left)
+                    // The racket is at the edge of the canvas.
+                    if (Area.X <= 0)
                     {
-                        area.X -= racketSpeed;
+                        area.X = 0;
                     }
-                    // The right key is pushed.
-                    else if (Direction == Directions.Right)
+                    // There is space to move.
+                    else
                     {
-                        area.X += racketSpeed;
+                        // The racket's speed is greater then the distance left.
+                        if (Area.X - 0 < racketSpeed)
+                        {
+                            area.X -= Area.X - 0;
+                        }
+                        // The racket can move by the racket's speed.
+                        else
+                        {
+                            area.X -= racketSpeed;
+                        }
                     }
-                }
 
-                onPropertyChanged("Area");
+                    onPropertyChanged("Area");
+                }
+                // Move the racket right.
+                else if (Direction == Directions.Right)
+                {
+                    // The racket is at the edge of the canvas.
+                    if (Area.X + Area.Width >= canvasWidth)
+                    {
+                        area.X = canvasWidth - Area.Width;
+                    }
+                    // There is space to move.
+                    else
+                    {
+                        // The racket's speed is greater then the distance left.
+                        if (canvasWidth - Area.X + Area.Width < racketSpeed)
+                        {
+                            area.X -= canvasWidth - Area.X + Area.Width;
+                        }
+                        // The racket can move by the racket's speed.
+                        else
+                        {
+                            area.X += racketSpeed;
+                        }
+                    }
+
+                    onPropertyChanged("Area");
+                }
             }
             catch
             { }

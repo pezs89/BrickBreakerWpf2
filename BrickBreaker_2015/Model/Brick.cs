@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace BrickBreaker_2015.Model
 {
@@ -100,6 +105,45 @@ namespace BrickBreaker_2015.Model
         #region Methods
 
         /// <summary>
+        /// Shape of the brick.
+        /// </summary>
+        /// <returns>The brick's rectangle.</returns>
+        public Rectangle GetRectangle()
+        {
+            // Set the brick's image as the set image.
+            ImageBrush imgBrush = new ImageBrush();
+            imgBrush.ImageSource = new BitmapImage(new Uri(ImagePath, UriKind.Relative));
+
+            // Create the rectangle.
+            Rectangle brickRectangle = new Rectangle();
+            brickRectangle.Fill = imgBrush;
+            brickRectangle.Width = Area.Width;
+            brickRectangle.Height = Area.Height;
+
+            // Bind the X position of the brick rectangle to the canvas.
+            Binding rectangleXBinding = new Binding("Area.X");
+            rectangleXBinding.Source = this;
+            brickRectangle.SetBinding(Canvas.LeftProperty, rectangleXBinding);
+
+            // Bind the Y position of the brick rectangle to the canvas.
+            Binding rectangleYBinding = new Binding("Area.Y");
+            rectangleYBinding.Source = this;
+            brickRectangle.SetBinding(Canvas.TopProperty, rectangleYBinding);
+
+            // Bind the width of the brick rectangle to the canvas.
+            Binding rectangleWidthBinding = new Binding("Area.Width");
+            rectangleWidthBinding.Source = this;
+            brickRectangle.SetBinding(Canvas.WidthProperty, rectangleWidthBinding);
+
+            // Bind the height of the brick rectangle to the canvas.
+            Binding rectangleHeightBinding = new Binding("Area.Height");
+            rectangleHeightBinding.Source = this;
+            brickRectangle.SetBinding(Canvas.HeightProperty, rectangleHeightBinding);
+
+            return brickRectangle;
+        }
+
+        /// <summary>
         /// Decrements the breaknumber of the brick.
         /// </summary>
         public void DecrementBreakNumber()
@@ -116,17 +160,19 @@ namespace BrickBreaker_2015.Model
                             if (ImagePath != @"..\..\Resources\Media\Brick\brokenmediumbrick.jpg")
                             {
                                 ImagePath = @"..\..\Resources\Media\Brick\brokenmediumbrick.jpg";
+
+                                onPropertyChanged("Area");
                             }
                             break;
                         case BricksType.Hard:
                             if (ImagePath != @"..\..\Resources\Media\Brick\brokenhardbrick.jpg")
                             {
                                 ImagePath = @"..\..\Resources\Media\Brick\brokenhardbrick.jpg";
+
+                                onPropertyChanged("Area");
                             }
                             break;
                     }
-
-                    onPropertyChanged("Area");
                 }
             }
             catch

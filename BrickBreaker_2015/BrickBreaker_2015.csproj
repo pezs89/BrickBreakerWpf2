@@ -67,6 +67,7 @@
     <Compile Include="DataAccess\MapTxtAccess.cs" />
     <Compile Include="ViewModel\CreditsViewModel.cs" />
     <Compile Include="ViewModel\ErrorLogViewModel.cs" />
+    <Compile Include="ViewModel\GameOverViewModel.cs" />
     <Compile Include="ViewModel\NewGameViewModel.cs" />
     <Compile Include="ViewModel\OptionsViewModel.cs" />
     <Compile Include="DataAccess\OptionsXmlAccess.cs" />
@@ -76,6 +77,9 @@
     </Compile>
     <Compile Include="View\DifficultySelectionWindow.xaml.cs">
       <DependentUpon>DifficultySelectionWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\GameOverWindow.xaml.cs">
+      <DependentUpon>GameOverWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\GamePlayWindow.xaml.cs">
       <DependentUpon>GamePlayWindow.xaml</DependentUpon>
@@ -94,6 +98,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\DifficultySelectionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\GameOverWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

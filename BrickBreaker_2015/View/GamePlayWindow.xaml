@@ -5,14 +5,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrickBreaker_2015.View"
         mc:Ignorable="d"
-        Title="GamePlayWindow" Height="475" Width="650" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp" MouseMove="Window_MouseMove" MouseLeftButtonDown="Window_MouseLeftButtonDown" Loaded="Window_Loaded">
+        Title="GamePlayWindow" Height="475" Width="650" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp" MouseMove="Window_MouseMove" MouseLeftButtonDown="Window_MouseLeftButtonDown" Loaded="Window_Loaded" Icon="/Resources/Concrete_wall.jpg">
     <Window.Background>
         <ImageBrush ImageSource="/Resources/Concrete_wall.jpg"/>
     </Window.Background>
-    <Canvas x:Name="canvas">
-        <Ellipse Fill="Red" Height="{Binding BallList.Area.Height}" Canvas.Left="{Binding BallList.Area.X}" Stroke="Black" Canvas.Top="{Binding BallList.Area.Y}" Width="{Binding BallList.Area.Width}"/>
-        <Rectangle Fill="White" Height="{Binding RacketList.Area.Height}" Canvas.Left="{Binding RacketList.Area.X}" Stroke="Black" Canvas.Top="{Binding RacketList.Area.Y}" Width="{Binding RacketList.Area.Width}"/>
-        <Rectangle Fill="White" Height="{Binding BrickList.Area.Height}" Canvas.Left="{Binding BrickList.Area.X}" Stroke="Black" Canvas.Top="{Binding BrickList.Area.Y}" Width="{Binding BrickList.Area.Width}"/>
-        <Rectangle Fill="White" Height="{Binding BonusList.Area.Height}" Canvas.Left="{Binding BonusList.Area.X}" Stroke="Black" Canvas.Top="{Binding BonusList.Area.Y}" Width="{Binding BonusList.Area.Width}"/>
+    <Canvas x:Name="canvas" Background="White">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.01*"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Label Content="Élet:" FontWeight="Thin" Foreground="Black" FontSize="20"></Label>
+            <Label Grid.Column="1" Content="{Binding PlayerLife}" FontWeight="Thin" Foreground="Black" FontSize="20"></Label>
+            <Label Grid.Column="3" Content="Pontszám:" FontWeight="Thin" Foreground="Black" FontSize="20"></Label>
+            <Label Grid.Column="4" Content="{Binding PlayerScorePoint}" FontWeight="Thin" Foreground="Black" FontSize="20"></Label>
+        </Grid>
     </Canvas>
 </Window>

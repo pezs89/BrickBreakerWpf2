@@ -58,9 +58,6 @@ namespace BrickBreaker_2015.ViewModel
 
         #region GameObjects
 
-        // The list of main objects.
-        private ObservableCollection<MainObject> gameObjectList;
-
         // The list of balls.
         private ObservableCollection<Ball> ballList;
 
@@ -160,6 +157,9 @@ namespace BrickBreaker_2015.ViewModel
         // The players life count.
         private int playerLife;
 
+        // The canvas.
+        private Canvas canvas;
+
         // The path of the current map;
         private string currentMapPath;
 
@@ -199,14 +199,35 @@ namespace BrickBreaker_2015.ViewModel
         // The height of the canvas.
         private double canvasHeight;
 
-        // Time of the game.
-        private DateTime timeOfGame;
+        // The action the view needs to take.
+        private ViewActionStatus viewAction;
+
+        // The actions the view can take.
+        public enum ViewActionStatus
+        {
+            DoNothing,
+            OpenHighscores,
+            OpenMenu,
+            NewMap
+        }
 
         #endregion GameMechanicsValues
 
         #endregion Fields
 
         #region Properties
+
+        /// <summary>
+        /// Gets or sets the viewAction.
+        /// </summary>
+        /// <value>
+        /// The viewAction.
+        /// </value>
+        public ViewActionStatus ViewAction
+        {
+            get { return viewAction; }
+            set { viewAction = value; }
+        }
 
         /// <summary>
         /// Gets or sets the playerLife.
@@ -230,18 +251,6 @@ namespace BrickBreaker_2015.ViewModel
         {
             get { return playerScorePoint; }
             set { playerScorePoint = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the timeOfGame.
-        /// </summary>
-        /// <value>
-        /// The timeOfGame.
-        /// </value>
-        public DateTime TimeOfGame
-        {
-            get { return timeOfGame; }
-            set { timeOfGame = value; }
         }
 
         /// <summary>
@@ -352,18 +361,6 @@ namespace BrickBreaker_2015.ViewModel
             set { bonusList = value; }
         }
 
-        /// <summary>
-        /// Gets or sets the gameObjectList.
-        /// </summary>
-        /// <value>
-        /// The gameObjectList.
-        /// </value>
-        public ObservableCollection<MainObject> GameObjectList
-        {
-            get { return gameObjectList; }
-            set { gameObjectList = value; }
-        }
-
         #endregion Properties
 
         #region Constructors
@@ -387,32 +384,102 @@ namespace BrickBreaker_2015.ViewModel
         /// <summary>
         /// Initializes a new instance of the <see cref="NewGameViewModel"/> class.
         /// </summary>
-        /// <param name="canvasWidth">The width of the canvas.</param>
-        /// <param name="canvasHeight">The height of the canvas.</param>
-        public NewGameViewModel(double canvasWidth, double canvasHeight)
+        /// <param name="canvas">The canvas.</param>
+        public NewGameViewModel(ref Canvas canvas)
         {
             mapTxtAccess = new MapTxtAccess();
             optionsViewModel = new OptionsViewModel();
 
-            this.canvasWidth = canvasWidth;
-            this.canvasHeight = canvasHeight;
-            PresetValues();
-
-            #region SetLabelValues
-
-            //// Show the scorepoints.
-            //ScoreLabel.Content = "Score: " + scoreValue;
-            //// Show the lifepoints.
-            //LifeLabel.Content = "Life: " + lifePoint;
-            //// Show the time.
-            //TimeLabel.Content = "Time: " + timeOfGame.ToString("HH:mm:ss");
-
-            #endregion SetLabelValues
+            this.canvas = canvas;
+            PresetValues1();
         }
 
         #endregion Constructors
 
         #region Methods
+
+        /// <summary>
+        /// Sets the needed fields for a new map and gameplay.
+        /// </summary>
+        /// <param name="timer">The timer.</param>
+        public void NewMap(ref DispatcherTimer timer)
+        {
+            canvas.Children.Clear();
+            ballList.Clear();
+            racketList.Clear();
+            brickList.Clear();
+            bonusList.Clear();
+
+            timer.Stop();
+            gameInSession = false;
+            gameIsPaused = false;
+
+            WindowLoaded();
+        }
+
+        /// <summary>
+        /// Refreshes the game objects on the canvas.
+        /// </summary>
+        public void RefreshDisplay()
+        {
+            canvas.Children.Clear();
+
+            #region Ball
+
+            // There is at leat one ball.
+            if (ballList.Count > 0)
+            {
+                // Check each ball.
+                for (int i = 0; i < ballList.Count; i++)
+                {
+                    canvas.Children.Add(ballList[i].GetEllipse());
+                }
+            }
+
+            #endregion Ball
+
+            #region Racket
+
+            // There is at leat one racket.
+            if (racketList.Count > 0)
+            {
+                // Check each racket.
+                for (int i = 0; i < racketList.Count; i++)
+                {
+                    canvas.Children.Add(racketList[i].GetRectangle());
+                }
+            }
+
+            #endregion Racket
+
+            #region Brick
+
+            // There is at leat one brick.
+            if (brickList.Count > 0)
+            {
+                // Check each brick.
+                for (int i = 0; i < brickList.Count; i++)
+                {
+                    canvas.Children.Add(brickList[i].GetRectangle());
+                }
+            }
+
+            #endregion Brick
+
+            #region Bonus
+
+            // There is at leat one bonus.
+            if (bonusList.Count > 0)
+            {
+                // Check each bonus.
+                for (int i = 0; i < bonusList.Count; i++)
+                {
+                    canvas.Children.Add(bonusList[i].GetRectangle());
+                }
+            }
+
+            #endregion Bonus
+        }
 
         /// <summary>
         /// Checks if the ball is in contact with an object.
@@ -459,8 +526,8 @@ namespace BrickBreaker_2015.ViewModel
                                 // There are more than one balls.
                                 else
                                 {
+                                    canvas.Children.Remove(ballList[j].GetEllipse());
                                     ballList.RemoveAt(j);
-                                    gameObjectList.Remove(ballList[j]);
                                 }
 
                                 // The life points reached 0.
@@ -481,17 +548,9 @@ namespace BrickBreaker_2015.ViewModel
                                 ballList[j].VerticalMovement *= -1;
                             }
 
-                            #region PlaySound
+                            ballList[j].RepositionBallAtCanvas(canvasWidth);
 
-                            // The sound is on.
-                            if (GetOption().IsSoundEnabled)
-                            {
-                                // Play the sound.
-                                mediaPlayer.Position = new TimeSpan(0);
-                                mediaPlayer.Play();
-                            }
-
-                            #endregion PlaySound
+                            PlaySound();
                         }
 
                         #endregion BallAndWallContact
@@ -548,25 +607,11 @@ namespace BrickBreaker_2015.ViewModel
                                             {
                                                 ballList[j].HorizontalMovement *= -1;
                                             }
-
-                                            // Reposition the ball.
-                                            if (ballList[j].Area.Y + ballList[j].Area.Width > oneRacket.Area.Y)
-                                            {
-                                                ballList[j].RepositionOnRacket(oneRacket);
-                                            }
                                         }
 
-                                        #region PlaySound
+                                        ballList[j].RepositionBallAtRacket(oneRacket);
 
-                                        // The sound is on.
-                                        if (GetOption().IsSoundEnabled)
-                                        {
-                                            // Play the sound.
-                                            mediaPlayer.Position = new TimeSpan(0);
-                                            mediaPlayer.Play();
-                                        }
-
-                                        #endregion PlaySound
+                                        PlaySound();
                                     }
 
                                     #endregion BallAndRacketContact
@@ -749,12 +794,54 @@ namespace BrickBreaker_2015.ViewModel
                                     #region NewVersion
 
                                     // 
-                                    if (ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X &&
-                                        ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width &&
-                                        ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y &&
-                                        ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height)
+                                    if (((ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X ||
+                                        ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width) &&
+                                        ballList[j].Area.Y + ballList[j].Area.Height >= brickList[i].Area.Y) && /* bottom of the ball */
+                                        ((ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X ||
+                                        ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width) &&
+                                        ballList[j].Area.Y <= brickList[i].Area.Y + brickList[i].Area.Height) && /* top of the ball */
+                                        ((ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y ||
+                                        ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) &&
+                                        ballList[j].Area.X <= brickList[i].Area.X + brickList[i].Area.Width) && /* left of the ball */
+                                        ((ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y ||
+                                        ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) &&
+                                        ballList[j].Area.X + ballList[j].Area.Width >= brickList[i].Area.X)) /* right of the ball */
                                     {
+                                        if (((ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X ||
+                                            ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width) &&
+                                            ballList[j].Area.Y + ballList[j].Area.Height >= brickList[i].Area.Y) || /* bottom of the ball */
+                                            ((ballList[j].Area.X + ballList[j].Area.Width / 2 >= brickList[i].Area.X ||
+                                            ballList[j].Area.X + ballList[j].Area.Width / 2 <= brickList[i].Area.X + brickList[i].Area.Width) &&
+                                            ballList[j].Area.Y <= brickList[i].Area.Y + brickList[i].Area.Height)) /* top of the ball */
+                                        {
+                                            if (ballList[j].BallType != Ball.BallsType.Steel)
+                                            {
+                                                ballList[j].HorizontalMovement = -ballList[j].HorizontalMovement;
+                                            }
+                                        }
+                                        else if (((ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y ||
+                                            ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) &&
+                                            ballList[j].Area.X <= brickList[i].Area.X + brickList[i].Area.Width) || /* left of the ball */
+                                            ((ballList[j].Area.Y + ballList[j].Area.Height / 2 >= brickList[i].Area.Y ||
+                                            ballList[j].Area.Y + ballList[j].Area.Height / 2 <= brickList[i].Area.Y + brickList[i].Area.Height) &&
+                                            ballList[j].Area.X + ballList[j].Area.Width >= brickList[i].Area.X)) /* right of the ball */
+                                        {
+                                            if (ballList[j].BallType != Ball.BallsType.Steel)
+                                            {
+                                                ballList[j].VerticalMovement = -ballList[j].VerticalMovement;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (ballList[j].BallType != Ball.BallsType.Steel)
+                                            {
+                                                ballList[j].HorizontalMovement = -ballList[j].HorizontalMovement;
+                                                ballList[j].VerticalMovement = -ballList[j].VerticalMovement;
+                                            }
+                                        }
 
+                                        //ballList[j].RepositionBallAtBrick(brickList[i]);
+                                        BrickContact(ballList[j], brickList[i]);
                                     }
 
                                     #endregion NewVersion
@@ -793,19 +880,14 @@ namespace BrickBreaker_2015.ViewModel
                             // The brick is at breaking point.
                             if (oneBrick.BreakNumber == 1)
                             {
-                                //// Add points to the score.
-                                //scoreValue += oneBrick.ScorePoint;
-                                //// Show the scorepints.
-                                //ScoreLabel.Content = "Score: " + scoreValue;
-
                                 // If the brick is lucky, then add bonus.
                                 if (oneBrick.CalculateBonusChance())
                                 {
                                     AddBonus(oneBrick);
                                 }
 
+                                canvas.Children.Remove(oneBrick.GetRectangle());
                                 brickList.Remove(oneBrick);
-                                gameObjectList.Remove(oneBrick);
                             }
                             // The brick is not at breaking point.
                             else
@@ -817,40 +899,45 @@ namespace BrickBreaker_2015.ViewModel
                         // The ball is a hard ball.
                         else
                         {
-                            //// Add points to the score.
-                            //scoreValue += oneBrick.ScorePoint;
-                            //// Show the scorepints.
-                            //ScoreLabel.Content = "Score: " + scoreValue;
-
                             // The brick is lucky, then add bonus.
                             if (oneBrick.CalculateBonusChance())
                             {
                                 AddBonus(oneBrick);
                             }
 
+                            canvas.Children.Remove(oneBrick.GetRectangle());
                             brickList.Remove(oneBrick);
-                            gameObjectList.Remove(oneBrick);
                         }
                     }
                 }
                 // The ball is a steel ball.
                 else
                 {
-                    //// Add points to the score.
-                    //scoreValue += oneBrick.ScorePoint;
-                    //// Show the scorepints.
-                    //ScoreLabel.Content = "Score: " + scoreValue;
-
                     // If the brick is lucky, then add bonus.
                     if (oneBrick.CalculateBonusChance())
                     {
                         AddBonus(oneBrick);
                     }
 
+                    canvas.Children.Remove(oneBrick.GetRectangle());
                     brickList.Remove(oneBrick);
-                    gameObjectList.Remove(oneBrick);
                 }
 
+                PlaySound();
+            }
+            catch (Exception e)
+            {
+                errorLogViewModel.LogError(e);
+            }
+        }
+
+        /// <summary>
+        /// Plays the sound.
+        /// </summary>
+        private void PlaySound()
+        {
+            try
+            {
                 // The sound is a on.
                 if (GetOption().IsSoundEnabled)
                 {
@@ -872,33 +959,24 @@ namespace BrickBreaker_2015.ViewModel
         {
             try
             {
+                PresetValues2();
+
                 // If no map or no options file was found then close the window.
                 if (!String.IsNullOrEmpty(currentMapPath) && currentMapPath == "notfound")
                 {
                     MessageBox.Show("Couldn't find the map file.", "Error");
 
-                    //MapSelection returnToMapSelection = new MapSelection();
-                    //returnToMapSelection.Show();
-                    //Close();
+                    viewAction = ViewActionStatus.OpenMenu;
                 }
                 else if (String.IsNullOrEmpty(currentMapPath))
                 {
                     MessageBox.Show("Couldn't find the options xml file.", "Error");
 
-                    //MapSelection returnToMapSelection = new MapSelection();
-                    //returnToMapSelection.Show();
-                    //Close();
+                    viewAction = ViewActionStatus.OpenMenu;
                 }
 
                 //playerLife = gamePresets != null && gamePresets.LifePoint != 0 ? gamePresets.LifePoint : 3;
                 //playerScorePoint = gamePresets != null && gamePresets.ScorePoint != 0 ? gamePresets.ScorePoint : 0;
-
-                //// Show the scorepoints.
-                //ScoreLabel.Content = "Score: " + scoreValue;
-                //// Show the lifepoints.
-                //LifeLabel.Content = "Life: " + lifePoint;
-                //// Show the time.
-                //TimeLabel.Content = "Time: " + timeOfGame.ToString("HH:mm:ss");
             }
             catch (Exception e)
             {
@@ -984,25 +1062,8 @@ namespace BrickBreaker_2015.ViewModel
                 // The game is over, the status is given and the game is still is session.
                 if (gameIsOver && !string.IsNullOrEmpty(gameOverStatus) && gameInSession)
                 {
-                    GameOver(gameOverStatus, timer);
+                    GameOver(gameOverStatus, ref timer);
                 }
-            }
-            catch (Exception e)
-            {
-                errorLogViewModel.LogError(e);
-            }
-        }
-
-        /// <summary>
-        /// Handles the highscores.
-        /// </summary>
-        private void HighScores(int score)
-        {
-            try
-            {
-                //GameOver submitScore = new GameOver();
-                //submitScore.ScoreLabel.Content = score;
-                //submitScore.Show();
             }
             catch (Exception e)
             {
@@ -1014,7 +1075,7 @@ namespace BrickBreaker_2015.ViewModel
         /// Handles the end of the game.
         /// </summary>
         /// <param name="status">The status.</param>
-        private void GameOver(string status, DispatcherTimer dispatcherTimer)
+        private void GameOver(string status, ref DispatcherTimer dispatcherTimer)
         {
             try
             {
@@ -1029,17 +1090,7 @@ namespace BrickBreaker_2015.ViewModel
                     gameIsOver = false;
                     gameOverStatus = null;
 
-                    if (CheckHighScores(playerScorePoint))
-                    {
-                        HighScores(playerScorePoint);
-                        //Close();
-                    }
-                    else
-                    {
-                        //MapSelection returnToMap = new MapSelection();
-                        //returnToMap.Show();
-                        //Close();
-                    }
+                    viewAction = ViewActionStatus.OpenHighscores;
                 }
 
                 #endregion Fail
@@ -1063,20 +1114,9 @@ namespace BrickBreaker_2015.ViewModel
 
                         if (MessageBox.Show("You've succeeded. \n Would you like to continue.", "Game Over", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                         {
-                            try
-                            {
-                                optionsViewModel.OptionModel.MapNumber += 1;
-                                optionsViewModel.SaveToXml();
-                            }
-                            catch
-                            {
-
-                            }
-
-                            //Drawer newMap = new Drawer();
-                            //newMap.gamePresets = new GamePresets(lifePoint, scoreValue);
-                            //newMap.Show();
-                            //Close();
+                            optionsViewModel.OptionModel.MapNumber += 1;
+                            optionsViewModel.SaveToXml();
+                            viewAction = ViewActionStatus.NewMap;
                         }
 
                         #endregion Constinue
@@ -1085,17 +1125,7 @@ namespace BrickBreaker_2015.ViewModel
 
                         else
                         {
-                            if (CheckHighScores(playerScorePoint))
-                            {
-                                HighScores(playerScorePoint);
-                                //Close();
-                            }
-                            else
-                            {
-                                //MapSelection returnToMap = new MapSelection();
-                                //returnToMap.Show();
-                                //Close();
-                            }
+                            viewAction = ViewActionStatus.OpenHighscores;
                         }
 
                         #endregion Exit
@@ -1107,17 +1137,7 @@ namespace BrickBreaker_2015.ViewModel
 
                     else
                     {
-                        if (CheckHighScores(playerScorePoint))
-                        {
-                            HighScores(playerScorePoint);
-                            //Close();
-                        }
-                        else
-                        {
-                            //MapSelection returnToMap = new MapSelection();
-                            //returnToMap.Show();
-                            //Close();
-                        }
+                        viewAction = ViewActionStatus.OpenHighscores;
                     }
 
                     #endregion LastMap
@@ -1132,44 +1152,6 @@ namespace BrickBreaker_2015.ViewModel
         }
 
         /// <summary>
-        /// Checks if the score is in the highscores.
-        /// </summary>
-        /// <param name="scoreValue">The score.</param>
-        /// <returns>True if the score can be submitted, false if not.</returns>
-        private bool CheckHighScores(int score)
-        {
-            try
-            {
-                bool retVal = false;
-                List<HighScoreModel> scores = scoreXmlAccess.LoadScores();
-                int i = 0;
-
-                while (i < scores.Count && !retVal)
-                {
-                    if (int.Parse(scores[i].PlayerScore) < playerScorePoint)
-                    {
-                        retVal = true;
-                    }
-
-                    i++;
-                }
-
-                if (i < highscoreLimit && !retVal)
-                {
-                    retVal = true;
-                }
-
-                return retVal;
-            }
-            catch (Exception e)
-            {
-                errorLogViewModel.LogError(e);
-
-                return false;
-            }
-        }
-
-        /// <summary>
         /// Handles the event when the ball falls down.
         /// </summary>
         private void DisposeOfBall()
@@ -1180,22 +1162,14 @@ namespace BrickBreaker_2015.ViewModel
                 racketList.Clear();
                 ballList.Clear();
                 bonusList.Clear();
-                gameObjectList.Clear();
-                if (brickList.Count > 0)
-                {
-                    for (int i = 0; i < brickList.Count; i++)
-                    {
-                        gameObjectList.Add(brickList[i]);
-                    }
-                }
 
                 // Add new racket.
-                Racket racket = new Racket((canvasWidth / 2) - (racketWidth / 2), canvasHeight - racketHeight, racketHeight, racketWidth,
+                Racket racket = new Racket(canvasWidth / 2 - racketWidth / 2, canvasHeight - racketHeight, racketWidth, racketHeight, 
                     @"..\..\Resources\Media\Racket\normalracket.jpg");
                 racket.Direction = Racket.Directions.Stay;
                 racket.StickyRacket = false;
+                canvas.Children.Add(racket.GetRectangle());
                 racketList.Add(racket);
-                gameObjectList.Add(racket);
 
                 // Add new ball.
                 Ball ball = new Ball((canvasWidth / 2) - ballRadius, canvasHeight - racketHeight - (ballRadius * 2), ballRadius * 2, ballRadius * 2,
@@ -1203,8 +1177,8 @@ namespace BrickBreaker_2015.ViewModel
                 ball.VerticalMovement = ballVerticalMovement > 0 ? ballVerticalMovement : -ballVerticalMovement;
                 ball.HorizontalMovement = ballHorizontalMovement < 0 ? ballHorizontalMovement : -ballHorizontalMovement;
                 ball.BallInMove = false;
+                canvas.Children.Add(ball.GetEllipse());
                 ballList.Add(ball);
-                gameObjectList.Add(ball);
             }
             catch (Exception e)
             {
@@ -1237,7 +1211,6 @@ namespace BrickBreaker_2015.ViewModel
                                     oneRacket.Area.Y < bonusList[i].Area.Y + bonusList[i].Area.Height)     /* bonus bottom */
                                 {
                                     playerScorePoint += bonusList[i].ScorePoint;
-                                    //ScoreLabel.Content = "Score: " + scoreValue;
 
                                     #region AddBonusEffect
 
@@ -1256,8 +1229,8 @@ namespace BrickBreaker_2015.ViewModel
                                             ball.VerticalMovement = ballVerticalMovement > 0 ? ballVerticalMovement : -ballVerticalMovement;
                                             ball.HorizontalMovement = ballHorizontalMovement < 0 ? ballHorizontalMovement : -ballHorizontalMovement;
                                             ball.BallInMove = false;
+                                            canvas.Children.Add(ball.GetEllipse());
                                             ballList.Add(ball);
-                                            gameObjectList.Add(ball);
                                             break;
                                         case Bonus.BonusesType.RacketLengthen:
                                             oneRacket.Lengthen(racketMaxSize, racketDifference);
@@ -1318,8 +1291,6 @@ namespace BrickBreaker_2015.ViewModel
                                             break;
                                     }
 
-                                    //LifeLabel.Content = "Life: " + lifePoint;
-
                                     // The player's life points reached 0, game over.
                                     if (playerLife <= 0)
                                     {
@@ -1329,8 +1300,8 @@ namespace BrickBreaker_2015.ViewModel
 
                                     #endregion AddBonusEffect
 
+                                    canvas.Children.Remove(ballList[i].GetEllipse());
                                     bonusList.Remove(bonusList[i]);
-                                    gameObjectList.Remove(bonusList[i]);
                                 }
                             }
                         }
@@ -1346,12 +1317,13 @@ namespace BrickBreaker_2015.ViewModel
         /// <summary>
         /// Presets the values.
         /// </summary>
-        private void PresetValues()
+        private void PresetValues1()
         {
             try
             {
                 #region PresetValues
 
+                viewAction = ViewActionStatus.DoNothing;
                 highscoreLimit = 10;
                 playerLife = 3;
                 playerScorePoint = 0;
@@ -1386,7 +1358,6 @@ namespace BrickBreaker_2015.ViewModel
                 rnd = new Random();
 
                 // Initialize the lists.
-                gameObjectList = new ObservableCollection<MainObject>();
                 ballList = new ObservableCollection<Ball>();
                 brickList = new ObservableCollection<Brick>();
                 racketList = new ObservableCollection<Racket>();
@@ -1399,16 +1370,16 @@ namespace BrickBreaker_2015.ViewModel
                 switch (GetOption().Resolution)
                 {
                     case "580x420":
+                        horizontalScaleNumber = 0.9;
+                        verticalScaleNumber = 0.9;
+                        break;
+                    case "640x480":
                         horizontalScaleNumber = 1;
                         verticalScaleNumber = 1;
                         break;
-                    case "640x480":
+                    case "800x600":
                         horizontalScaleNumber = 1.25;
                         verticalScaleNumber = 1.25;
-                        break;
-                    case "800x600":
-                        horizontalScaleNumber = 1.6;
-                        verticalScaleNumber = 1.6;
                         break;
                 }
 
@@ -1446,7 +1417,20 @@ namespace BrickBreaker_2015.ViewModel
                 racketDifference *= horizontalScaleNumber;
 
                 #endregion SetScaling
+            }
+            catch (Exception e)
+            {
+                errorLogViewModel.LogError(e);
+            }
+        }
 
+        /// <summary>
+        /// Presets the values.
+        /// </summary>
+        private void PresetValues2()
+        {
+            try
+            {
                 #region MapSelection
 
                 try
@@ -1482,18 +1466,23 @@ namespace BrickBreaker_2015.ViewModel
 
                 try
                 {
+                    canvasHeight = canvas.ActualHeight;
+                    canvasWidth = canvas.ActualWidth;
+
                     if (!string.IsNullOrEmpty(currentMapPath) && currentMapPath != "notfound")
                     {
                         // Add a racket.
-                        racketList.Add(new Racket(canvasWidth / 2 - racketWidth / 2, canvasHeight - racketHeight, racketWidth, racketHeight, @"..\..\Resources\Media\Racket\normalracket.jpg"));
+                        racketList.Add(new Racket(canvasWidth / 2 - racketWidth / 2, canvasHeight - racketHeight, racketWidth, racketHeight,
+                            @"..\..\Resources\Media\Racket\normalracket.jpg"));
                         racketList[0].Direction = Racket.Directions.Stay;
                         racketList[0].StickyRacket = false;
-                        gameObjectList.Add(racketList[0]);
+                        canvas.Children.Add(racketList[0].GetRectangle());
 
                         // Add a ball.
-                        ballList.Add(new Ball(canvasWidth / 2 - ballRadius, canvasHeight - racketHeight - ballRadius * 2, ballRadius * 2, ballRadius * 2, @"..\..\Resources\Media\Ball\normalball.jpg", ballHorizontalMovement, ballVerticalMovement, Ball.BallsType.Normal));
+                        ballList.Add(new Ball(canvasWidth / 2 - ballRadius, canvasHeight - racketHeight - ballRadius * 2, ballRadius * 2, ballRadius * 2,
+                            @"..\..\Resources\Media\Ball\normalball.jpg", -ballHorizontalMovement, -ballVerticalMovement, Ball.BallsType.Normal));
                         ballList[0].BallInMove = false;
-                        gameObjectList.Add(ballList[0]);
+                        canvas.Children.Add(ballList[0].GetEllipse());
 
                         // Add the bricks.
                         brickList = mapTxtAccess.LoadMap(currentMapPath, brickWidth, brickHeight);
@@ -1501,7 +1490,7 @@ namespace BrickBreaker_2015.ViewModel
                         {
                             for (int i = 0; i < brickList.Count; i++)
                             {
-                                gameObjectList.Add(brickList[i]);
+                                canvas.Children.Add(brickList[i].GetRectangle());
                             }
                         }
                     }
@@ -1555,8 +1544,8 @@ namespace BrickBreaker_2015.ViewModel
                         // Descend the bonus and remove it if it's out of the canvas.
                         if (bonusList[i].Descend(bonusSpeed, canvasWidth, canvasHeight))
                         {
+                            canvas.Children.Remove(bonusList[i].GetRectangle());
                             bonusList.Remove(bonusList[i]);
-                            gameObjectList.Remove(bonusList[i]);
                         }
                     }
                 }
@@ -1645,13 +1634,13 @@ namespace BrickBreaker_2015.ViewModel
 
                 Bonus bonus = new Bonus(oneBrick.Area.X + (oneBrick.Area.Width / 2) - (bonusWidth / 2), oneBrick.Area.Y + oneBrick.Area.Height, bonusHeight, bonusWidth, bonusImage, type);
                 bonus.ScorePoint = 5;
+                canvas.Children.Add(bonus.GetRectangle());
                 bonusList.Add(bonus);
-                gameObjectList.Add(bonus);
 
                 if (bonus.Descend(bonusSpeed, canvasWidth, canvasHeight))
                 {
+                    canvas.Children.Remove(bonus.GetRectangle());
                     bonusList.Remove(bonus);
-                    gameObjectList.Remove(bonus);
                 }
             }
             catch (Exception e)
@@ -1721,8 +1710,10 @@ namespace BrickBreaker_2015.ViewModel
                     }
                 }
             }
-            catch
-            { }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -1766,8 +1757,10 @@ namespace BrickBreaker_2015.ViewModel
                     }
                 }
             }
-            catch
-            { }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         #endregion MouseControls
@@ -1805,8 +1798,10 @@ namespace BrickBreaker_2015.ViewModel
                     }
                 }
             }
-            catch
-            { }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         /// <summary>
@@ -1826,13 +1821,10 @@ namespace BrickBreaker_2015.ViewModel
                     // Pause the game and send message.
                     dispatcherTimer.Stop();
                     gameIsPaused = true;
-                    //TimeLabel.Content = "The game is paused.";
 
                     if (MessageBox.Show("Do you want to quit?", "Warning", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
-                        //View.DifficultySelectionWindow returnToMapSelection = new View.DifficultySelectionWindow();
-                        //returnToMapSelection.Show();
-                        //Close();
+                        viewAction = ViewActionStatus.OpenMenu;
                     }
                 }
 
@@ -1971,7 +1963,6 @@ namespace BrickBreaker_2015.ViewModel
                             // Pause the game.
                             dispatcherTimer.Stop();
                             gameIsPaused = true;
-                            //TimeLabel.Content = "The game is paused.";
                         }
                         // The game is paused.
                         else
@@ -1979,7 +1970,6 @@ namespace BrickBreaker_2015.ViewModel
                             // Continue the game.
                             dispatcherTimer.Start();
                             gameIsPaused = false;
-                            //TimeLabel.Content = "Time: " + timeOfGame.ToString("HH:mm:ss");
                         }
                     }
 
@@ -1988,8 +1978,10 @@ namespace BrickBreaker_2015.ViewModel
 
                 #endregion OptionBindedKeys
             }
-            catch
-            { }
+            catch (Exception error)
+            {
+                errorLogViewModel.LogError(error);
+            }
         }
 
         #endregion KeyboardControls
@@ -2108,8 +2100,9 @@ namespace BrickBreaker_2015.ViewModel
 
                 return retVal;
             }
-            catch
+            catch (Exception e)
             {
+                errorLogViewModel.LogError(e);
                 return null;
             }
         }

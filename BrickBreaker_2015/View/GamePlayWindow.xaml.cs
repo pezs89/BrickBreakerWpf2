@@ -49,9 +49,7 @@ namespace BrickBreaker_2015.View
                 InitializeComponent();
 
                 errorLogViewModel = new ErrorLogViewModel();
-                //canvas.Background = new SolidColorBrush(Colors.White);
-
-                newGameViewModel = new NewGameViewModel(canvas.ActualWidth, canvas.ActualHeight);
+                newGameViewModel = new NewGameViewModel(ref canvas);
                 optionsViewModel = new OptionsViewModel();
 
                 this.DataContext = newGameViewModel;
@@ -59,7 +57,7 @@ namespace BrickBreaker_2015.View
                 timer = new DispatcherTimer();
                 timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
                 timer.Tick += Timer_Tick;
-                //timer.Start();
+                timer.Start();
             }
             catch
             { }
@@ -150,6 +148,31 @@ namespace BrickBreaker_2015.View
                 newGameViewModel.BallAtContact();
                 newGameViewModel.RacketAtContactWithBonus();
                 newGameViewModel.CheckForGameOver(ref timer);
+                newGameViewModel.RefreshDisplay();
+
+                if (newGameViewModel.ViewAction != NewGameViewModel.ViewActionStatus.DoNothing)
+                {
+                    switch (newGameViewModel.ViewAction)
+                    {
+                        case NewGameViewModel.ViewActionStatus.OpenMenu:
+                            newGameViewModel.ViewAction = NewGameViewModel.ViewActionStatus.DoNothing;
+                            MainWindow mainWindow = new MainWindow();
+                            mainWindow.ShowDialog();
+                            this.Close();
+                            break;
+                        case NewGameViewModel.ViewActionStatus.OpenHighscores:
+                            newGameViewModel.ViewAction = NewGameViewModel.ViewActionStatus.DoNothing;
+                            GameOverWindow gameOverWindow = new GameOverWindow();
+                            gameOverWindow.DataContext = newGameViewModel;
+                            gameOverWindow.ShowDialog();
+                            this.Close();
+                            break;
+                        case NewGameViewModel.ViewActionStatus.NewMap:
+                            newGameViewModel.ViewAction = NewGameViewModel.ViewActionStatus.DoNothing;
+                            newGameViewModel.NewMap(ref timer);
+                            break;
+                    }
+                }
             }
             catch (Exception error)
             {
@@ -167,6 +190,38 @@ namespace BrickBreaker_2015.View
             try
             {
                 newGameViewModel.WindowLoaded();
+
+                /*if (newGameViewModel.BallList.Count > 0)
+                {
+                    foreach (var item in newGameViewModel.BallList)
+                    {
+                        canvas.Children.Add(item.GetEllipse());
+                    }
+                }
+
+                if (newGameViewModel.RacketList.Count > 0)
+                {
+                    foreach (var item in newGameViewModel.RacketList)
+                    {
+                        canvas.Children.Add(item.GetRectangle());
+                    }
+                }
+
+                if (newGameViewModel.BrickList.Count > 0)
+                {
+                    foreach (var item in newGameViewModel.BrickList)
+                    {
+                        canvas.Children.Add(item.GetRectangle());
+                    }
+                }
+
+                if (newGameViewModel.BonusList.Count > 0)
+                {
+                    foreach (var item in newGameViewModel.BonusList)
+                    {
+                        canvas.Children.Add(item.GetRectangle());
+                    }
+                }*/
             }
             catch (Exception error)
             {

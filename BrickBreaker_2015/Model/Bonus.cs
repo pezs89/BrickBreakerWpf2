@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace BrickBreaker_2015.Model
 {
@@ -91,6 +96,45 @@ namespace BrickBreaker_2015.Model
         #region Methods
 
         /// <summary>
+        /// Shape of the bonus.
+        /// </summary>
+        /// <returns>The bonus's rectangle.</returns>
+        public Rectangle GetRectangle()
+        {
+            // Set the bonus's image as the set image.
+            ImageBrush imgBrush = new ImageBrush();
+            imgBrush.ImageSource = new BitmapImage(new Uri(ImagePath, UriKind.Relative));
+
+            // Create the rectangle.
+            Rectangle bonusRectangle = new Rectangle();
+            bonusRectangle.Fill = imgBrush;
+            bonusRectangle.Width = Area.Width;
+            bonusRectangle.Height = Area.Height;
+
+            // Bind the X position of the bonus rectangle to the canvas.
+            Binding rectangleXBinding = new Binding("Area.X");
+            rectangleXBinding.Source = this;
+            bonusRectangle.SetBinding(Canvas.LeftProperty, rectangleXBinding);
+
+            // Bind the Y position of the bonus rectangle to the canvas.
+            Binding rectangleYBinding = new Binding("Area.Y");
+            rectangleYBinding.Source = this;
+            bonusRectangle.SetBinding(Canvas.TopProperty, rectangleYBinding);
+
+            // Bind the width of the bonus rectangle to the canvas.
+            Binding rectangleWidthBinding = new Binding("Area.Width");
+            rectangleWidthBinding.Source = this;
+            bonusRectangle.SetBinding(Canvas.WidthProperty, rectangleWidthBinding);
+
+            // Bind the height of the bonus rectangle to the canvas.
+            Binding rectangleHeightBinding = new Binding("Area.Height");
+            rectangleHeightBinding.Source = this;
+            bonusRectangle.SetBinding(Canvas.HeightProperty, rectangleHeightBinding);
+
+            return bonusRectangle;
+        }
+
+        /// <summary>
         /// Descends the specified speed.
         /// </summary>
         /// <param name="bonusSpeed">The speed of the bonus.</param>
@@ -110,6 +154,7 @@ namespace BrickBreaker_2015.Model
                 {
                     // If the bouns top didn't reaches the bottom of the canvas, then move it down.
                     area.Y += bonusSpeed;
+
                     onPropertyChanged("Area");
 
                     return false;

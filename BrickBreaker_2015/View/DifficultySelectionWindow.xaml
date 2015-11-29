@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BrickBreaker_2015.View"
         mc:Ignorable="d"
-        Title="DifficultySelectionWindow" Height="475" Width="650" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" KeyDown="Window_KeyDown">
+        Title="DifficultySelectionWindow" Height="475" Width="650" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" KeyDown="Window_KeyDown" Icon="/Resources/Concrete_wall.jpg">
     <Window.Background>
         <ImageBrush ImageSource="/Resources/Concrete_wall.jpg"></ImageBrush>
     </Window.Background>
