@@ -1364,7 +1364,7 @@ namespace BrickBreaker_2015.ViewModel
                 bonusList = new ObservableCollection<Bonus>();
 
                 #endregion PresetValues
-                 
+                
                 #region SetScaling
 
                 switch (GetOption().Resolution)

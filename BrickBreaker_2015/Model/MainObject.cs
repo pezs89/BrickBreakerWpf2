@@ -33,10 +33,7 @@ namespace BrickBreaker_2015.Model
         public Rect Area
         {
             get { return area; }
-            set
-            {
-                area = value; onPropertyChanged("Area");
-            }
+            set { area = value; }
         }
 
         /// <summary>
